@@ -394,27 +394,37 @@ function agendar_consulta($pdo, $id_paciente, $id_especializacao, $id_horario, $
     $valor = $especializacao['preco'] ?? 0;
     $nome_espec = $especializacao['nome'] ?? 'Consulta';
 
-    // Verificar se o horário já está ocupado
-    $stmt_check = $pdo->prepare("SELECT id_consulta, status FROM consultas WHERE id_data = ? AND id_horario = ?");
-    $stmt_check->execute([$id_data, $id_horario]);
-    $existing = $stmt_check->fetch();
+    try {
+        $pdo->beginTransaction();
 
-    if ($existing) {
-        if ($existing['status'] !== 'Cancelada') {
-            return false;
+        $stmt_check = $pdo->prepare("SELECT id_consulta, status FROM consultas WHERE id_data = ? AND id_horario = ?");
+        $stmt_check->execute([$id_data, $id_horario]);
+        $existing = $stmt_check->fetch();
+
+        if ($existing) {
+            if ($existing['status'] !== 'Cancelada') {
+                $pdo->rollBack();
+                return false;
+            }
+            $stmt = $pdo->prepare("UPDATE consultas SET id_paciente = ?, id_especializacao = ?, modalidade = ?, valor = ?, status = 'Pendente', pagamento_status = 'Pendente' WHERE id_consulta = ?");
+            $sucesso = $stmt->execute([$id_paciente, $id_especializacao, $modalidade, $valor, $existing['id_consulta']]);
+            $id_consulta = $existing['id_consulta'];
+        } else {
+            $stmt = $pdo->prepare("
+                INSERT INTO consultas (id_paciente, id_especializacao, id_horario, id_data, modalidade, valor, status)
+                VALUES (?, ?, ?, ?, ?, ?, 'Pendente')
+            ");
+            $sucesso = $stmt->execute([$id_paciente, $id_especializacao, $id_horario, $id_data, $modalidade, $valor]);
+            if ($sucesso) {
+                $id_consulta = $pdo->lastInsertId();
+            }
         }
-        $stmt = $pdo->prepare("UPDATE consultas SET id_paciente = ?, id_especializacao = ?, modalidade = ?, valor = ?, status = 'Pendente', pagamento_status = 'Pendente' WHERE id_consulta = ?");
-        $sucesso = $stmt->execute([$id_paciente, $id_especializacao, $modalidade, $valor, $existing['id_consulta']]);
-        $id_consulta = $existing['id_consulta'];
-    } else {
-        $stmt = $pdo->prepare("
-            INSERT INTO consultas (id_paciente, id_especializacao, id_horario, id_data, modalidade, valor, status)
-            VALUES (?, ?, ?, ?, ?, ?, 'Pendente')
-        ");
-        $sucesso = $stmt->execute([$id_paciente, $id_especializacao, $id_horario, $id_data, $modalidade, $valor]);
-        if ($sucesso) {
-            $id_consulta = $pdo->lastInsertId();
-        }
+
+        $pdo->commit();
+    } catch (PDOException $e) {
+        $pdo->rollBack();
+        error_log("Erro ao agendar consulta: " . $e->getMessage());
+        return false;
     }
 
     if ($sucesso) {
