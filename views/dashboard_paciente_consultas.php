@@ -37,7 +37,7 @@
                         <?php foreach ($consultas_futuras as $consulta): ?>
                             <tr class="consulta-row" data-status="<?php echo strtolower($consulta['status']); ?>">
                                 <td><?php echo formatar_data($consulta['data_calendario']); ?></td>
-                                <td><?php echo $consulta['horario']; ?></td>
+                                <td><?php echo substr($consulta['horario'], 0, 5); ?></td>
                                 <td><?php echo htmlspecialchars($consulta['especializacao']); ?></td>
                                 <td><?php echo htmlspecialchars($consulta['modalidade']); ?></td>
                                 <td>
@@ -52,19 +52,23 @@
                                 </td>
                                 <td>
                                     <div class="acoes-btn">
-                                        <?php if ($consulta['status'] === 'Confirmada' && $consulta['pagamento_status'] === 'Pendente'): ?>
-                                            <button class="btn-pequeno btn-pagar" onclick="abrirPagamento(<?php echo $consulta['id_consulta']; ?>, <?php echo $consulta['valor']; ?>)">
-                                                Pagar
-                                            </button>
-                                        <?php endif; ?>
-                                        <?php if (consulta_pode_ser_cancelada_pelo_paciente($consulta)): ?>
-                                            <form method="POST" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja cancelar esta consulta?');">
-                                                <input type="hidden" name="acao" value="cancelar_consulta">
-                                                <input type="hidden" name="id_consulta" value="<?php echo $consulta['id_consulta']; ?>">
-                                                <button type="submit" class="btn-pequeno btn-cancelar">Cancelar</button>
-                                            </form>
-                                        <?php elseif ($consulta['status'] !== 'Cancelada'): ?>
-                                            <span style="font-size: 12px; color: #9ca3af;">Prazo encerrado</span>
+                                        <?php if ($consulta['status'] === 'Cancelada'): ?>
+                                            <span style="font-size: 12px; color: #ef4444; font-weight: 600;">Cancelada</span>
+                                        <?php else: ?>
+                                            <?php if ($consulta['status'] === 'Confirmada' && $consulta['pagamento_status'] === 'Pendente'): ?>
+                                                <button class="btn-pequeno btn-pagar" onclick="abrirPagamento(<?php echo $consulta['id_consulta']; ?>, <?php echo $consulta['valor']; ?>)">
+                                                    Pagar
+                                                </button>
+                                            <?php endif; ?>
+                                            <?php if (consulta_pode_ser_cancelada_pelo_paciente($consulta)): ?>
+                                                <form method="POST" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja cancelar esta consulta?');">
+                                                    <input type="hidden" name="acao" value="cancelar_consulta">
+                                                    <input type="hidden" name="id_consulta" value="<?php echo $consulta['id_consulta']; ?>">
+                                                    <button type="submit" class="btn-pequeno btn-cancelar">Cancelar</button>
+                                                </form>
+                                            <?php else: ?>
+                                                <span style="font-size: 12px; color: #9ca3af;">Prazo encerrado</span>
+                                            <?php endif; ?>
                                         <?php endif; ?>
                                     </div>
                                 </td>
@@ -96,7 +100,7 @@
                         <?php foreach ($consultas_passadas as $consulta): ?>
                             <tr class="consulta-row" style="opacity: 0.6; background-color: #f9fafb;">
                                 <td><?php echo formatar_data($consulta['data_calendario']); ?></td>
-                                <td><?php echo $consulta['horario']; ?></td>
+                                <td><?php echo substr($consulta['horario'], 0, 5); ?></td>
                                 <td><?php echo htmlspecialchars($consulta['especializacao']); ?></td>
                                 <td><?php echo htmlspecialchars($consulta['modalidade']); ?></td>
                                 <td>
@@ -124,7 +128,7 @@
                 <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
             <p>Você ainda não tem consultas agendadas.</p>
-            <a href="?aba=agendar" class="btn btn-primary">Agendar Consulta</a>
+            <a href="?aba=calendario" class="btn btn-primary">Agendar Consulta</a>
         </div>
     <?php endif; ?>
 </div>

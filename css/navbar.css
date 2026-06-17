@@ -1,0 +1,148 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  /* Início e o fim da barra na horizontal. */
+  inset-inline: 0;
+  padding: 1rem 0;
+  /* Transições suaves quando rolar para baixo.*/
+  transition: background var(--speed) var(--ease),
+              box-shadow var(--speed) var(--ease),
+              padding var(--speed) var(--ease);
+}
+
+/* Ocorre quando rola para baixo */
+.navbar.scrolled {
+  background: rgba(245,242,238,.92);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-sm);
+  padding: .6rem 0;
+}
+
+.navbar-conteudo {
+  display: grid;
+  /* Cria 3 colunas: a da esquerda e a da direita terão tamanhos idênticose a do meio vai se ajustar ao tamanho do texto (auto). Isso garante que fique no centro */
+  grid-template-columns: 1fr auto 1fr; 
+  align-items: center;
+  max-width: 1200px; 
+  margin: 0 auto;      /* Centraliza a barra inteira na tela */
+}
+
+/* Identidade Visual */
+.navbar-logo {
+  display: flex;
+}
+
+.logo-img {
+  width: 300px;
+  height: 100px;
+}
+
+/* Links de Navegação */
+.navbar-links {
+  display: flex;
+  justify-self: center;
+  gap: 5rem;
+}
+
+.navbar-links a {
+  font-size: .875rem;
+  color: var(--grafite);
+  font-weight: 550;
+  position: relative;
+  padding-bottom: 2px;
+}
+
+/* Linha efeito hover */
+.navbar-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 1.5px;
+  background: var(--gradiente-linha);
+  transition: width var(--speed) var(--ease);
+}
+
+.navbar-links a:hover::after,
+.navbar-links a.active::after { 
+  width: 100%;  /* A linha estica e ocupa toda a extensão do texto */
+}
+
+/* Container do Botão de Login */
+.navbar-acao {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  justify-self: end;
+}
+
+/* Customização do Botão de Login */
+.btn-primary {
+  min-width: 200px;
+  padding: .8rem 1rem; 
+  gap: 1rem; 
+  display: inline-flex;
+  align-items: center;      /* Centraliza verticalmente */
+  justify-content: center;  /* Centraliza horizontalmente o conjunto (ícone + texto) */
+  border-radius: 50px;
+  background: var(--gradiente-principal);
+  color: var(--branco);
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--speed) var(--ease),
+              box-shadow var(--speed) var(--ease),
+              background var(--speed) var(--ease),
+              color var(--speed) var(--ease); 
+}
+
+.btn-primary:hover {
+  background: var(--gradiente-fundo);
+  color: var(--grafite);
+}
+
+/* ARRUMAR DAQUI PRA BAIXO (RESPONSIVIDADE) */
+/* Botão Hambúrguer (Celular) */
+.navbar-botao {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px;
+}
+
+.navbar-botao span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--clr-text);
+  border-radius: 99px;
+  transition: transform var(--speed) var(--ease), opacity var(--speed);
+}
+
+.navbar-botao.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.navbar-botao.open span:nth-child(2) { opacity: 0; }
+.navbar-botao.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Menu Desdobrável do Celular */
+.navbar-celular {
+  display: none;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem 0 1rem;
+  border-top: 1px solid var(--clr-lavender);
+  margin-top: .5rem;
+}
+
+.navbar-celular a {
+  font-size: 1rem;
+  color: var(--clr-text);
+}
+
+.navbar-celular.open { 
+  display: flex; 
+}
+
+/* Adaptação para Telas Menores */
+@media (max-width: 768px) {
+  .navbar-links,
+  .navbar-acao { display: none; }
+  .navbar-botao { display: flex; }
+}

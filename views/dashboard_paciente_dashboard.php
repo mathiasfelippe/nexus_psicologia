@@ -9,7 +9,7 @@
             </svg>
         </div>
         <div class="card-content">
-            <h3>Próxima Consulta</h3>
+            <h3>Proxima Consulta</h3>
             <?php
             $proxima = null;
             $data_hoje = date('Y-m-d');
@@ -22,7 +22,7 @@
             if ($proxima):
             ?>
                 <p class="card-valor"><?php echo formatar_data($proxima['data_calendario']); ?></p>
-                <p class="card-desc"><?php echo htmlspecialchars($proxima['especializacao']); ?> às <?php echo $proxima['horario']; ?></p>
+                <p class="card-desc"><?php echo htmlspecialchars($proxima['especializacao']); ?> as <?php echo substr($proxima['horario'], 0, 5); ?></p>
             <?php else: ?>
                 <p class="card-desc">Nenhuma consulta agendada</p>
             <?php endif; ?>
@@ -51,15 +51,15 @@
             </svg>
         </div>
         <div class="card-content">
-            <h3>Notificações</h3>
+            <h3>Notificacoes</h3>
             <p class="card-valor"><?php echo $notificacoes_nao_lidas; ?></p>
-            <p class="card-desc">Não lidas</p>
+            <p class="card-desc">Nao lidas</p>
         </div>
     </div>
 </div>
 
 <div class="secao">
-    <h2>Próximas Consultas</h2>
+    <h2>Proximas Consultas</h2>
     <?php if (count($consultas) > 0): ?>
         <div class="consultas-lista">
             <?php
@@ -101,10 +101,48 @@
                 endforeach;
             else:
             ?>
-                <p class="vazio">Nenhuma consulta próxima agendada.</p>
+                <p class="vazio">Nenhuma consulta proxima agendada.</p>
             <?php endif; ?>
         </div>
     <?php else: ?>
-        <p class="vazio">Você ainda não tem consultas agendadas. <a href="?aba=agendar">Agende uma agora!</a></p>
+        <p class="vazio">Voce ainda nao tem consultas agendadas. <a href="?aba=calendario">Agende pelo calendario!</a></p>
+    <?php endif; ?>
+</div>
+
+<div class="secao" style="margin-top: 24px;">
+    <h2>Historico de Consultas</h2>
+    <?php 
+    $consultas_passadas = array_filter($consultas, function($c) use ($data_hoje) {
+        return $c['data_calendario'] < $data_hoje || $c['status'] === 'Cancelada';
+    });
+    $consultas_passadas = array_slice($consultas_passadas, 0, 5);
+    
+    if (count($consultas_passadas) > 0): 
+    ?>
+        <div class="consultas-lista">
+            <?php foreach ($consultas_passadas as $consulta): ?>
+                <div class="consulta-item" style="opacity: 0.7;">
+                    <div class="consulta-info">
+                        <h4><?php echo htmlspecialchars($consulta['especializacao']); ?></h4>
+                        <p class="consulta-data">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <?php echo formatar_data_hora($consulta['data_calendario'], $consulta['horario']); ?>
+                        </p>
+                    </div>
+                    <div class="consulta-status">
+                        <span class="status-badge status-<?php echo strtolower($consulta['status']); ?>">
+                            <?php echo htmlspecialchars($consulta['status']); ?>
+                        </span>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php else: ?>
+        <p class="vazio">Nenhum historico de consultas.</p>
     <?php endif; ?>
 </div>

@@ -1,0 +1,139 @@
+/* Container principal que envelopa todo o conteúdo de especializações. */
+.specializations {
+  padding-block: var(--section-gap);
+  background: #ffffff;
+}
+
+.specializations-titulo {
+  font-family: var(--font-titulo);
+  /* Responsividade, define o tamanho minimo, o ideal e o máximo da fonte. */
+  font-size: clamp(2rem, 3.5vw, 2.9rem);
+  font-weight: 300;
+  /* Espaçamento da linha */
+  line-height: 1.15;
+  /* Faz com que o texto de baixo não fique colado */
+  margin-bottom: 3rem;
+  color: var(--grafite);
+}
+
+/* ── Carrossel ── */
+.specializations-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1.5rem;
+  /* Habilita o scroll horizontal e esconde o vertical */
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: 100%;
+  padding-inline: 2rem;
+  padding-bottom: 1rem;
+  scroll-behavior: smooth;
+  scroll-padding-inline: 2rem;
+  /* Informa ao usuário que ele pode clicar e arrastar com o mouse */
+  cursor: grab;
+}
+
+/* Classe ativada via JavaScript quando o usuário está ativamente arrastando o carrossel */
+.specializations-grid.dragging {
+  cursor: grabbing;
+  user-select: none; /* Evita que o texto seja selecionado sem querer durante o arrasto */
+}
+
+.specializations-grid .spec-card {
+  /* O flex: 0 0 impede que o card encolha (shrink) ou expanda (grow) distorcendo o layout */
+  flex: 0 0 clamp(320px, 35vw, 420px);
+  min-width: clamp(320px, 35vw, 420px);
+}
+
+/* ── Cards ── */
+.spec-card {
+  background: var(--gradiente-radial);
+  border-radius: 2.2rem;
+  padding: 1.8rem 1.8rem 2.2rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.6);
+  
+  /* Transições suaves para a elevação e sombra no hover */
+  transition:
+    transform var(--speed) var(--ease),
+    box-shadow var(--speed) var(--ease);
+}
+
+.spec-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Botão circular */
+.spec-card-botao {
+  width: 57px;
+  height: 57px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--lavanda);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 1.8rem;
+  left: 1.8rem;
+  z-index: 2;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Seta */
+.spec-card-botao svg {
+  width: 30px;
+  height: 30px;
+}
+
+/* Controla o espaço onde a imagem fica */
+.spec-card-ilustracao {
+  width: 100%;
+  aspect-ratio: 1.1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+/* Controla a imagem dentro do quadro */
+.spec-card-ilustracao img {
+  max-width: 85%;
+  max-height: 85%;
+  object-fit: contain;
+}
+
+.spec-card-nome {
+  font-family: var(--font-titulo);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--grafite);
+  margin-bottom: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.spec-card-descricao {
+  font-size: 0.85rem;
+  font-family: var(--font-body);
+  color: var(--grafite);
+  line-height: 1.5;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .specializations-grid {
+    padding-inline: 1rem;
+  }
+
+  .specializations-grid .spec-card {
+    /* Em telas pequenas, o card ocupa 82% da largura da tela, deixando uma "ponta" do próximo card visível para sugerir o scroll */
+    flex: 0 0 82vw;
+    min-width: 82vw;
+  }
+
+}

@@ -54,7 +54,7 @@ $datas = obter_datas_disponiveis($pdo);
     </form>
 
     <script>
-        let calendarInstance = null;
+        var calendarAgendamento = null;
 
         document.addEventListener('DOMContentLoaded', function() {
             inicializarCalendario();
@@ -65,11 +65,11 @@ $datas = obter_datas_disponiveis($pdo);
             if (!calendarEl) return;
 
             // Destruir calendário anterior se existir
-            if (calendarInstance) {
-                calendarInstance.destroy();
+            if (calendarAgendamento) {
+                calendarAgendamento.destroy();
             }
 
-            calendarInstance = new FullCalendar.Calendar(calendarEl, {
+            calendarAgendamento = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'pt-br',
                 buttonText: {
@@ -88,7 +88,7 @@ $datas = obter_datas_disponiveis($pdo);
                     buscarHorarios(info.dateStr);
                 }
             });
-            calendarInstance.render();
+            calendarAgendamento.render();
         }
 
         function buscarHorarios(dataStr) {
@@ -110,8 +110,13 @@ $datas = obter_datas_disponiveis($pdo);
 
                         document.getElementById('calendar-agendamento').style.display = 'none';
                         document.getElementById('form-agendamento').style.display = 'block';
+
+                        if (data.horarios.length === 0) {
+                            alert('Todos os horários estão ocupados ou bloqueados nesta data. Escolha outra data.');
+                            cancelarSelecao();
+                        }
                     } else {
-                        alert('Esta data não está disponível para agendamento.');
+                        alert('Esta data não está disponível para agendamento. Escolha outra data.');
                     }
                 })
                 .catch(error => {
@@ -133,6 +138,7 @@ $datas = obter_datas_disponiveis($pdo);
             // Reinicializar calendário
             inicializarCalendario();
         }
+
 
     </script>
 

@@ -1,0 +1,192 @@
+.destaque {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding-top: 90px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Mancha suave de fundo (gradiente abstrato) */
+.destaque::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradiente-fundo);
+  pointer-events: none;
+}
+
+
+.destaque-conteudo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 3rem;
+  padding-block: 5rem 4rem;
+}
+
+/* ── Coluna da Esquerda (Texto) ── */
+.texto { 
+  position: relative; 
+  z-index: 1; 
+}
+
+.titulo {
+  font-family: var(--font-titulo);
+  /* clamp(MÍNIMO, IDEAL, MÁXIMO) */
+  font-size: clamp(2.6rem, 5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.12;
+  color: var(--clr-text);
+  margin-bottom: 1.4rem;
+}
+
+.titulo strong {
+  font-style: normal;
+  /* Adiciona o gradiente */
+  background: var(--gradiente-principal);
+  /* Recorta o gradiente no texto */
+  background-clip: text;
+  /* Deixa a cor original da letra invisível para o gradiente de fundo aparecer */ 
+  color: transparent;
+  font-weight: 400;
+}
+
+.linha-gradiente {
+  width: 120px;                  /* Largura da linha */
+  height: 7px;                   /* Espessura da linha */
+  background: var(--gradiente-linha);
+  margin-top: 40px;              /* Espaço entre o texto de cima e a linha */
+  margin-bottom: 40px;           /* Espaço entre a linha e o texto de baixo */
+}
+
+.subtitulo {
+  font-family: var(--font-body);
+  font-size: .95rem;
+  color: var(--clr-muted);
+  line-height: 1.75;
+  max-width: 440px;
+  margin-bottom: 2rem;
+}
+
+/* Customização do Botão de Agendamento */
+.btn-primary {
+  min-width: 200px;
+  padding: .8rem 1rem; 
+  gap: 1rem; 
+  display: inline-flex;
+  align-items: center;      /* Centraliza verticalmente */
+  justify-content: center;  /* Centraliza horizontalmente o conjunto (ícone + texto) */
+  border-radius: 50px;
+  background: var(--gradiente-principal);
+  color: var(--branco);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-primary:hover {
+  background: var(--gradiente-fundo);
+  color: var(--grafite);
+  transition: transform var(--speed) var(--ease),
+              box-shadow var(--speed) var(--ease),
+              background var(--speed) var(--ease),
+              color var(--speed) var(--ease); 
+}
+
+/* Botão saiba mais */
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  margin-left: .5rem;
+  background-color: transparent; /* Fundo transparente */
+  border: 2px solid var(--azul-sereno); 
+  padding: .8rem 1rem;            /* Espaçamento interno (altura e largura) */
+  border-radius: 50px;            /* Cantos arredondados */
+  cursor: pointer;            
+  box-shadow: var(--shadow-lg);
+  
+}
+
+.btn-outline:hover {
+  background: var(--gradiente-fundo);
+  color: var(--grafite);
+}
+
+.selos {
+  margin-top: 2rem;
+  display: flex;
+  gap: 2.5rem; /* Aumentado para dar o respiro correto entre os dois blocos */
+  flex-wrap: wrap;
+}
+
+.selo {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem; /* Espaço entre o círculo do ícone e o texto */
+}
+
+/* Substitui o antigo .selo-ponto */
+.selo-icone {
+  width: 42px; 
+  height: 42px;
+  border-radius: 50%;
+  background-color: #E8E8F2; /* Tom de fundo lavanda/roxo clarinho da imagem */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #7994C4; /* Azul acinzentado do traço dos ícones */
+}
+
+.selo-icone svg {
+  width: 20px;
+  height: 20px;
+}
+
+.selo-texto {
+  font-size: 0.9rem;
+  color: var(--clr-muted, var(--grafite)); 
+  line-height: 1.3; /* Aproxima as duas linhas de texto */
+  text-align: left;
+}
+
+.visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 650px;
+}
+
+.hero-imagem {
+  position: absolute;
+
+  top: 50%;
+  right: -10%;
+
+  transform: translateY(-50%) scale(1.45);
+
+  width: 100%;
+  max-width: 700px;
+
+  object-fit: contain;
+  pointer-events: none;
+
+  z-index: 0; /* impede passar por cima da navbar */
+}
+
+/* ── Responsivo (Telas menores de Celular/Tablet) ── */
+@media (max-width: 900px) {
+  .destaque-conteudo {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 2rem;
+  }
+  .subtitulo { margin-inline: auto; }
+  .botoes,
+  .selos { justify-content: center; }
+  .etiqueta { margin-inline: auto; }
+  
+  .hero-imagem { 
+    width: min(320px, 80%); 
+  }
+}

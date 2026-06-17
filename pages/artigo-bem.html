@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Peso de Dizer "Está Tudo Bem" Quando Não Está: O Mascaramento Emocional | Nexus Health</title>
+    
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    
+    <style>
+        /* ============================================================
+           Ajustes e Integrações do Artigo
+           ============================================================ */
+        
+        :root {
+            --container: 1300px;
+        }
+
+        body {
+            min-height: 100vh;
+        }
+
+        /* Reading Progress Bar */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--gradiente-principal);
+            width: 0%;
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            background: var(--gradiente-radial);
+            position: relative;
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--perola);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .section-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: var(--font-titulo);
+            font-size: clamp(2.5rem, 8vw, 3.8rem);
+            line-height: 1.15;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--grafite);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--grafite);
+            opacity: 0.8;
+            max-width: 630px;
+            margin: 0 auto;
+        }
+
+        /* Layout Grid */
+        .article-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 3rem;
+            padding: 4rem 0;
+        }
+
+        /* Sidebar Navigation */
+        aside {
+            position: sticky;
+            top: 13rem; 
+            height: fit-content;
+        }
+
+        .toc {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--branco);
+            box-shadow: var(--shadow-md);
+        }
+
+        .toc h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--azul-sereno);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .toc ul { list-style: none; }
+        .toc li { margin-bottom: 1rem; }
+        .toc a {
+            text-decoration: none;
+            color: var(--grafite);
+            font-weight: 500;
+            transition: var(--speed) var(--ease);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .toc a:hover, .toc a.active {
+            color: var(--azul-sereno);
+            opacity: 1;
+            transform: translateX(5px);
+        }
+
+        /* Main Content */
+        .content section {
+            margin-bottom: 5rem;
+        }
+
+        .content h2 {
+            font-family: var(--font-titulo);
+            font-size: 2.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--grafite);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .content p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Info Card */
+        .info-card {
+            background: var(--branco);
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            border-left: 6px solid var(--azul-sereno);
+            box-shadow: var(--shadow-md);
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--azul-sereno);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* Symptoms Grid */
+        .symptoms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .symptom-item {
+            background: var(--branco);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: var(--speed) var(--ease);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .symptom-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .symptom-icon {
+            color: var(--azul-sereno);
+            background: var(--areia);
+            padding: 0.75rem;
+            border-radius: var(--radius-sm);
+            display: flex;
+        }
+
+        /* CTA Section */
+        .cta {
+            background: var(--gradiente-principal);
+            padding: 4rem;
+            border-radius: var(--radius-xl);
+            color: var(--branco);
+            text-align: center;
+            margin-top: 4rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .cta h2 {
+            color: var(--branco);
+            font-size: 2.5rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: 1rem 2.5rem;
+            border-radius: var(--radius-xl);
+            background: var(--branco);
+            color: var(--azul-sereno);
+            font-weight: 700;
+            transition: var(--speed) var(--ease);
+            box-shadow: var(--shadow-md);
+            margin-top: 2rem;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Ajustes da Navbar Sticky */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            background-color: var(--branco, #ffffff);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-acao .btn-primary {
+            margin-top: 0;
+            padding: 0.5rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .article-layout { grid-template-columns: 1fr; }
+            aside { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PROGRESS BAR -->
+    <div id="progress-bar"></div>
+
+    <!-- NAVBAR -->
+      <nav class="navbar" id="navbar">
+    <div class="container">
+      <div class="navbar-conteudo">
+
+        <!-- Logo -->
+        <a href="../index.html" class="navbar-logo">
+          <img src="../assets/logo.png" alt="Nexus Logo" class="logo-img" />
+        </a>
+
+        <!-- Navegação -->
+        <ul class="navbar-links" role="list">
+          <li><a href="../index.html#about">Sobre</a></li>
+          <li><a href="../index.html#specializations">Especializações</a></li>
+          <li><a href="../index.html#contact">Contato</a></li>
+          <li><a href="../pages/artigos.html">Artigos</a></li>
+        </ul>
+
+        <!-- Botão login -->
+        <div class="navbar-acao">
+          <a href="../login.php" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+              <polyline points="10 17 15 12 10 7"></polyline>
+              <line x1="15" y1="12" x2="3" y2="12"></line>
+            </svg>
+            Login
+          </a>
+        </div>
+
+        <!-- Menu hambúrguer -->
+        <button class="navbar-botao" id="hamburger" aria-label="Menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <ul class="navbar-celular" id="mobile-menu" role="list">
+        <li><a href="../index.html#about">Sobre</a></li>
+        <li><a href="../index.html#specializations">Especializações</a></li>
+        <li><a href="../index.html#contact">Contato</a></li>
+        <li><a href="../login.php" class="btn btn-primary" style="width:fit-content">Agendar</a></li>
+      </ul>
+    </div>
+  </nav>
+
+    <!-- HERO BAR -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content reveal">
+                <span class="section-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                    Saúde Mental e Autenticidade
+                </span>
+                <h1>O Peso de Dizer "Está Tudo Bem" Quando Não Está</h1>
+                <p>Compreenda o fenômeno do mascaramento emocional, os impactos do silenciamento psicológico e como construir espaços seguros para acolher a sua própria vulnerabilidade.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="article-layout">
+            
+            <!-- SIDEBAR: TABLE OF CONTENTS (TOC) -->
+            <aside>
+                <nav class="toc">
+                    <h3>Navegação</h3>
+                    <ul class="toc-list">
+                        <li><a href="#mascaramento" class="active">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                            O Fenômeno</a>
+                        </li>
+                        <li><a href="#por-que">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                            As Causas</a>
+                        </li>
+                        <li><a href="#consequencias">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                            Os Impactos</a>
+                        </li>
+                        <li><a href="#vulnerabilidade">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            Autenticidade</a>
+                        </li>
+                        <li><a href="#apoio">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+                            Como Mudar</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="content">
+                
+                <section id="mascaramento" class="reveal">
+                    <h2>O Fenômeno do Mascaramento Emocional</h2>
+                    <p>Responder mecanicamente com um "está tudo bem" transformou-se em uma das maiores convenções sociais da modernidade. No entanto, quando essa frase deixa de ser apenas uma saudação formal e passa a agir como um escudo protetor contra o mundo exterior, entramos no terreno do mascaramento emocional. Essa dinâmica consiste na contenção consciente ou inconsciente de sentimentos dolorosos — como tristeza, exaustão, solidão ou frustração — por meio de uma fachada de normalidade ou otimismo forçado.</p>
+                    
+                    <div class="info-card">
+                        <strong>A Exaustão por Trás do Sorriso</strong>
+                        <p>O esforço psíquico necessário para sustentar uma imagem de estabilidade enquanto o interior enfrenta uma tempestade é imenso. Esse processo drena as defesas emocionais da mente, pavimentando o caminho para o esgotamento silencioso.</p>
+                    </div>
+                </section>
+
+                <section id="por-que" class="reveal">
+                    <h2>Por Que Escondemos Nossas Dores?</h2>
+                    <p>A necessidade de mascarar os sentimentos é alimentada por múltiplos fatores socioculturais e crenças nucleares rígidas. Entre as principais motivações por trás do "está tudo bem" automático estão:</p>
+                    <div class="symptoms-grid">
+                        <div class="symptom-item">
+                            <div class="symptom-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                            </div>
+                            <span>Medo de ser um Peso para os Outros</span>
+                        </div>
+                        <div class="symptom-item">
+                            <div class="symptom-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+                            </div>
+                            <span>Cultura da Positividade Tóxica</span>
+                        </div>
+                        <div class="symptom-item">
+                            <div class="symptom-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                            </div>
+                            <span>Associação de Vulnerabilidade à Fraqueza</span>
+                        </div>
+                        <div class="symptom-item">
+                            <div class="symptom-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12" y1="17" y2="17"/></svg>
+                            </div>
+                            <span>Receio de Incompreensão ou Julgamento</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="consequencias" class="reveal">
+                    <h2>Os Impactos do Silenciamento Emocional</h2>
+                    <p>Engolir sentimentos e fingir constância cobra um preço altíssimo do organismo e da mente. A longo prazo, a supressão sistemática gera psicossomatização — convertendo dores psíquicas em sintomas físicos como tensões musculares, enxaquecas crônicas e distúrbios digestivos ou do sono. Além disso, ao reprimir o que sente, o indivíduo constrói uma barreira invisível que impede conexões profundas e verdadeiras com as pessoas ao seu redor, alimentando um profundo sentimento de solidão acompanhada.</p>
+                </section>
+
+                <section id="vulnerabilidade" class="reveal">
+                    <h2>Validar a Vulnerabilidade Como Potência</h2>
+                    <p>Romper esse ciclo exige uma profunda mudança de paradigma: compreender que a vulnerabilidade não é o oposto de força, mas sim a sua base real. Vivenciar e demonstrar sentimentos difíceis de forma honesta exige muito mais coragem do que se esconder atrás de uma máscara inabalável. Quando nos permitimos admitir que não estamos bem, damos o primeiro passo para o autocuidado autêntico e abrimos espaço para que o suporte externo atue genuinamente.</p>
+                </section>
+
+                <section id="apoio" class="reveal">
+                    <h2>Como Construir Relações Mais Autênticas</h2>
+                    <p>Abandonar o automatismo do "está tudo bem" requer prática contínua através de pequenos atos de coragem diários. É fundamental selecionar pessoas de extrema confiança em sua rede de apoio para expressar honestamente as suas flutuações internas. Substituir frases genéricas por declarações sinceras, como "estou passando por dias desafiadores, mas estou lidando com isso", ajuda a redefinir seus limites emocionais com integridade.</p>
+                </section>
+
+                <!-- CALL TO ACTION -->
+                <div class="cta reveal">
+                    <h2>Não há problema nenhum em não estar bem o tempo todo.</h2>
+                    <p>O acompanhamento psicoterapêutico oferece um espaço neutro, ético e livre de julgamentos, ideal para você retirar o peso de suas máscaras cotidianas e aprender a processar as suas demandas internas de forma leve, acolhedora e equilibrada.</p>
+                    <a href="login.php" class="btn-primary">
+                        Agendar Sessão
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </a>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+      <footer class="footer" id="contact">
+    <div class="container">
+      <div class="footer__grade">
+
+        <div class="footer__coluna footer__brand">
+          <div class="footer__logo">
+            <img src="../assets/logo.png" alt="Nexus Psicologia" class="footer__imagem-logo">
+          </div>
+        </div>
+
+        <div class="footer__coluna">
+          <p class="footer__slogan">
+            Psicoterapia com acolhimento,<br>respeito e propósito.
+          </p>
+        </div>
+
+        <div class="footer__coluna">
+          <p class="footer__titulo-coluna">Navegação</p>
+          <ul class="footer__links">
+            <li><a href="../index.html#home">Início</a></li>
+            <li><a href="../index.html#about">Sobre</a></li>
+            <li><a href="../index.html#specializations">Especializações</a></li>
+            <li><a href="../login.php">Agendar</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__coluna">
+          <p class="footer__titulo-coluna">Artigos</p>
+          <ul class="footer__links">
+            <li><a href="../pages/artigo-ansiedade.html">Ansiedade</a></li>
+            <li><a href="../pages/artigo-autoconhecimento.html">Autoconhecimento</a></li>
+            <li><a href="../pages/artigo-relacionamentos.html">Relacionamentos</a></li>
+            <li><a href="../pages/artigos.html">Mais . . .</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__coluna footer__contato-lista">
+          <p class="footer__titulo-coluna">Contato</p>
+          
+          <div class="footer__item-contato">
+            <span class="footer__icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+            </span>
+            <span>(11) 99999-9999</span>
+          </div>
+
+          <div class="footer__item-contato">
+            <span class="footer__icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </span>
+            <span>contato@nexuspsi.com.br</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer__barra-inferior">
+        <p class="footer__texto-direitos">© 2026 Nexus Psicologia. Todos os direitos reservados.</p>
+        <div class="footer__redes-sociais">
+          <a href="#" class="footer__link-rede-social" aria-label="Instagram">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a href="#" class="footer__link-rede-social" aria-label="LinkedIn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+              <rect x="2" y="9" width="4" height="12"/>
+              <circle cx="4" cy="4" r="2"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+    <!-- INTERACTION LOGIC -->
+    <script>
+        // Reading Progress Bar
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+            
+            // Active Link Tracker in TOC
+            const sections = document.querySelectorAll('section[id]');
+            sections.forEach(section => {
+                const sectionHeight = section.offsetHeight;
+                const sectionTop = section.offsetTop - 150;
+                const sectionId = section.getAttribute('id');
+                
+                if (winScroll > sectionTop && winScroll <= sectionTop + sectionHeight) {
+                    document.querySelectorAll('.toc a').forEach(a => a.classList.remove('active'));
+                    const activeLink = document.querySelector('.toc a[href*=' + sectionId + ']');
+                    if(activeLink) activeLink.classList.add('active');
+                }
+            });
+        };
+
+        // Reveal on scroll Observer
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

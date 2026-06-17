@@ -28,19 +28,19 @@ foreach ($consultas as $c) {
 
     $inicio = strtotime($c['data_calendario'] . ' ' . $horario);
     $passada = $inicio && $inicio < $agora;
-    $cor = '#6366f1';
+    $cor = '#80A1D4';
 
     if ($c['status'] === 'Pendente') {
-        $cor = '#f59e0b';
+        $cor = '#e0a85c';
     } elseif ($c['status'] === 'Confirmada') {
-        $cor = '#10b981';
+        $cor = '#75C9C8';
     } elseif ($c['pagamento_status'] === 'Reembolsado') {
-        $cor = '#ef4444';
+        $cor = '#c08080';
     }
 
     $eventos[] = [
         'id' => $c['id_consulta'],
-        'title' => $c['horario'] . 'h - ' . $c['especializacao'],
+        'title' => substr($c['horario'], 0, 5) . 'h - ' . $c['especializacao'],
         'start' => $c['data_calendario'] . 'T' . $horario,
         'end' => date('Y-m-d\TH:i:s', strtotime($c['data_calendario'] . ' ' . $horario . ' +1 hour')),
         'backgroundColor' => $cor,

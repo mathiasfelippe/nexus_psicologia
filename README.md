@@ -29,6 +29,7 @@ Unificamos as ferramentas utilizadas e os conceitos aplicados em cada camada da 
 
 ### **Back-end & Infraestrutura**
 ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white) — Lógica de negócios, processamento de formulários, autenticação de utilizadores e controlo seguro de sessões.
+![SQLite](https://img.shields.io/badge/sqlite-%23003B57.svg?style=for-the-badge&logo=sqlite&logoColor=white) — Banco de dados relacional embutido, sem necessidade de servidor externo.
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white) — Gestão de código e controlo de versão através do GitHub Desktop.
 
 ### **Front-end & Interatividade**
@@ -42,11 +43,43 @@ Unificamos as ferramentas utilizadas e os conceitos aplicados em cada camada da 
 
 ```bash
 NexusPsicologia/
-├── assets/          # Recursos visuais (Logos, ícones e imagens)
-├── includes/        # Componentes PHP reutilizáveis (Conexão BD, componentes de layout)
-├── index.php        # Página inicial e portal de autenticação
-├── agendamento.php  # Módulo principal para marcação de consultas
-├── style.css        # Folhas de estilo globais e regras do dashboard
-├── efeitos.js       # Scripts assíncronos e interações de interface
-└── README.md        # Documentação do projeto
+├── api/                    # Endpoints JSON para requisições AJAX
+│   ├── consultas_paciente.php
+│   ├── consultas_psicologa.php
+│   ├── horarios_disponiveis.php
+│   └── notificacoes.php
+├── assets/                 # Recursos visuais (Logos, ícones e imagens)
+├── components/             # Componentes HTML da landing page
+├── config/                 # Configurações e lógica de negócio
+│   ├── conexao.php         # Conexão PDO com SQLite
+│   ├── funcoes.php         # Funções de negócio (CRUD, notificações, etc.)
+│   ├── gerar_datas.php     # Geração de datas úteis
+│   └── inicializar_datas.php
+├── css/                    # Folhas de estilo
+│   ├── global.css          # Variáveis CSS, reset, tipografia
+│   ├── navbar.css, hero.css, about.css, stats.css
+│   ├── specializations.css, cta.css, footer.css
+│   ├── login.css           # Tela de autenticação
+│   └── dashboards.css      # Dashboard (glassmorphism + dark mode)
+├── js/                     # Scripts JavaScript
+│   ├── main.js             # Landing page
+│   ├── dashboard_paciente.js
+│   └── dashboard_psicologa.js   # Dashboard da psicóloga
+├── pages/                  # Páginas institucionais e artigos
+├── views/                  # Views dos dashboards (incluídas via PHP)
+├── uploads/fotos/          # Fotos de perfil dos usuários
+├── index.html              # Landing page institucional
+├── login.php               # Autenticação (login + cadastro)
+├── logout.php              # Encerrar sessão
+├── dashboard_paciente.php  # Painel do paciente
+├── dashboard_psicologa.php # Painel da psicóloga
+├── estrutura_db.sql        # Script SQL completo (SQLite)
+└── README.md
+```
 
+---
+
+## 🔗 Links Úteis
+
+- **Login:** `/login.php`
+- **Admin (psicóloga):** admin@nexus.com / password

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexus Psicologia</title>
+  <link rel="icon" href="assets/simbologo.png" />
+
+  <!-- ── Estilos ── -->
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/navbar.css" />
+  <link rel="stylesheet" href="css/hero.css" />
+  <link rel="stylesheet" href="css/about.css" />
+  <link rel="stylesheet" href="css/stats.css" />
+  <link rel="stylesheet" href="css/specializations.css" />
+  <link rel="stylesheet" href="css/cta.css" />
+  <link rel="stylesheet" href="css/footer.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       NAVBAR
+  ══════════════════════════════════════════ -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <div class="navbar-conteudo">
+
+        <!-- Logo -->
+        <a href="#" class="navbar-logo">
+          <img src="assets/logo.png" alt="Nexus Logo" class="logo-img" />
+        </a>
+
+        <!-- Navegação -->
+        <ul class="navbar-links" role="list">
+          <li><a href="#about">Sobre</a></li>
+          <li><a href="#specializations">Especializações</a></li>
+          <li><a href="#contact">Contato</a></li>
+          <li><a href="pages/artigos.html">Artigos</a></li>
+        </ul>
+
+        <!-- Botão login -->
+        <div class="navbar-acao">
+          <a href="login.php" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+              <polyline points="10 17 15 12 10 7"></polyline>
+              <line x1="15" y1="12" x2="3" y2="12"></line>
+            </svg>
+            Login
+          </a>
+        </div>
+
+        <!-- Menu hambúrguer -->
+        <button class="navbar-botao" id="hamburger" aria-label="Menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <ul class="navbar-celular" id="mobile-menu" role="list">
+        <li><a href="#about">Sobre</a></li>
+        <li><a href="#specializations">Especializações</a></li>
+        <li><a href="#contact">Contato</a></li>
+        <li><a href="pages/artigos.html">Artigos</a></li>
+        <li><a href="login.php" class="btn btn-primary" style="width:fit-content">Agendar</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ══════════════════════════════════════════
+         HERO
+    ══════════════════════════════════════════ -->
+    <section class="destaque" id="home">
+      <div class="container">
+        <div class="destaque-conteudo">
+
+          <div class="texto">
+
+            <h1 class="titulo reveal" style="transition-delay:.1s">
+              Um espaço seguro<br>
+              <strong> para cuidar da</strong><br>
+              <strong>sua mente.</strong>
+            </h1>
+
+            <div class="linha-gradiente"></div>
+
+            <p class="subtitulo reveal" style="transition-delay:.2s">
+              Psicoterapia com escuta qualificada, acolhimento e acompanhamento
+              personalizado para cada fase da sua vida.
+            </p>
+
+            <div class="botoes reveal" style="transition-delay:.3s">
+              <a href="login.php" class="btn btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                Agendar Sessão
+              </a>
+              <a href="pages/sobre_nexus.html" class="btn btn-outline">
+                Saiba mais
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </a>
+            </div>
+
+           <div class="selos reveal" style="transition-delay:.4s">
+  <div class="selo">
+    <div class="selo-icone">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+      </svg>
+    </div>
+    <span class="selo-texto">Atendimento online<br>e presencial</span>
+  </div>
+
+  <div class="selo">
+    <div class="selo-icone">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        <path d="m9 12 2 2 4-4"></path>
+      </svg>
+    </div>
+    <span class="selo-texto">Ambiente<br>Seguro</span>
+  </div>
+</div>
+          </div>
+
+          <div class="visual reveal" style="transition-delay:.2s">
+            <img src="./assets/destaque.png" alt="" class="hero-imagem">
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         ABOUT
+    ══════════════════════════════════════════ -->
+    <section class="sobre" id="about">
+      <div class="container">
+        <div class="conteudo-sobre">
+
+          <div class="foto-bloco reveal">
+            <img src="assets/juliana_moura.png" alt="Foto da Psicóloga Juliana">
+            <div class="foto-anel"></div>
+            <div class="status-tag">
+              <span class="status-ponto"></span>
+              Disponível para novos pacientes
+            </div>
+          </div>
+
+          <div class="texto-bloco">
+            <p class="section-label reveal">Sobre mim</p>
+
+            <h2 class="sobre-titulo reveal" style="transition-delay:.1s">
+              Prazer, eu sou a<br>
+              psicóloga <strong>Juliana Moura</strong>
+            </h2>
+
+            <p class="sobre-texto reveal" style="transition-delay:.2s">
+              Acredito que cada história é única e merece ser ouvida com respeito,
+              empatia e sem julgamentos. Meu trabalho é caminhar ao seu lado no processo
+              de compreender, ressignificar e transformar.
+            </p>
+
+            <div class="destaques reveal" style="transition-delay:.3s">
+              <div class="item">
+                <div class="item-icone">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="#5bc0be" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                  </svg>
+                </div>
+                <span class="item-titulo">Escuta ativa</span>
+                <span class="item-desc">Acolhimento genuíno e sem julgamentos.</span>
+              </div>
+              <div class="item">
+                <div class="item-icone">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="#5bc0be" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                </div>
+                <span class="item-titulo">Abordagem personalizada</span>
+                <span class="item-desc">Cada processo terapêutico é único.</span>
+              </div>
+              <div class="item item-link">
+                <div class="item-icone">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="#5bc0be" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="6" x2="12" y2="14"/>
+                    <circle cx="12" cy="18" r="0.5" fill="#5bc0be" stroke="#5bc0be"/>
+                  </svg>
+                </div>
+                <a href="pages/sobre_nexus.html" class="btn-saiba-mais">
+                  <span class="link-texto">Saiba mais</span>
+                  <svg class="seta" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         STATS
+    ══════════════════════════════════════════ -->
+    <section class="stats" aria-label="Números">
+  <div class="container">
+    <div class="stats_inner">
+
+      <div class="stats_item reveal">
+        <div class="stats_icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="stats_text">
+          <div class="stats_value" data-count="200">+200</div>
+          <div class="stats_label">pessoas atendidas</div>
+        </div>
+      </div>
+
+      <div class="stats_item reveal" style="transition-delay:.1s">
+        <div class="stats_icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></svg>
+        </div>
+        <div class="stats_text">
+          <div class="stats_value">98%</div>
+          <div class="stats_label">de satisfação</div>
+        </div>
+      </div>
+
+      <div class="stats_item reveal" style="transition-delay:.2s">
+        <div class="stats_icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="12" x="3" y="4" rx="2" ry="2"/><line x1="2" x2="22" y1="20" y2="20"/><line x1="5" x2="19" y1="16" y2="16"/></svg>
+        </div>
+        <div class="stats_text">
+          <div class="stats_value">Modalidade</div>
+          <div class="stats_label">flexível</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+ <!-- ══════════════════════════════════════════
+         SPECIALIZATIONS
+    ══════════════════════════════════════════ -->
+
+<section class="specializations" id="specializations">
+  <div class="container">
+
+    <div class="specializations-cabecalho">
+      <p class="section-label reveal">ÁREAS DE ATUAÇÃO</p>
+      <h2 class="specializations-titulo reveal" style="transition-delay:.1s">Especializações</h2>
+    </div>
+
+    <div class="specializations-wrapper">
+      <div class="specializations-grid" id="spec-grid">
+        
+        <div class="spec-card reveal" style="transition-delay:.1s">
+          
+          <a href="./pages/clinica.html" class="spec-card-botao" aria-label="Ver mais">
+            <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L5 5L1 9" stroke="#484848" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+
+          <div class="spec-card-ilustracao">
+            <img src="assets/clinica.png" alt="Ilustração Clínica">
+          </div>
+          <h3 class="spec-card-nome">Clínica</h3>
+          <p class="spec-card-descricao">Promove equilíbrio emocional e bem-estar psicológico.</p>
+        </div>
+
+        <div class="spec-card reveal" style="transition-delay:.2s">
+          
+          <a href="pages/infantil.html" class="spec-card-botao" aria-label="Ver mais">
+            <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L5 5L1 9" stroke="#484848" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+
+          <div class="spec-card-ilustracao">
+            <img src="assets/infantil.png" alt="Ilustração Infantil">
+          </div>
+          <h3 class="spec-card-nome">Infantil</h3>
+          <p class="spec-card-descricao">Auxilia no desenvolvimento emocional e social na infância.</p>
+        </div>
+
+        <div class="spec-card reveal" style="transition-delay:.3s">
+          
+          <a href="pages/casal.html" class="spec-card-botao" aria-label="Ver mais">
+            <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L5 5L1 9" stroke="#484848" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+
+          <div class="spec-card-ilustracao">
+            <img src="assets/casal.png" alt="Ilustração Terapia de Casal">
+          </div>
+          <h3 class="spec-card-nome">Terapia de Casal</h3>
+          <p class="spec-card-descricao">Fortalece a comunicação e os vínculos afetivos.</p>
+        </div>
+
+        <div class="spec-card reveal" style="transition-delay:.4s">
+          
+          <a href="pages/neuropsicologia.html" class="spec-card-botao" aria-label="Ver mais">
+            <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L5 5L1 9" stroke="#484848" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+
+          <div class="spec-card-ilustracao">
+            <img src="assets/neuro.png" alt="Ilustração Neuropsicologia">
+          </div>
+          <h3 class="spec-card-nome">Neuropsicologia</h3>
+          <p class="spec-card-descricao">Compreende a relação entre o cérebro e o comportamento.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <!-- ══════════════════════════════════════════
+         CTA
+    ══════════════════════════════════════════ -->
+    <section class="cta-section" id="schedule">
+  <div class="container">
+    <div class="cta-box">
+
+      <div class="cta-text reveal">
+        <h2 class="cta-title">
+          Sua saúde mental<br>merece atenção.<br>
+          <em>Vamos começar?</em>
+        </h2>
+      </div>
+
+      <div class="cta-action reveal" style="transition-delay:.15s">
+        <p class="cta-description">
+          Agende sua sessão e dê o primeiro passo para uma vida com mais leveza e propósito.
+        </p>
+        <a href="#contact" class="btn btn-primary" style="font-size:.9rem; padding:.75rem 1.75rem">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          Agendar sessão
+        </a>
+      </div>
+
+    <div class="cta-photo" aria-hidden="true">
+        <img src="./assets/final_nexus.png" alt="" class="cta-img">
+      </div>
+      
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+
+    <div class="footer__mapa-header">
+      <span class="footer__mapa-badge">Localização</span>
+    </div>
+
+    <div class="footer__mapa-container">
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14628.536528734963!2d-46.66236520268551!3d-23.563630628280387!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c8da0aa315%3A0xd59f9431f2c9776a!2sAv.%20Paulista%20-%20S%C3%A3o%20Paulo%2C%20SP!5e0!3m2!1spt-BR!2sbr!4v1710000000000!5m2!1spt-BR!2sbr" 
+        width="100%" 
+        height="350" 
+        style="border:0;" 
+        allowfullscreen="" 
+        loading="lazy" 
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+
+    <div class="footer__grade">
+
+      <div class="footer__coluna footer__brand">
+        <div class="footer__logo">
+          <img src="./assets/logo.png" alt="Nexus Psicologia" class="footer__imagem-logo">
+        </div>
+      </div>
+
+      <div class="footer__coluna">
+        <p class="footer__slogan">
+          Psicoterapia com acolhimento,<br>respeito e propósito.
+        </p>
+      </div>
+
+      <div class="footer__coluna">
+        <p class="footer__titulo-coluna">Navegação</p>
+        <ul class="footer__links">
+          <li><a href="#home">Início</a></li>
+          <li><a href="#about">Sobre</a></li>
+          <li><a href="#specializations">Especializações</a></li>
+          <li><a href="#schedule">Agendar</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__coluna">
+        <p class="footer__titulo-coluna">Artigos</p>
+        <ul class="footer__links">
+          <li><a href="pages/artigo-ansiedade.html">Ansiedade</a></li>
+          <li><a href="pages/artigo-autoconhecimento.html">Autoconhecimento</a></li>
+          <li><a href="pages/artigo-relacionamentos.html">Relacionamentos</a></li>
+          <li><a href="pages/artigos.html">Mais . . .</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__coluna footer__contato-lista" id="contact">
+        <p class="footer__titulo-coluna">Contato</p>
+        
+        <div class="footer__item-contato">
+          <span class="footer__icone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </span>
+          <span>(11) 99999-9999</span>
+        </div>
+
+        <div class="footer__item-contato">
+          <span class="footer__icone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </span>
+          <span>contato@nexuspsi.com.br</span>
+        </div>
+
+        <div class="footer__item-contato">
+          <span class="footer__icone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </span>
+          <span>São Paulo - SP</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer__barra-inferior">
+      <p class="footer__texto-direitos">© 2026 Nexus Psicologia. Todos os direitos reservados.</p>
+      <div class="footer__redes-sociais">
+        <a href="#" class="footer__link-rede-social" aria-label="Instagram">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="#" class="footer__link-rede-social" aria-label="LinkedIn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+            <rect x="2" y="9" width="4" height="12"/>
+            <circle cx="4" cy="4" r="2"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</footer>
+  
+  <!-- ── Scripts ── -->
+  <script src="js/main.js"></script>
+
+</body>
+</html>

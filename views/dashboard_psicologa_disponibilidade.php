@@ -134,4 +134,15 @@ foreach ($todas_datas as $data) {
 .btn-marcar-disponivel:hover {
     background-color: #45a049;
 }
+
+body.dark-mode .mes-grupo h4 {
+    color: var(--branco);
+    border-bottom-color: rgba(255,255,255,.1);
+}
+body.dark-mode .btn-marcar-disponivel {
+    background-color: var(--verde-agua);
+}
+body.dark-mode .btn-marcar-disponivel:hover {
+    background-color: #5da8a7;
+}
 </style>

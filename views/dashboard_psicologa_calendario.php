@@ -2,24 +2,42 @@
 $consultas = obter_todas_consultas($pdo);
 $eventos = [];
 
-// Converter consultas para formato do FullCalendar
+// Converter consultas para formato do FullCalendar — mesma lógica de cores do Paciente
 foreach ($consultas as $consulta) {
-    $cor = '#667eea'; // Padrão
-    if ($consulta['status'] === 'Confirmada') {
-        $cor = '#4caf50'; // Verde
-    } elseif ($consulta['status'] === 'Cancelada') {
-        $cor = '#ff6b6b'; // Vermelho
-    } elseif ($consulta['status'] === 'Pendente') {
-        $cor = '#ffc107'; // Amarelo
+    if ($consulta['status'] === 'Cancelada') {
+        continue;
+    }
+
+    $horario = $consulta['horario'];
+    if (strlen($horario) === 5) {
+        $horario .= ':00';
+    } elseif (strlen($horario) === 4) {
+        $horario = '0' . $horario . ':00';
+    }
+
+    $inicio = strtotime($consulta['data_calendario'] . ' ' . $horario);
+    $passada = $inicio && $inicio < time();
+
+    $cor = '#6366f1';
+    if ($consulta['status'] === 'Pendente') {
+        $cor = '#f59e0b';
+    } elseif ($consulta['status'] === 'Confirmada') {
+        $cor = '#10b981';
     }
 
     $eventos[] = [
         'id' => 'consulta_' . $consulta['id_consulta'],
-        'title' => $consulta['paciente_nome'] . ' - ' . $consulta['especializacao'],
-        'start' => $consulta['data_calendario'] . 'T' . $consulta['horario'],
-        'end' => date('Y-m-d\TH:i', strtotime($consulta['data_calendario'] . ' ' . $consulta['horario'] . ' +1 hour')),
+        'title' => substr($consulta['horario'], 0, 5) . 'h - ' . $consulta['paciente_nome'] . ' (' . $consulta['especializacao'] . ')',
+        'start' => $consulta['data_calendario'] . 'T' . $horario,
+        'end' => date('Y-m-d\TH:i', strtotime($consulta['data_calendario'] . ' ' . $horario . ' +1 hour')),
         'backgroundColor' => $cor,
-        'borderColor' => $cor,
+        'borderColor' => $passada ? '#6b7280' : $cor,
+        'textColor' => '#ffffff',
+        'classNames' => [
+            'consulta-calendario',
+            $passada ? 'consulta-passada-evento' : 'consulta-futura-evento',
+            'consulta-status-' . strtolower($consulta['status'])
+        ],
         'extendedProps' => [
             'paciente' => $consulta['paciente_nome'],
             'email' => $consulta['paciente_email'],
@@ -29,7 +47,8 @@ foreach ($consultas as $consulta) {
             'status' => $consulta['status'],
             'pagamento' => $consulta['pagamento_status'],
             'valor' => $consulta['valor'],
-            'id_consulta' => $consulta['id_consulta']
+            'id_consulta' => $consulta['id_consulta'],
+            'passada' => $passada
         ]
     ];
 }
@@ -37,428 +56,289 @@ foreach ($consultas as $consulta) {
 $eventos_json = json_encode($eventos);
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendário - Nexus Psicologia</title>
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.js'></script>
-    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.css' rel='stylesheet' />
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fa;
-            color: #333;
-        }
-
-        .calendario-container {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            margin: 20px;
-        }
-
-        .calendario-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .calendario-header h2 {
-            font-size: 24px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .calendario-legend {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-        }
-
-        .legend-color {
-            width: 16px;
-            height: 16px;
-            border-radius: 4px;
-        }
-
-        /* FullCalendar Customization */
-        .fc {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .fc .fc-button-primary {
-            background-color: #667eea;
-            border-color: #667eea;
-        }
-
-        .fc .fc-button-primary:hover {
-            background-color: #5568d3;
-        }
-
-        .fc .fc-button-primary.fc-button-active {
-            background-color: #667eea;
-            border-color: #667eea;
-        }
-
-        .fc .fc-col-header-cell {
-            background-color: #f5f7fa;
-            color: #333;
-            font-weight: 600;
-            border-color: #e0e0e0;
-        }
-
-        .fc .fc-daygrid-day.fc-day-other {
-            background-color: #fafafa;
-        }
-
-        .fc .fc-daygrid-day:hover {
-            background-color: #f9f9f9;
-        }
-
-        .fc .fc-event {
-            cursor: pointer;
-            border: none;
-        }
-
-        .fc .fc-event-title {
-            font-weight: 600;
-            font-size: 12px;
-            padding: 4px;
-        }
-
-        .fc-daygrid-event-frame {
-            padding: 2px;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-conteudo {
-            background-color: white;
-            border-radius: 12px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .modal-header h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .modal-fechar {
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: #999;
-            cursor: pointer;
-        }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        .detalhes-consulta {
-            display: grid;
-            gap: 16px;
-        }
-
-        .detalhe-item {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .detalhe-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #999;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-        }
-
-        .detalhe-valor {
-            font-size: 14px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            width: fit-content;
-        }
-
-        .status-confirmada {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .status-pendente {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-
-        .status-cancelada {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .modal-acoes {
-            display: flex;
-            gap: 8px;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 10px 16px;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background-color: #667eea;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #5568d3;
-        }
-
-        .btn-secondary {
-            background-color: #f0f0f0;
-            color: #333;
-        }
-
-        .btn-secondary:hover {
-            background-color: #e0e0e0;
-        }
-
-        @media (max-width: 768px) {
-            .calendario-container {
-                margin: 10px;
-                padding: 16px;
-            }
-
-            .calendario-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 16px;
-            }
-
-            .calendario-legend {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="calendario-container">
-        <div class="calendario-header">
+<div class="calendario-secao calendario-psicologa-secao">
+    <div class="calendario-header calendario-header-com-legenda">
+        <div>
             <h2>Calendário de Consultas</h2>
-            <div class="calendario-legend">
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #ffc107;"></div>
-                    <span>Pendente</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #4caf50;"></div>
-                    <span>Confirmada</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #ff6b6b;"></div>
-                    <span>Cancelada</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #9ca3af;"></div>
-                    <span>Passada</span>
-                </div>
-            </div>
+            <p class="calendario-descricao">Visualize todas as consultas confirmadas, pendentes e passadas.</p>
         </div>
-
-        <div id="calendar"></div>
-    </div>
-
-    <!-- Modal de Detalhes -->
-    <div id="modalDetalhes" class="modal">
-        <div class="modal-conteudo">
-            <div class="modal-header">
-                <h2>Detalhes da Consulta</h2>
-                <button class="modal-fechar" onclick="fecharModal()">&times;</button>
+        <div class="calendario-legenda-inline">
+            <div class="legenda-item">
+                <span class="legenda-cor" style="background-color: #10b981;"></span>
+                <span>Confirmada</span>
             </div>
-            <div class="modal-body">
-                <div class="detalhes-consulta" id="detalhesConteudo"></div>
-                <div class="modal-acoes" id="acoesConteudo"></div>
+            <div class="legenda-item">
+                <span class="legenda-cor" style="background-color: #f59e0b;"></span>
+                <span>Pendente</span>
+            </div>
+            <div class="legenda-item">
+                <span class="legenda-cor" style="background-color: #6b7280;"></span>
+                <span>Passada</span>
             </div>
         </div>
     </div>
+    <div id="calendar-psicologa"></div>
+</div>
 
-    <script>
-        const eventos = <?php echo $eventos_json; ?>;
+<!-- Modal de Detalhes da Consulta -->
+<div id="modalDetalhesPsicologa" class="modal">
+    <div class="modal-conteudo">
+        <div class="modal-header">
+            <h2>Detalhes da Consulta</h2>
+            <button class="modal-fechar" onclick="fecharModalDetalhesPsicologa()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="detalhes-consulta" id="detalhesConteudoPsicologa"></div>
+            <div class="modal-acoes" id="acoesConteudoPsicologa"></div>
+        </div>
+    </div>
+</div>
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const calendarEl = document.getElementById('calendar');
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
+<script>
+(function() {
+    const eventosPsicologa = <?php echo $eventos_json; ?>;
+
+    function inicializarCalendarioPsicologaView() {
+        const calendarEl = document.getElementById('calendar-psicologa');
+        if (!calendarEl || typeof FullCalendar === 'undefined') return;
+        if (calendarEl.dataset.inicializado === '1') return;
+        calendarEl.dataset.inicializado = '1';
+
+        const cal = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
             locale: 'pt-br',
-            locales: ['pt-br'],
             buttonText: {
                 today: 'Hoje',
                 month: 'Mês',
                 week: 'Semana',
                 day: 'Dia'
             },
-            events: eventos,
-                eventDidMount: function(info) {
-                    if (info.event.extendedProps.passada) {
-                        info.el.style.opacity = '0.6';
-                        info.el.style.textDecoration = 'line-through';
-                    }
-                },
-                eventClick: function(info) {
-                    mostrarDetalhes(info.event);
-                },
-                datesSet: function(info) {
-                    // Atualizar eventos quando mudar de período
-                }
-            });
-            calendar.render();
+            height: 'auto',
+            contentHeight: 'auto',
+            expandRows: true,
+            displayEventTime: false,
+            events: eventosPsicologa,
+            eventDidMount: function(info) {
+                const props = info.event.extendedProps;
+                info.el.title = (props.paciente || '') + ' | ' + (props.especializacao || '') + ' | ' + (props.status || '');
+            },
+            eventClick: function(info) {
+                mostrarDetalhesPsicologa(info.event);
+            }
         });
 
-        function mostrarDetalhes(event) {
-            const props = event.extendedProps;
-            const detalhesHTML = `
-                <div class="detalhe-item">
-                    <span class="detalhe-label">Paciente</span>
-                    <span class="detalhe-valor">${props.paciente}</span>
-                </div>
-                <div class="detalhe-item">
-                    <span class="detalhe-label">Email</span>
-                    <span class="detalhe-valor">${props.email}</span>
-                </div>
-                <div class="detalhe-item">
-                    <span class="detalhe-label">Telefone</span>
-                    <span class="detalhe-valor">${props.telefone || 'Não informado'}</span>
-                </div>
-                <div class="detalhe-item">
-                    <span class="detalhe-label">Especialização</span>
-                    <span class="detalhe-valor">${props.especializacao}</span>
-                </div>
-                <div class="detalhe-item">
-                    <span class="detalhe-label">Modalidade</span>
-                    <span class="detalhe-valor">${props.modalidade}</span>
-                </div>
-                <div class="detalhe-item">
-                    <span class="detalhe-label">Valor</span>
-                    <span class="detalhe-valor">R$ ${parseFloat(props.valor).toFixed(2).replace('.', ',')}</span>
-                </div>
-                <div class="detalhe-item">
-                    <span class="detalhe-label">Status</span>
-                    <span class="status-badge status-${props.status.toLowerCase()}">${props.status}</span>
-                </div>
-                <div class="detalhe-item">
-                    <span class="detalhe-label">Pagamento</span>
-                    <span class="detalhe-valor">${props.pagamento}</span>
-                </div>
+        cal.render();
+        setTimeout(function() { cal.render(); cal.updateSize(); }, 150);
+    }
+
+    function mostrarDetalhesPsicologa(event) {
+        const props = event.extendedProps;
+        const data = event.start ? event.start.toLocaleDateString('pt-BR') : '';
+        const hora = event.start ? event.start.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
+        const valor = Number(props.valor || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        const statusClass = 'status-' + (props.status || '').toLowerCase();
+
+        const detalhesHTML = `
+            <div class="detalhe-item">
+                <span class="detalhe-label">Paciente</span>
+                <span class="detalhe-valor">${props.paciente || 'Não informado'}</span>
+            </div>
+            <div class="detalhe-item">
+                <span class="detalhe-label">Email</span>
+                <span class="detalhe-valor">${props.email || 'Não informado'}</span>
+            </div>
+            <div class="detalhe-item">
+                <span class="detalhe-label">Telefone</span>
+                <span class="detalhe-valor">${props.telefone || 'Não informado'}</span>
+            </div>
+            <div class="detalhe-item">
+                <span class="detalhe-label">Especialização</span>
+                <span class="detalhe-valor">${props.especializacao || 'Não informada'}</span>
+            </div>
+            <div class="detalhe-item">
+                <span class="detalhe-label">Modalidade</span>
+                <span class="detalhe-valor">${props.modalidade || 'Não informada'}</span>
+            </div>
+            <div class="detalhe-item">
+                <span class="detalhe-label">Data / Hora</span>
+                <span class="detalhe-valor">${data} ${hora}</span>
+            </div>
+            <div class="detalhe-item">
+                <span class="detalhe-label">Valor</span>
+                <span class="detalhe-valor">R$ ${valor}</span>
+            </div>
+            <div class="detalhe-item">
+                <span class="detalhe-label">Status</span>
+                <span class="status-badge ${statusClass}">${props.status || ''}</span>
+            </div>
+            <div class="detalhe-item">
+                <span class="detalhe-label">Pagamento</span>
+                <span class="detalhe-valor">${props.pagamento || 'Não informado'}</span>
+            </div>
+        `;
+
+        let acoesHTML = '';
+        if (props.status === 'Pendente') {
+            acoesHTML = `
+                <form method="POST" style="flex: 1;">
+                    <input type="hidden" name="acao" value="confirmar_consulta">
+                    <input type="hidden" name="id_consulta" value="${props.id_consulta}">
+                    <button type="submit" class="btn btn-confirmar btn-modal-acao"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Confirmar</button>
+                </form>
+                <button type="button" class="btn btn-cancelar btn-modal-acao" onclick="abrirModalCancelarCalendario(${props.id_consulta}); fecharModalDetalhesPsicologa();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg> Cancelar</button>
             `;
-
-            let acoesHTML = '';
-            if (props.status === 'Pendente') {
-                acoesHTML = `
-                    <form method="POST" style="flex: 1;">
-                        <input type="hidden" name="acao" value="confirmar_consulta">
-                        <input type="hidden" name="id_consulta" value="${props.id_consulta}">
-                        <button type="submit" class="btn btn-primary">Confirmar</button>
-                    </form>
-                    <form method="POST" style="flex: 1;">
-                        <input type="hidden" name="acao" value="cancelar_consulta">
-                        <input type="hidden" name="id_consulta" value="${props.id_consulta}">
-                        <button type="submit" class="btn btn-secondary">Cancelar</button>
-                    </form>
-                `;
-            } else if (props.status !== 'Cancelada') {
-                acoesHTML = `
-                    <form method="POST" style="flex: 1;">
-                        <input type="hidden" name="acao" value="cancelar_consulta">
-                        <input type="hidden" name="id_consulta" value="${props.id_consulta}">
-                        <button type="submit" class="btn btn-secondary">Cancelar Consulta</button>
-                    </form>
-                `;
-            }
-            acoesHTML += `<button type="button" class="btn btn-secondary" onclick="fecharModal()" style="flex: 1;">Fechar</button>`;
-
-            document.getElementById('detalhesConteudo').innerHTML = detalhesHTML;
-            document.getElementById('acoesConteudo').innerHTML = acoesHTML;
-            document.getElementById('modalDetalhes').classList.add('show');
+        } else if (props.status !== 'Cancelada' && !props.passada) {
+            acoesHTML = `
+                <button type="button" class="btn btn-cancelar btn-modal-acao" onclick="abrirModalCancelarCalendario(${props.id_consulta}); fecharModalDetalhesPsicologa();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg> Cancelar Consulta</button>
+            `;
         }
+        acoesHTML += `<button type="button" class="btn btn-secondary btn-modal-fechar" onclick="fecharModalDetalhesPsicologa()">Fechar</button>`;
 
-        function fecharModal() {
-            document.getElementById('modalDetalhes').classList.remove('show');
-        }
+        document.getElementById('detalhesConteudoPsicologa').innerHTML = detalhesHTML;
+        document.getElementById('acoesConteudoPsicologa').innerHTML = acoesHTML;
+        document.getElementById('modalDetalhesPsicologa').classList.add('show');
+    }
 
-        window.onclick = function(event) {
-            const modal = document.getElementById('modalDetalhes');
-            if (event.target === modal) {
-                modal.classList.remove('show');
-            }
-        }
-    </script>
-</body>
-</html>
+    window.fecharModalDetalhesPsicologa = function() {
+        document.getElementById('modalDetalhesPsicologa').classList.remove('show');
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', inicializarCalendarioPsicologaView);
+    } else {
+        inicializarCalendarioPsicologaView();
+    }
+})();
+</script>
+
+<style>
+/* Estilos do modal de detalhes */
+.detalhes-consulta {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+.detalhe-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.detalhe-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detalhe-valor {
+    font-size: 14px;
+    color: var(--neutral-900);
+    font-weight: 500;
+}
+
+.detalhe-item .status-badge {
+    align-self: flex-start;
+}
+
+/* Botões de ação no modal */
+.btn-modal-acao,
+.btn-modal-fechar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 22px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    line-height: 1;
+    min-height: 40px;
+}
+.btn-modal-acao {
+    border: none;
+}
+.btn-modal-acao svg,
+.btn-modal-fechar svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+.btn-modal-fechar {
+    border: 1px solid var(--neutral-200);
+    background: white;
+    color: var(--neutral-600);
+}
+.btn-modal-fechar:hover {
+    background: var(--neutral-100);
+    color: var(--neutral-900);
+    border-color: var(--neutral-300);
+}
+.modal-acoes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--neutral-200);
+}
+.modal-acoes form {
+    display: contents;
+}
+
+/* Calendário da psicóloga */
+#calendar-psicologa {
+    --fc-border-color: var(--neutral-200);
+    --fc-button-bg-color: var(--primary);
+    --fc-button-border-color: var(--primary);
+    --fc-button-hover-bg-color: var(--primary-dark);
+    --fc-button-active-bg-color: var(--primary-dark);
+    --fc-today-bg-color: rgba(128, 161, 212, 0.1);
+    --fc-event-bg-color: var(--primary);
+    --fc-event-border-color: var(--primary);
+    width: 100%;
+    min-height: 560px;
+    margin-top: var(--spacing-xl);
+}
+
+body.dark-mode .detalhe-label {
+    color: rgba(255,255,255,.4);
+}
+body.dark-mode .detalhe-valor {
+    color: var(--branco);
+}
+body.dark-mode .btn-modal-fechar {
+    background: rgba(255,255,255,.08);
+    border-color: rgba(255,255,255,.12);
+    color: var(--branco);
+}
+body.dark-mode .btn-modal-fechar:hover {
+    background: rgba(255,255,255,.14);
+    color: var(--branco);
+    border-color: var(--azul-sereno);
+}
+body.dark-mode .modal-acoes {
+    border-top-color: rgba(255,255,255,.08);
+}
+body.dark-mode #calendar-psicologa {
+    --fc-border-color: rgba(255,255,255,.1);
+    --fc-button-bg-color: rgba(255,255,255,.08);
+    --fc-button-border-color: rgba(255,255,255,.12);
+    --fc-button-hover-bg-color: rgba(255,255,255,.14);
+    --fc-button-active-bg-color: rgba(128,161,212,.3);
+    --fc-today-bg-color: rgba(128,161,212,.08);
+    --fc-event-bg-color: var(--azul-sereno);
+    --fc-event-border-color: var(--azul-sereno);
+}
+</style>

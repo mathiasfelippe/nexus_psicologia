@@ -1,0 +1,485 @@
+/* ============================================================
+   global.css — CSS variables, reset, base typography
+   ============================================================ */
+/* Import Google Fonts = Lora e Comfortaa */
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+
+:root {
+  /* ── Paleta de cores ── */
+  --areia:            #F7F4EA; /* Cor 1 (Fundo claro/suave) */
+  --perola:           #DED9E2; /* Cor 2 (Tom neutro) */
+  --lavanda:          #C0B9DD; /* Cor 3 (Roxo suave) */
+  --azul-sereno:      #80A1D4; /* Cor 4 (Azul calmo) */
+  --verde-agua:       #75C9C8; /* Cor 5 (Destaque/Acento) */
+
+  /* ── Cores de suporte ── */
+  --branco:           #FFFFFF;
+  --grafite:          #484848; /* Seu substituto do preto (ótimo para leitura!) */
+
+  /* ── Gradientes ── */
+  --gradiente-principal: linear-gradient(135deg, var(--azul-sereno) 0%, var(--verde-agua) 100%);
+  --gradiente-fundo: linear-gradient(160deg, var(--areia) 0%, var(--perola) 50%, var(--lavanda) 100%);
+  --gradiente-linha: linear-gradient(90deg, var(--azul-sereno) 0%, var(--perola) 100%);
+  --gradiente-radial: radial-gradient(circle at top right, var(--lavanda) 0%, var(--areia) 70%);
+
+  /* Tipografia */
+  --font-titulo: 'Lora', sans-serif ;
+  --font-body: 'Comfortaa', serif;
+
+  /* Espaçamento entre seções */
+  --section-gap: 6rem;
+  --container:   1200px;
+
+  /* Arredondamento - pequeno, medio, largo,extra largo */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 28px;
+  --radius-xl: 48px;
+
+  /* Sombras - pequeno, medio , largo */
+  --shadow-sm: 0 2px 12px rgba(123,111,191,.10);
+  --shadow-md: 0 8px 32px rgba(123,111,191,.15);
+  --shadow-lg: 0 16px 56px rgba(123,111,191,.18);
+
+  /* Transições */
+  --ease: cubic-bezier(.4,0,.2,1);
+  --speed: 0.3s;
+}
+
+/* ── Reset ── */
+/* limpa a bagunça e as regras invisíveis que os navegadores vêm de fábrica - ex: site lindo no chrome, no safari vira feio */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--gradiente-fundo);
+  color: var(--grafite);
+  line-height: 1.6;
+  /* Esconde qualquer barra de rolagem horizontal. */
+  overflow-x: hidden;
+}
+
+img {
+  display: block; 
+  max-width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul, ol {
+  list-style: none; 
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font: inherit;
+}
+
+/* ── Container ── */
+/* Segura o conteúdo do site */
+.container {
+  width: min(var(--container), 100% - 2.5rem);
+  margin-inline: auto;
+}
+
+/* Etiquetas acima dos títulos principais de cada seção */
+.section-label {
+  font-family: var(--font-body);
+  font-size: .7rem;
+  font-weight: 500;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--azul-sereno);
+  margin-bottom: .75rem;
+}
+
+/* -- Botões -- */
+btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center; /* Adicionado aqui para centralizar todos os botões por padrão */
+  gap: .5rem;
+  padding: .65rem 1.4rem;
+  border-radius: var(--radius-xl);
+  font-size: .85rem;
+  font-weight: 500;
+}
+
+/* Estilo padrão do Botão Principal do sistema */
+.btn-primary {
+  background: var(--clr-primary);
+  color: var(--clr-white);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Fade-in animation (com JS IntersectionObserver) ── */
+/* o CSS prepara o visual do efeito e o JS avisa o momento exato em que o usuário chegou naquela parte do site para ativar a animação. */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================
+   ARTIGO / ESPECIALIZAÇÃO — Layout de página de conteúdo
+   ============================================================ */
+
+/* Barra de progresso de leitura no topo da página */
+#progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: var(--gradiente-principal);
+  width: 0%;
+  z-index: 1000;
+  transition: width 0.1s ease;
+}
+
+/* Hero da página de artigo/especialização — altura reduzida, gradiente radial */
+.artigo-hero {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  background: var(--gradiente-radial);
+  position: relative;
+  padding: 4rem 0;
+  border-bottom: 1px solid var(--perola);
+}
+
+.artigo-hero .container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.artigo-hero .section-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.artigo-hero h1 {
+  font-family: var(--font-titulo);
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  color: var(--grafite);
+}
+
+.artigo-hero p {
+  font-size: 1.25rem;
+  color: var(--grafite);
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Grid principal: sidebar (TOC) + conteúdo */
+.artigo-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 3rem;
+  padding: 4rem 0;
+}
+
+/* Sidebar fixa com navegação (Table of Contents) */
+.artigo-sidebar {
+  position: sticky;
+  top: 13rem;
+  height: fit-content;
+}
+
+.toc {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--branco);
+  box-shadow: var(--shadow-md);
+}
+
+.toc h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--azul-sereno);
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.toc ul {
+  list-style: none;
+}
+
+.toc li {
+  margin-bottom: 1rem;
+}
+
+.toc a {
+  text-decoration: none;
+  color: var(--grafite);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  opacity: 0.7;
+  transition: var(--speed) var(--ease);
+}
+
+.toc a:hover,
+.toc a.active {
+  color: var(--azul-sereno);
+  opacity: 1;
+  transform: translateX(5px);
+}
+
+/* Área de conteúdo principal */
+.artigo-content section {
+  margin-bottom: 5rem;
+}
+
+.artigo-content h2 {
+  font-family: var(--font-titulo);
+  font-size: 2.25rem;
+  margin-bottom: 1.5rem;
+  color: var(--grafite);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.artigo-content p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+
+/* Card de destaque com borda lateral colorida */
+.info-card {
+  background: var(--branco);
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  border-left: 6px solid var(--verde-agua);
+  box-shadow: var(--shadow-md);
+  margin: 3rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.info-card strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--verde-agua);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+}
+
+/* Grid de sintomas/itens com ícone */
+.symptoms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.symptom-item {
+  background: var(--branco);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: var(--speed) var(--ease);
+  box-shadow: var(--shadow-sm);
+}
+
+.symptom-item:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.symptom-icon {
+  color: var(--azul-sereno);
+  background: var(--areia);
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+}
+
+/* CTA final da página */
+.cta {
+  background: var(--gradiente-principal);
+  padding: 4rem;
+  border-radius: var(--radius-xl);
+  color: var(--branco);
+  text-align: center;
+  margin-top: 4rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.cta h2 {
+  color: var(--branco);
+  font-size: 2.5rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.cta p {
+  color: var(--branco);
+  opacity: 0.9;
+}
+
+.cta .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: 1rem 2.5rem;
+  border-radius: var(--radius-xl);
+  background: var(--branco);
+  color: var(--azul-sereno);
+  font-weight: 700;
+  box-shadow: var(--shadow-md);
+  margin-top: 2rem;
+  transition: var(--speed) var(--ease);
+}
+
+.cta .btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Ajustes da Navbar nas páginas de artigo (sticky + botão login) */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background-color: var(--branco);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.navbar-acao .btn-primary {
+  margin-top: 0;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+}
+
+/* Responsivo: coluna única em telas menores */
+@media (max-width: 992px) {
+  .artigo-layout {
+    grid-template-columns: 1fr;
+  }
+  .artigo-sidebar {
+    display: none;
+  }
+}
+
+/* Card da psicóloga (página Sobre) */
+.psicologa-card {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+  background: var(--branco);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-md);
+  margin: 2rem 0;
+}
+
+.psicologa-card img {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--verde-agua);
+}
+
+/* Grid de valores (página Sobre) */
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.value-item {
+  background: var(--branco);
+  padding: 2rem;
+  border-radius: var(--radius-md);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.value-item .symptom-icon {
+  margin: 0 auto 1rem;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+}
+
+.value-item h4 {
+  margin-bottom: 0.5rem;
+}
+
+/* Texto do CRP da psicóloga */
+.psicologa-crp {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  opacity: 0.8;
+}
+
+/* Estilos extras para páginas com listas (infantil, etc.) */
+.artigo-content h3 {
+  font-family: var(--font-titulo);
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: var(--verde-agua);
+}
+
+.artigo-content ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 1.5rem;
+}
+
+.artigo-content li {
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  position: relative;
+  color: var(--grafite);
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+.artigo-content li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--verde-agua);
+  font-weight: bold;
+}
+
+@media (max-width: 992px) {
+  .psicologa-card {
+    flex-direction: column;
+    text-align: center;
+  }
+}

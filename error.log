@@ -1,0 +1,35 @@
+[16-Jun-2026 20:55:32 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 UNIQUE constraint failed: consultas.id_data, consultas.id_horario in C:\xampp\htdocs\nexus_final\config\funcoes.php:401
+Stack trace:
+#0 C:\xampp\htdocs\nexus_final\config\funcoes.php(401): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\nexus_final\dashboard_paciente.php(39): agendar_consulta(Object(PDO), 4, 2, 3, 3, 'Online')
+#2 {main}
+  thrown in C:\xampp\htdocs\nexus_final\config\funcoes.php on line 401
+[16-Jun-2026 20:55:38 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 UNIQUE constraint failed: consultas.id_data, consultas.id_horario in C:\xampp\htdocs\nexus_final\config\funcoes.php:401
+Stack trace:
+#0 C:\xampp\htdocs\nexus_final\config\funcoes.php(401): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\nexus_final\dashboard_paciente.php(39): agendar_consulta(Object(PDO), 4, 2, 3, 3, 'Online')
+#2 {main}
+  thrown in C:\xampp\htdocs\nexus_final\config\funcoes.php on line 401
+[16-Jun-2026 20:58:33 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 UNIQUE constraint failed: consultas.id_data, consultas.id_horario in C:\xampp\htdocs\nexus_final\config\funcoes.php:408
+Stack trace:
+#0 C:\xampp\htdocs\nexus_final\config\funcoes.php(408): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\nexus_final\dashboard_paciente.php(39): agendar_consulta(Object(PDO), 4, 2, 3, 3, 'Online')
+#2 {main}
+  thrown in C:\xampp\htdocs\nexus_final\config\funcoes.php on line 408
+[16-Jun-2026 20:58:37 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 UNIQUE constraint failed: consultas.id_data, consultas.id_horario in C:\xampp\htdocs\nexus_final\config\funcoes.php:408
+Stack trace:
+#0 C:\xampp\htdocs\nexus_final\config\funcoes.php(408): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\nexus_final\dashboard_paciente.php(39): agendar_consulta(Object(PDO), 4, 2, 3, 3, 'Online')
+#2 {main}
+  thrown in C:\xampp\htdocs\nexus_final\config\funcoes.php on line 408
+[16-Jun-2026 20:58:48 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 UNIQUE constraint failed: consultas.id_data, consultas.id_horario in C:\xampp\htdocs\nexus_final\config\funcoes.php:408
+Stack trace:
+#0 C:\xampp\htdocs\nexus_final\config\funcoes.php(408): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\nexus_final\dashboard_paciente.php(39): agendar_consulta(Object(PDO), 4, 2, 1, 2, 'Online')
+#2 {main}
+  thrown in C:\xampp\htdocs\nexus_final\config\funcoes.php on line 408
+[16-Jun-2026 21:00:23 America/Sao_Paulo] [NOTIFICACAO] tipo=agendamento dest=paciente msg=Voce agendou uma consulta de Infantil para 16/06/2026 as 09:00. Aguarde a confir
+[16-Jun-2026 21:00:23 America/Sao_Paulo] [NOTIFICACAO] tipo=nova_consulta dest=psicologa msg=O(a) paciente Alana Corso agendou uma consulta de Infantil para 16/06/2026 as 09
+[16-Jun-2026 21:00:43 America/Sao_Paulo] [NOTIFICACAO] tipo=agendamento dest=paciente msg=Voce agendou uma consulta de Infantil para 19/06/2026 as 12:00. Aguarde a confir
+[16-Jun-2026 21:00:43 America/Sao_Paulo] [NOTIFICACAO] tipo=nova_consulta dest=psicologa msg=O(a) paciente Alana Corso agendou uma consulta de Infantil para 19/06/2026 as 12
+[16-Jun-2026 21:01:45 America/Sao_Paulo] [NOTIFICACAO] tipo=cancelamento dest=paciente msg=Sua consulta foi cancelada pela psicóloga. Motivo: Motivos pessoais.

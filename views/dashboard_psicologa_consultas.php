@@ -34,7 +34,7 @@
                                 </div>
                             </td>
                             <td><?php echo formatar_data($consulta['data_calendario']); ?><?php if ($passada) echo ' <span style="color: #9ca3af; font-size: 11px;">(Passada)</span>'; ?></td>
-                            <td><?php echo $consulta['horario']; ?></td>
+                            <td><?php echo substr($consulta['horario'], 0, 5); ?></td>
                             <td><?php echo htmlspecialchars($consulta['especializacao']); ?></td>
                             <td><?php echo htmlspecialchars($consulta['modalidade']); ?></td>
                             <td>
@@ -61,17 +61,13 @@
                                         </form>
                                     <?php endif; ?>
                                     <?php if ($consulta['status'] !== 'Cancelada'): ?>
-                                        <form method="POST" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja cancelar esta consulta?');">
-                                            <input type="hidden" name="acao" value="cancelar_consulta">
-                                            <input type="hidden" name="id_consulta" value="<?php echo $consulta['id_consulta']; ?>">
-                                            <button type="submit" class="btn-pequeno btn-cancelar" title="Cancelar">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                    <circle cx="12" cy="12" r="10"></circle>
-                                                    <line x1="15" y1="9" x2="9" y2="15"></line>
-                                                    <line x1="9" y1="9" x2="15" y2="15"></line>
-                                                </svg>
-                                            </button>
-                                        </form>
+                                        <button type="button" class="btn-pequeno btn-cancelar" title="Cancelar" onclick="abrirModalCancelarConsulta(<?php echo $consulta['id_consulta']; ?>)">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <line x1="15" y1="9" x2="9" y2="15"></line>
+                                                <line x1="9" y1="9" x2="15" y2="15"></line>
+                                            </svg>
+                                        </button>
                                     <?php endif; ?>
                                 </div>
                             </td>
@@ -91,6 +87,42 @@
     <?php endif; ?>
 </div>
 
+<!-- Modal de Cancelamento com Motivo Obrigatório -->
+<div id="modalCancelarConsulta" class="modal">
+    <div class="modal-conteudo" style="max-width: 480px;">
+        <div class="modal-header">
+            <div>
+                <span class="modal-badge-acao" style="background:rgba(239,68,68,0.12);color:var(--danger);">Cancelamento</span>
+                <h2>Cancelar Consulta</h2>
+            </div>
+            <button class="modal-fechar" onclick="fecharModalCancelarConsulta()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-icone-msg">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+            </div>
+            <p style="text-align:center; font-size:15px; color:var(--neutral-700); margin-bottom:20px;">Para cancelar esta consulta, informe obrigatoriamente o motivo abaixo.</p>
+            <form method="POST" id="formCancelarConsultaPsicologa" onsubmit="return validarCancelamentoPsicologa()">
+                <input type="hidden" name="acao" value="cancelar_consulta">
+                <input type="hidden" name="id_consulta" id="idConsultaCancelar">
+                <div class="form-group">
+                    <label for="motivoCancelamentoPsicologa">Motivo do Cancelamento *</label>
+                    <textarea name="comentario" id="motivoCancelamentoPsicologa" rows="3" placeholder="Informe o motivo do cancelamento para o paciente..." style="resize:vertical;"></textarea>
+                    <p id="erroCancelamento" class="form-erro" style="display:none;">O motivo do cancelamento e obrigatorio.</p>
+                </div>
+                <div class="modal-acoes">
+                    <button type="button" class="btn btn-modal-fechar" onclick="fecharModalCancelarConsulta()">Voltar</button>
+                    <button type="submit" class="btn btn-cancelar btn-modal-acao">Confirmar Cancelamento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
 function filtrarConsultas(status) {
     const rows = document.querySelectorAll('.consulta-row');
@@ -107,4 +139,31 @@ function filtrarConsultas(status) {
         }
     });
 }
+
+function abrirModalCancelarConsulta(idConsulta) {
+    document.getElementById('idConsultaCancelar').value = idConsulta;
+    document.getElementById('motivoCancelamentoPsicologa').value = '';
+    document.getElementById('erroCancelamento').style.display = 'none';
+    document.getElementById('modalCancelarConsulta').classList.add('show');
+}
+
+function fecharModalCancelarConsulta() {
+    document.getElementById('modalCancelarConsulta').classList.remove('show');
+}
+
+function validarCancelamentoPsicologa() {
+    const motivo = document.getElementById('motivoCancelamentoPsicologa').value.trim();
+    if (!motivo) {
+        document.getElementById('erroCancelamento').style.display = 'block';
+        return false;
+    }
+    return true;
+}
+
+document.addEventListener('click', function(e) {
+    var modal = document.getElementById('modalCancelarConsulta');
+    if (modal && e.target === modal) {
+        modal.classList.remove('show');
+    }
+});
 </script>

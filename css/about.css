@@ -1,0 +1,212 @@
+/* Foto e texto da psicóloga */
+.sobre {
+  /* Separa as seções */
+  padding-block: var(--section-gap);
+  background: var(--branco);
+  /* Fundo da seção arredondado */
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  position: relative;
+  /* Garante que o pedaço da bolha de luz que sair da tela seja cortado */
+  overflow: hidden;
+}
+
+/* "Caixa" fantasma direto pelo CSS para fins estéticos, sem precisar adicionar uma tag no HTML */
+.sobre::before {
+  content: '';
+  /* Ignora o grid, ignora os textos e flutua livremente por cima do fundo branco. */
+  position: absolute;
+  /* Posiciona a bolha de luz. Valores negativos significam que foi empurrada para fora da seção */
+  top: -60px; right: -80px;
+  /* Cria um quadrado */
+  width: 340px; height: 340px;
+  /* Modifica os cantos desse quadrado até ele virar um círculo. */
+  border-radius: 50%;
+  background: var(--gradiente-radial);
+  /* Faz com que ela não atrapalhe o clique do  usuário caso haja um botão em cima */
+  pointer-events: none;
+}
+
+/* Organiza as colunas lado a lado */
+.conteudo-sobre {
+  display: grid;
+  /* Separação de espaço */
+  grid-template-columns: 1.2fr 1.4fr;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+/* Lado da Foto */
+.foto-bloco {
+  position: relative;
+  max-width: 550px; 
+  width: 100%;
+ }
+
+.foto-bloco img {
+  width: 100%;
+  height: auto;
+  display: block;
+  /* sombra suave que dá profundidade */
+  filter: drop-shadow(0 8px 16px rgba(168, 159, 216, 0.393));
+}
+
+/* Anel decorativo giratório */
+.foto-anel {
+  /* Faz flutuar */
+  position: absolute;
+  /* Faz como que o anel se estique para fora das quatro bordas da caixa pai */
+  inset: -8px;
+  border-radius: 50%;
+  /* Espessura, estilo e cor */
+  border: 2px dashed var(--lavanda);
+  /* Animação, quanto maior o tempo mais lento */
+  animation: girar-anel 100s linear infinite;
+  pointer-events: none;
+}
+
+/* Define a animação */
+@keyframes girar-anel {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Tag flutuante de status */
+.status-tag {
+  position: absolute;
+  /* Distância de 1.5rem da foto */
+  bottom: 1.5rem;
+  /* Faz com que ela "saia" para fora do limite da foto */
+  right: 2rem;
+  background: var(--gradiente-radial);
+  border-radius: var(--radius-md);
+  /* Espaçamento interno */
+  padding: .75rem 1.1rem;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  /* Espaço entre o ícone (status-ponto) e o texto */
+  gap: .6rem;
+  font-size: .8rem;
+  /* Proíbe o navegador de quebrar o texto em duas linhas */
+  white-space: nowrap;
+}
+
+.status-ponto {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #6BCB77;
+  box-shadow: 0 0 0 3px rgba(107,203,119,.25);
+   /* Proibe que o elemento seja encolhido pelo navegador quando a tela ficar pequena. */
+  flex-shrink: 0;
+}
+
+/* ── Lado do Texto ── */
+.sobre-titulo {
+  font-family: var(--font-titulo);
+  /* Responsividade, define o tamanho minimo, o ideal e o máximo da fonte. */
+  font-size: clamp(2rem, 3.5vw, 2.9rem);
+  font-weight: 300;
+  /* Espaçamento da linha */
+  line-height: 1.15;
+  /* Faz com que o texto de baixo não fique colado */
+  margin-bottom: 3rem;
+}
+
+.sobre-titulo strong {
+  /* Adiciona o gradiente */
+  background: var(--gradiente-principal);
+  /* Recorta o gradiente no texto */
+  background-clip: text;
+  /* Deixa a cor original da letra invisível para o gradiente de fundo aparecer */ 
+  color: transparent;
+  font-weight: 400;
+}
+
+.sobre-texto {
+  font-family: var(--font-body);
+  font-size: .93rem;
+  color: var(--grafite);
+  line-height: 1.85;
+  max-width: 480px;
+  margin-bottom: 2rem;
+}
+
+/* - Destaques - */
+/* Container principal, alinha as 3 colunas */
+.destaques {
+  display: flex;
+  gap: 2.5rem;
+  margin-bottom: 2rem;
+  /* Força os três círculos a começarem exatamente na mesma linha pelo topo */
+  align-items: flex-start;
+}
+
+/* Cada coluna individual */
+.destaques .item {
+  display: flex;
+  /* Empilhan na vertical */
+  flex-direction: column;
+  gap: 0.4rem;
+  /* Divide o espaço de forma igual entre as 3 colunas. */
+  flex: 1;
+}
+
+/* Círculo */
+.item-icone {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--grafite); /* Borda escura combinando com o texto */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+/* Títulos das colunas */
+.item-titulo, 
+.btn-saiba-mais {
+  font-size: .80rem;
+  font-weight: 800;
+  color: var(--grafite);
+}
+
+/* Descrições */
+.item-desc {
+  font-size: 0.70rem;
+  color: var(--grafite);
+  line-height: 1.4;
+}
+
+/*Saiba Mais */
+.btn-saiba-mais {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Sublinhado exclusivo para o texto, deixando a seta de fora */
+.btn-saiba-mais .link-texto {
+  border-bottom: 1.5px solid var(--grafite);
+  padding-bottom: 2px;
+  margin-right: 0.3rem;
+}
+
+/* Seta lateral do Saiba Mais */
+.btn-saiba-mais .seta {
+  display: flex;
+  align-items: center;
+}
+
+
+/* ── Responsivo (Celular/Tablet) ── */
+@media (max-width: 900px) {
+  .conteudo-sobre {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .foto-moldura   { max-width: 340px; margin-inline: auto; }
+  .status-tag     { right: 0; }
+  .sobre-texto    { max-width: 100%; }
+  .destaques      { gap: 1.5rem; }
+}

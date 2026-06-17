@@ -1,6 +1,10 @@
 <?php
 require_once 'config/conexao.php';
 require_once 'config/funcoes.php';
+require_once 'config/inicializar_datas.php';
+
+// Garantir que o banco de dados está atualizado
+verificar_esquema_banco($pdo);
 
 // Verificar se está logado
 if (!isset($_SESSION['id_paciente'])) {
@@ -11,8 +15,12 @@ if (!isset($_SESSION['id_paciente'])) {
 $id_paciente = $_SESSION['id_paciente'];
 $paciente = obter_paciente($pdo, $id_paciente);
 
-// Obter aba ativa
+// Obter aba ativa (redirecionar agendar antigo para calendario)
 $aba_ativa = isset($_GET['aba']) ? $_GET['aba'] : 'dashboard';
+if ($aba_ativa === 'agendar') {
+    header('Location: dashboard_paciente.php?aba=calendario');
+    exit;
+}
 
 // Processar ações POST
 $sucesso = $_SESSION['flash_sucesso'] ?? '';
@@ -36,25 +44,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($acao === 'processar_pagamento') {
         $id_consulta = isset($_POST['id_consulta']) ? intval($_POST['id_consulta']) : 0;
         $metodo = isset($_POST['metodo_pagamento']) ? $_POST['metodo_pagamento'] : 'Pix';
-        
-        if (processar_pagamento($pdo, $id_consulta, $id_paciente, $metodo)) {
-            $sucesso = 'Pagamento processado com sucesso!';
+        $consulta_pag = obter_consulta($pdo, $id_consulta);
+        if (!$consulta_pag) {
+            $erro = 'Consulta não encontrada.';
+        } elseif ($consulta_pag['id_paciente'] != $id_paciente) {
+            $erro = 'Sem permissão para pagar esta consulta.';
+        } elseif ($consulta_pag['status'] === 'Cancelada') {
+            $erro = 'Não é possível pagar uma consulta cancelada.';
+        } elseif ($consulta_pag['status'] !== 'Confirmada') {
+            $erro = 'O pagamento só pode ser realizado para consultas confirmadas pela psicóloga.';
+        } elseif ($consulta_pag['pagamento_status'] === 'Pago' || $consulta_pag['pagamento_status'] === 'Concluído') {
+            $erro = 'Esta consulta já foi paga.';
+        } elseif (processar_pagamento($pdo, $id_consulta, $id_paciente, $metodo)) {
+            $sucesso = 'Pagamento processado com sucesso! Sua consulta está confirmada.';
         } else {
-            $erro = 'Erro ao processar pagamento.';
+            $erro = 'Erro ao processar pagamento. Tente novamente.';
         }
     } elseif ($acao === 'cancelar_consulta') {
         $id_consulta = isset($_POST['id_consulta']) ? intval($_POST['id_consulta']) : 0;
         $consulta_cancelar = obter_consulta($pdo, $id_consulta);
         if ($consulta_cancelar && $consulta_cancelar['id_paciente'] == $id_paciente) {
-            if (!consulta_pode_ser_cancelada_pelo_paciente($consulta_cancelar)) {
-                $erro = 'A consulta so pode ser cancelada com pelo menos 24 horas de antecedencia.';
-            } elseif (cancelar_consulta($pdo, $id_consulta, null, 1)) {
+            if ($consulta_cancelar['status'] === 'Cancelada') {
+                $erro = 'Esta consulta já foi cancelada.';
+            } elseif (!consulta_pode_ser_cancelada_pelo_paciente($consulta_cancelar)) {
+                $erro = 'A consulta só pode ser cancelada com pelo menos 24 horas de antecedência.';
+            } elseif (cancelar_consulta($pdo, $id_consulta, $id_paciente, 1, false, null, 'paciente')) {
+                criar_notificacao($pdo, $id_paciente, 1, 'cancelamento', "Sua consulta foi cancelada com sucesso.", 'paciente');
+                $data_cancel_fmt = date('d/m/Y', strtotime($consulta_cancelar['data_calendario']));
+                $hora_cancel_fmt = substr($consulta_cancelar['horario'], 0, 5);
+                criar_notificacao($pdo, $id_paciente, 1, 'cancelamento', "A(o) paciente {$paciente['nome']} cancelou a consulta do dia $data_cancel_fmt as $hora_cancel_fmt.", 'psicologa');
                 $sucesso = 'Consulta cancelada com sucesso!';
             } else {
                 $erro = 'Erro ao cancelar consulta.';
             }
         } else {
             $erro = 'Consulta não encontrada ou sem permissão.';
+        }
+    } elseif ($acao === 'reagendar_consulta') {
+        $id_consulta = isset($_POST['id_consulta']) ? intval($_POST['id_consulta']) : 0;
+        $nova_data = isset($_POST['nova_data']) ? $_POST['nova_data'] : '';
+        $novo_horario = isset($_POST['id_horario']) ? intval($_POST['id_horario']) : 0;
+        $consulta_reag = obter_consulta($pdo, $id_consulta);
+        if (!$consulta_reag || $consulta_reag['id_paciente'] != $id_paciente) {
+            $erro = 'Consulta nao encontrada ou sem permissao.';
+        } elseif (reagendar_consulta($pdo, $id_consulta, $id_paciente, $nova_data, $novo_horario)) {
+            $sucesso = 'Consulta reagendada com sucesso!';
+        } else {
+            $erro = 'Erro ao reagendar consulta.';
         }
     } elseif ($acao === 'marcar_lida') {
         $id_notificacao = isset($_POST['id_notificacao']) ? intval($_POST['id_notificacao']) : 0;
@@ -66,20 +102,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data_nascimento = isset($_POST['data_nascimento']) ? $_POST['data_nascimento'] : '';
         $cpf = isset($_POST['cpf']) ? trim($_POST['cpf']) : '';
         $endereco = isset($_POST['endereco']) ? trim($_POST['endereco']) : '';
+        $foto_perfil = null;
         
-        if (!empty($nome) && !empty($email)) {
-            try {
-                $stmt = $pdo->prepare("UPDATE pacientes SET nome = ?, email = ?, telefone = ?, data_nascimento = ?, cpf = ?, endereco = ? WHERE id = ?");
-                if ($stmt->execute([$nome, $email, $telefone, $data_nascimento, $cpf, $endereco, $id_paciente])) {
-                    $sucesso = 'Perfil atualizado com sucesso!';
-                    $paciente = obter_paciente($pdo, $id_paciente);
+        // Processar upload de foto
+        if (!empty($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === UPLOAD_ERR_OK) {
+            $diretorio = __DIR__ . '/uploads/fotos/';
+            if (!is_dir($diretorio)) {
+                mkdir($diretorio, 0777, true);
+            }
+            $extensao = strtolower(pathinfo($_FILES['foto_perfil']['name'], PATHINFO_EXTENSION));
+            $extensoes_permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            if (!in_array($extensao, $extensoes_permitidas)) {
+                $erro = 'Formato de imagem nao permitido. Use: JPG, PNG, GIF ou WEBP.';
+            } elseif ($_FILES['foto_perfil']['size'] > 5 * 1024 * 1024) {
+                $erro = 'A imagem deve ter no maximo 5MB.';
+            } else {
+                $nome_arquivo = uniqid() . '.' . $extensao;
+                $caminho = $diretorio . $nome_arquivo;
+                if (move_uploaded_file($_FILES['foto_perfil']['tmp_name'], $caminho)) {
+                    $foto_perfil = 'uploads/fotos/' . $nome_arquivo;
                 } else {
-                    $erro = 'Erro ao atualizar perfil.';
+                    $erro = 'Erro ao fazer upload da imagem.';
                 }
+            }
+        }
+        
+        if (empty($erro) && !empty($nome) && !empty($email)) {
+            try {
+                if ($foto_perfil) {
+                    $stmt = $pdo->prepare("UPDATE pacientes SET nome = ?, email = ?, telefone = ?, data_nascimento = ?, cpf = ?, endereco = ?, foto_perfil = ? WHERE id = ?");
+                    $stmt->execute([$nome, $email, $telefone, $data_nascimento, $cpf, $endereco, $foto_perfil, $id_paciente]);
+                } else {
+                    $stmt = $pdo->prepare("UPDATE pacientes SET nome = ?, email = ?, telefone = ?, data_nascimento = ?, cpf = ?, endereco = ? WHERE id = ?");
+                    $stmt->execute([$nome, $email, $telefone, $data_nascimento, $cpf, $endereco, $id_paciente]);
+                }
+                $sucesso = 'Perfil atualizado com sucesso!';
+                $paciente = obter_paciente($pdo, $id_paciente);
             } catch (Exception $e) {
                 $erro = 'Erro ao atualizar perfil.';
             }
-        } else {
+        } elseif (empty($erro)) {
             $erro = 'Nome e email sao obrigatorios.';
         }
     }
@@ -96,17 +158,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Obter dados para o dashboard
-$minhas_consultas = obter_consultas_paciente($pdo, $id_paciente);
+$consultas = obter_consultas_paciente($pdo, $id_paciente);
 $hoje = date('Y-m-d');
 $agora = time();
 $obter_timestamp_consulta = function($consulta) {
     return strtotime(trim($consulta['data_calendario'] . ' ' . $consulta['horario']));
 };
-$proximas_consultas = array_filter($minhas_consultas, function($c) use ($agora, $obter_timestamp_consulta) {
+$proximas_consultas = array_filter($consultas, function($c) use ($agora, $obter_timestamp_consulta) {
     $inicio = $obter_timestamp_consulta($c);
     return $c['status'] !== 'Cancelada' && $inicio && $inicio >= $agora;
 });
-$consultas_passadas = array_filter($minhas_consultas, function($c) use ($agora, $obter_timestamp_consulta) {
+$consultas_passadas = array_filter($consultas, function($c) use ($agora, $obter_timestamp_consulta) {
     $inicio = $obter_timestamp_consulta($c);
     return $c['status'] !== 'Cancelada' && $inicio && $inicio < $agora;
 });
@@ -120,6 +182,7 @@ $notificacoes = obter_notificacoes_paciente($pdo, $id_paciente, 5);
 $notificacoes_nao_lidas = contar_notificacoes_nao_lidas_paciente($pdo, $id_paciente);
 $especializacoes = obter_especializacoes($pdo);
 $datas_disponiveis = obter_datas_disponiveis($pdo);
+$minhas_consultas = $consultas; // Alias para uso nas abas de consultas e pagamentos
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -127,23 +190,272 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Dashboard - Nexus Premium</title>
-    <link rel="icon" href="assets/img/favicon.ico">
-    <link rel="stylesheet" href="assets/css/saas-premium.css">
+    <link rel="icon" href="assets/simbologo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/dashboards.css">
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.css' rel='stylesheet' />
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.js'></script>
-    <script src="assets/js/dashboard_paciente_novo.js" defer></script>
+    <script src="js/dashboard_paciente.js" defer></script>
     <style>
-        .notificacao-item.nao-lida { border-left: 4px solid #6366f1 !important; background-color: #f8faff; }
-        .notificacao-item.lida { opacity: 0.7; }
+        /* ═══════════════════════════════════════════════════════════════
+           OVERRIDES NEXUS — Paciente
+        ═══════════════════════════════════════════════════════════════ */
+
+        .notificacao-item.nao-lida {
+            border-left: 4px solid var(--azul-sereno) !important;
+            background: rgba(128,161,212,.06);
+        }
+        .notificacao-item.lida { opacity: 0.6; }
+
+        .notificacao-icone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: rgba(128,161,212,.08);
+            flex-shrink: 0;
+        }
+
+        .notificacao-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: rgba(247,244,234,.4);
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--warning);
+        }
+
+        .notificacao-conteudo { flex: 1; min-width: 0; }
+
+        .notificacao-conteudo h4 {
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--grafite);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .notificacao-conteudo p {
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: var(--grafite);
+            opacity: 0.55;
+            margin-bottom: var(--spacing-xs);
+            line-height: 1.5;
+        }
+
+        .notificacao-data {
+            font-family: var(--font-body);
+            font-size: 11px;
+            color: var(--grafite);
+            opacity: 0.35;
+        }
+
+        .vazio-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-2xl);
+            color: var(--grafite);
+            opacity: 0.4;
+        }
+
+        .vazio-container p {
+            font-family: var(--font-body);
+            font-size: 14px;
+        }
+
+        .consulta-card-moderno {
+            background: rgba(255,255,255,.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,.5);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--azul-sereno);
+            transition: all 0.3s cubic-bezier(.4,0,.2,1);
+            position: relative;
+            overflow: hidden;
+        }
+        .consulta-card-moderno::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(128,161,212,.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .consulta-card-moderno:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+        .consulta-card-moderno.passada {
+            border-left-color: var(--lavanda);
+            opacity: 0.55;
+        }
+        .consulta-card-moderno.passada::before {
+            background: radial-gradient(circle, rgba(192,185,221,.08) 0%, transparent 70%);
+        }
+        .consulta-card-moderno .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .consulta-card-moderno h3 {
+            font-family: var(--font-titulo);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--grafite);
+            margin-bottom: 8px;
+        }
+        .consulta-card-moderno .card-meta {
+            font-family: var(--font-body);
+            font-size: 12px;
+            color: var(--grafite);
+            opacity: 0.5;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .consulta-card-moderno .card-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .consulta-card-moderno .card-meta svg {
+            width: 14px;
+            height: 14px;
+            opacity: 0.6;
+        }
+        .consulta-card-moderno .card-actions { margin-top: 16px; }
+        .consulta-card-moderno .card-actions .btn { width: 100%; }
+
+        .dashboard-empty {
+            text-align: center;
+            color: var(--grafite);
+            opacity: 0.35;
+            padding: 32px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            background: rgba(255,255,255,.3);
+            border-radius: var(--radius-lg);
+            border: 2px dashed rgba(222,217,226,.3);
+        }
+
+        .consulta-card-moderno .card-status-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .section-title {
+            margin-bottom: 24px;
+            font-family: var(--font-titulo);
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--grafite);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--gradiente-principal);
+            border-radius: 2px;
+        }
+
+        .section-gap { margin-top: 24px; }
+        .card-grid { display: grid; gap: 16px; }
+
+        .calendario-secao {
+            position: relative;
+            overflow: hidden;
+            background: rgba(255,255,255,.65);
+            backdrop-filter: blur(20px) saturate(1.2);
+            -webkit-backdrop-filter: blur(20px) saturate(1.2);
+            border: 1px solid rgba(255,255,255,.5);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,.7);
+        }
+        .calendario-secao::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(128,161,212,.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .calendario-secao::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -15%;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(117,201,200,.05) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .calendario-secao > * { position: relative; z-index: 1; }
+
+        body.dark-mode .notificacao-item {
+            background: rgba(255,255,255,.05);
+        }
+        body.dark-mode .notificacao-conteudo h4,
+        body.dark-mode .notificacao-conteudo p,
+        body.dark-mode .notificacao-data {
+            color: var(--branco);
+        }
+        body.dark-mode .notificacao-conteudo p { opacity: 0.55; }
+        body.dark-mode .notificacao-data { opacity: 0.35; }
+        body.dark-mode .vazio-container { color: var(--branco); }
+        body.dark-mode .consulta-card-moderno {
+            background: rgba(30,30,50,.7);
+            border-color: rgba(255,255,255,.1);
+        }
+        body.dark-mode .consulta-card-moderno h3,
+        body.dark-mode .consulta-card-moderno .card-meta {
+            color: var(--branco);
+        }
+        body.dark-mode .consulta-card-moderno .card-meta { opacity: 0.5; }
+        body.dark-mode .dashboard-empty {
+            color: var(--branco);
+            background: rgba(255,255,255,.04);
+            border-color: rgba(255,255,255,.08);
+        }
+        body.dark-mode .section-title { color: var(--branco); }
+        body.dark-mode .calendario-secao {
+            background: rgba(30,30,50,.7);
+            border-color: rgba(255,255,255,.08);
+        }
     </style>
 </head>
 <body>
+<script>if(localStorage.getItem('darkMode')==='true'||localStorage.getItem('darkMode')==='enabled')document.body.classList.add('dark-mode')</script>
     <div class="dashboard-container">
         <!-- SIDEBAR -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <a href="index.html" class="logo-link">
-                    <img src="assets/img/logo.png" alt="Nexus Logo" class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Nexus Logo" class="sidebar-logo">
                 </a>
             </div>
 
@@ -153,12 +465,6 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 16l4-4m0 0l4 4m-4-4v4"></path>
                     </svg>
                     <span>Dashboard</span>
-                </a>
-                <a href="?aba=agendar" class="nav-item <?php echo $aba_ativa === 'agendar' ? 'ativo' : ''; ?>">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                    <span>Agendar Consulta</span>
                 </a>
                 <a href="?aba=calendario" class="nav-item <?php echo $aba_ativa === 'calendario' ? 'ativo' : ''; ?>">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -217,8 +523,7 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
                     $titulo = "Dashboard";
                     switch($aba_ativa) {
                         case 'dashboard': $titulo = "Bem-vindo(a), " . htmlspecialchars(explode(' ', $paciente['nome'])[0]) . "!"; break;
-                        case 'agendar': $titulo = "Agendar Consulta"; break;
-                        case 'calendario': $titulo = "Meu Calendário"; break;
+                        case 'calendario': $titulo = "Meu Calendario"; break;
                         case 'consultas': $titulo = "Minhas Consultas"; break;
                         case 'pagamentos': $titulo = "Pagamentos"; break;
                         case 'notificacoes': $titulo = "Notificações"; break;
@@ -227,6 +532,14 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
                     echo $titulo;
                 ?></h1>
                 <div class="header-actions">
+                    <button class="btn-notificacoes" onclick="window.location.href='?aba=notificacoes'" title="Ver notificações">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <?php if ($notificacoes_nao_lidas > 0): ?>
+                            <span class="badge"><?php echo $notificacoes_nao_lidas; ?></span>
+                        <?php endif; ?>
+                    </button>
                     <button class="btn-notificacoes" id="btn-dark-mode" title="Alternar modo escuro">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
@@ -266,20 +579,28 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
 
                 <!-- Próximas Consultas -->
                 <div class="calendario-secao">
-                    <h2 style="margin-bottom: 24px;">Suas Próximas Consultas</h2>
-                    <div style="display: grid; gap: 16px;">
+                    <h2 class="section-title">Suas Próximas Consultas</h2>
+                    <div class="card-grid">
                         <?php 
                         foreach (array_slice($proximas_consultas, 0, 3) as $consulta): 
                         ?>
-                            <div style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-left: 4px solid #6366f1;">
-                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div class="consulta-card-moderno">
+                                <div class="card-header">
                                     <div>
-                                        <h3 style="font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 8px;">
-                                            <?php echo htmlspecialchars($consulta['especializacao']); ?>
-                                        </h3>
-                                        <div style="font-size: 14px; color: #6b7280; display: flex; gap: 16px;">
-                                            <div>📅 <?php echo date('d/m/Y', strtotime($consulta['data_calendario'])); ?></div>
-                                            <div>🕐 <?php echo $consulta['horario']; ?>h</div>
+                                        <h3><?php echo htmlspecialchars($consulta['especializacao']); ?></h3>
+                                        <div class="card-meta">
+                                            <span>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                                <?php echo date('d/m/Y', strtotime($consulta['data_calendario'])); ?>
+                                            </span>
+                                            <span>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                                <?php echo substr($consulta['horario'], 0, 5); ?>h
+                                            </span>
+                                            <span>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                                                <?php echo htmlspecialchars($consulta['modalidade']); ?>
+                                            </span>
                                         </div>
                                     </div>
                                     <span class="status-badge status-<?php echo strtolower($consulta['status']); ?>">
@@ -287,34 +608,40 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
                                     </span>
                                 </div>
                                 <?php if ($consulta['status'] === 'Confirmada' && $consulta['pagamento_status'] === 'Pendente'): ?>
-                                    <button class="btn btn-primary" style="margin-top: 16px; width: 100%;" onclick="abrirModalPagamento(<?php echo $consulta['id_consulta']; ?>, <?php echo $consulta['valor']; ?>)">
-                                        Realizar Pagamento
-                                    </button>
+                                    <div class="card-actions">
+                                        <button class="btn btn-primary" onclick="abrirModalPagamento(<?php echo $consulta['id_consulta']; ?>, <?php echo $consulta['valor']; ?>)">
+                                            Realizar Pagamento
+                                        </button>
+                                    </div>
                                 <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
                         <?php if (empty($proximas_consultas)): ?>
-                            <p style="text-align: center; color: #6b7280; padding: 20px;">Você não tem consultas agendadas.</p>
+                            <p class="dashboard-empty">Você não tem consultas agendadas.</p>
                         <?php endif; ?>
                     </div>
                 </div>
 
-                <div class="calendario-secao" style="margin-top: 24px;">
-                    <h2 style="margin-bottom: 24px;">Consultas que já passaram</h2>
-                    <div style="display: grid; gap: 16px;">
+                <div class="calendario-secao section-gap">
+                    <h2 class="section-title">Consultas que já passaram</h2>
+                    <div class="card-grid">
                         <?php foreach (array_slice($consultas_passadas, 0, 5) as $consulta): ?>
-                            <div style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-left: 4px solid #9ca3af;">
-                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div class="consulta-card-moderno passada">
+                                <div class="card-header">
                                     <div>
-                                        <h3 style="font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 8px;">
-                                            <?php echo htmlspecialchars($consulta['especializacao']); ?>
-                                        </h3>
-                                        <div style="font-size: 14px; color: #6b7280; display: flex; gap: 16px;">
-                                            <div>📅 <?php echo date('d/m/Y', strtotime($consulta['data_calendario'])); ?></div>
-                                            <div>🕐 <?php echo $consulta['horario']; ?>h</div>
+                                        <h3><?php echo htmlspecialchars($consulta['especializacao']); ?></h3>
+                                        <div class="card-meta">
+                                            <span>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                                <?php echo date('d/m/Y', strtotime($consulta['data_calendario'])); ?>
+                                            </span>
+                                            <span>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                                <?php echo substr($consulta['horario'], 0, 5); ?>h
+                                            </span>
                                         </div>
                                     </div>
-                                    <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
+                                    <div class="card-status-group">
                                         <span class="status-badge status-<?php echo strtolower($consulta['status']); ?>">
                                             <?php echo $consulta['status']; ?>
                                         </span>
@@ -332,101 +659,9 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
                 </div>
             </div>
 
-            <!-- Agendar -->
-            <div class="aba-conteudo <?php echo $aba_ativa === 'agendar' ? 'ativo' : ''; ?>" id="aba-agendar">
-                <?php include 'views/dashboard_paciente_agendar.php'; ?>
-            </div>
-
-            <!-- Calendário -->
+            <!-- Calendario -->
             <div class="aba-conteudo <?php echo $aba_ativa === 'calendario' ? 'ativo' : ''; ?>" id="aba-calendario">
-                <div class="calendario-secao calendario-paciente-secao">
-                    <div class="calendario-header calendario-header-com-legenda">
-                        <div>
-                            <h2>Calendário de Atendimentos</h2>
-                            <p class="calendario-descricao">Visualize suas consultas confirmadas, pendentes e passadas.</p>
-                        </div>
-                        <div class="calendario-legenda-inline">
-                            <div class="legenda-item">
-                                <span class="legenda-cor" style="background-color: #10b981;"></span>
-                                <span>Confirmada</span>
-                            </div>
-                            <div class="legenda-item">
-                                <span class="legenda-cor" style="background-color: #f59e0b;"></span>
-                                <span>Pendente</span>
-                            </div>
-                            <div class="legenda-item">
-                                <span class="legenda-cor" style="background-color: #6b7280;"></span>
-                                <span>Passada</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="calendar"></div>
-                </div>
-                <script>
-                    (function() {
-                        function montarCalendarioPaciente() {
-                            const calendarEl = document.getElementById('calendar');
-                            if (!calendarEl || typeof FullCalendar === 'undefined') return;
-                            if (calendarEl.dataset.inicializado === '1') return;
-
-                            calendarEl.dataset.inicializado = '1';
-                            const calendarioPaciente = new FullCalendar.Calendar(calendarEl, {
-                                initialView: 'dayGridMonth',
-                                headerToolbar: {
-                                    left: 'prev,next today',
-                                    center: 'title',
-                                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                                },
-                                locale: 'pt-br',
-                                buttonText: {
-                                    today: 'Hoje',
-                                    month: 'Mês',
-                                    week: 'Semana',
-                                    day: 'Dia'
-                                },
-                                height: 'auto',
-                                contentHeight: 'auto',
-                                events: 'api/consultas_paciente.php',
-                                displayEventTime: false,
-                                eventDidMount: function(info) {
-                                    const props = info.event.extendedProps;
-                                    const estado = props.passada ? 'Consulta passada' : 'Consulta futura';
-                                    info.el.title = `${props.especializacao} | ${props.modalidade || 'Modalidade não informada'} | ${props.status} | ${props.pagamento || 'Pagamento não informado'} | ${estado}`;
-                                },
-                                eventClick: function(info) {
-                                    const event = info.event;
-                                    const props = event.extendedProps;
-                                    const data = event.start ? event.start.toLocaleDateString('pt-BR') : '';
-                                    const hora = event.start ? event.start.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
-                                    const valor = Number(props.valor || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                                    const estado = props.passada ? 'Consulta que já passou' : 'Consulta futura';
-
-                                    alert(
-                                        `Especialidade: ${props.especializacao}\n` +
-                                        `Modalidade: ${props.modalidade || 'Não informada'}\n` +
-                                        `Data/Hora: ${data} ${hora}\n` +
-                                        `Status: ${props.status}\n` +
-                                        `Pagamento: ${props.pagamento || 'Não informado'}\n` +
-                                        `Valor: R$ ${valor}\n` +
-                                        `${estado}`
-                                    );
-                                }
-                            });
-
-                            calendarioPaciente.render();
-                            setTimeout(function() {
-                                calendarioPaciente.render();
-                                calendarioPaciente.updateSize();
-                            }, 150);
-                        }
-
-                        if (document.readyState === 'loading') {
-                            document.addEventListener('DOMContentLoaded', montarCalendarioPaciente);
-                        } else {
-                            montarCalendarioPaciente();
-                        }
-                    })();
-                </script>
+                <?php include 'views/dashboard_paciente_calendario.php'; ?>
             </div>
 
             <!-- Minhas Consultas -->
@@ -452,18 +687,20 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
                                 <?php foreach ($minhas_consultas as $consulta): ?>
                                     <tr>
                                         <td><?php echo htmlspecialchars($consulta['especializacao']); ?></td>
-                                        <td><?php echo date('d/m/Y', strtotime($consulta['data_calendario'])) . ' ' . $consulta['horario'] . 'h'; ?></td>
+                                        <td><?php echo date('d/m/Y', strtotime($consulta['data_calendario'])) . ' ' . substr($consulta['horario'], 0, 5) . 'h'; ?></td>
                                         <td><?php echo htmlspecialchars($consulta['modalidade']); ?></td>
                                         <td><span class="status-badge status-<?php echo strtolower($consulta['status']); ?>"><?php echo $consulta['status']; ?></span></td>
                                         <td><span class="status-badge status-<?php echo strtolower($consulta['pagamento_status']); ?>"><?php echo $consulta['pagamento_status']; ?></span></td>
                                         <td>
-                                            <?php if (consulta_pode_ser_cancelada_pelo_paciente($consulta)): ?>
+                                            <?php if ($consulta['status'] === 'Cancelada'): ?>
+                                                <span style="font-size: 12px; color: #ef4444; font-weight: 600;">Cancelada</span>
+                                            <?php elseif (consulta_pode_ser_cancelada_pelo_paciente($consulta)): ?>
                                                 <form method="POST" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja cancelar esta consulta?');">
                                                     <input type="hidden" name="acao" value="cancelar_consulta">
                                                     <input type="hidden" name="id_consulta" value="<?php echo $consulta['id_consulta']; ?>">
                                                     <button type="submit" class="btn btn-pequeno btn-cancelar">Cancelar</button>
                                                 </form>
-                                            <?php elseif ($consulta['status'] !== 'Cancelada'): ?>
+                                            <?php else: ?>
                                                 <span style="font-size: 12px; color: #9ca3af;">Prazo encerrado</span>
                                             <?php endif; ?>
                                         </td>
@@ -498,7 +735,7 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
                                 ?>
                                     <tr>
                                         <td><?php echo htmlspecialchars($pag['especializacao']); ?></td>
-                                        <td><?php echo date('d/m/Y', strtotime($pag['data_calendario'])) . ' ' . $pag['horario'] . 'h'; ?></td>
+                                        <td><?php echo date('d/m/Y', strtotime($pag['data_calendario'])) . ' ' . substr($pag['horario'], 0, 5) . 'h'; ?></td>
                                         <td style="font-weight: 600; color: #10b981;">R$ <?php echo number_format($pag['valor'], 2, ',', '.'); ?></td>
                                         <td><?php echo htmlspecialchars($pag['metodo_pagamento'] ?? '-'); ?></td>
                                         <td>
@@ -530,29 +767,7 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
 
             <!-- Notificações -->
             <div class="aba-conteudo <?php echo $aba_ativa === 'notificacoes' ? 'ativo' : ''; ?>" id="aba-notificacoes">
-                <div class="secao">
-                    <h2>Notificações</h2>
-                    <div class="notificacoes-lista">
-                        <?php foreach ($notificacoes as $notif): ?>
-		                            <div class="notificacao-item <?php echo $notif['lida'] ? 'lida' : 'nao-lida'; ?> <?php echo $notif['tipo']; ?>" style="<?php echo $notif['lida'] ? 'opacity: 0.7;' : ''; ?>">
-		                                <div style="display: flex; justify-content: space-between; align-items: start;">
-                                            <div>
-                                                <div class="notificacao-titulo"><?php echo htmlspecialchars(formatar_tipo_notificacao($notif['tipo'])); ?></div>
-                                                <div class="notificacao-desc"><?php echo htmlspecialchars($notif['mensagem']); ?></div>
-                                                <div style="font-size: 11px; color: #9ca3af; margin-top: 4px;"><?php echo date('d/m/Y H:i', strtotime($notif['data_criacao'])); ?></div>
-                                            </div>
-                                            <?php if (!$notif['lida']): ?>
-                                                <form method="POST" style="margin: 0;">
-                                                    <input type="hidden" name="acao" value="marcar_lida">
-                                                    <input type="hidden" name="id_notificacao" value="<?php echo $notif['id_notificacao']; ?>">
-                                                    <button type="submit" class="btn btn-pequeno" style="padding: 4px 8px; font-size: 10px;">Marcar como lida</button>
-                                                </form>
-                                            <?php endif; ?>
-                                        </div>
-		                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
+                <?php include 'views/dashboard_paciente_notificacoes.php'; ?>
             </div>
 
             <!-- Perfil -->
@@ -562,8 +777,29 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
                         <h2 style="margin: 0;">Meu Perfil</h2>
                         <button class="btn btn-primary" id="btn-editar-perfil" onclick="ativarEdicaoPerfil()">Editar Perfil</button>
                     </div>
-                    <form method="POST" id="form-perfil" class="form-row">
+                    <form method="POST" id="form-perfil" class="form-row" enctype="multipart/form-data">
                         <input type="hidden" name="acao" value="editar_perfil">
+
+                        <!-- Foto de Perfil -->
+                        <div style="grid-column: 1 / -1; display: flex; align-items: center; gap: 20px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #f3f4f6;">
+                            <div style="position: relative;">
+                                <div id="foto-preview-paciente" style="width: 80px; height: 80px; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); color: white; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 32px; font-weight: 700; flex-shrink: 0; overflow: hidden; cursor: pointer;" onclick="document.getElementById('foto_perfil_paciente').click()">
+                                    <?php if (!empty($paciente['foto_perfil'])): ?>
+                                        <img src="<?php echo htmlspecialchars($paciente['foto_perfil']); ?>" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <?php else: ?>
+                                        <span><?php echo strtoupper(substr($paciente['nome'], 0, 1)); ?></span>
+                                    <?php endif; ?>
+                                </div>
+                                <input type="file" id="foto_perfil_paciente" name="foto_perfil" class="foto-upload-input" accept="image/*" style="display: none;" onchange="previewFotoPerfilPaciente(this)">
+                                <label for="foto_perfil_paciente" id="btn-alterar-foto" style="position: absolute; bottom: 0; right: 0; background: #6366f1; color: white; width: 28px; height: 28px; border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white; font-size: 14px;" title="Alterar foto">&#9998;</label>
+                            </div>
+                            <div>
+                                <h3 style="font-size: 18px; font-weight: 700; color: #111827; margin: 0 0 4px 0;"><?php echo htmlspecialchars($paciente['nome']); ?></h3>
+                                <p style="color: #6b7280; margin: 0; font-size: 14px;"><?php echo htmlspecialchars($paciente['email']); ?></p>
+                                <p id="foto-upload-hint" style="color: #9ca3af; margin: 4px 0 0 0; font-size: 12px; display: none;">Clique no botao para alterar a foto</p>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label>Nome Completo</label>
                             <input type="text" name="nome" id="nome-perfil" value="<?php echo htmlspecialchars($paciente['nome']); ?>" disabled required>
@@ -612,7 +848,7 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
-                                <?php echo date('d/m', strtotime($consulta['data_calendario'])) . ' ' . $consulta['horario'] . 'h'; ?>
+                                <?php echo date('d/m', strtotime($consulta['data_calendario'])) . ' ' . substr($consulta['horario'], 0, 5) . 'h'; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -632,7 +868,7 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
                         </div>
                     <?php endforeach; ?>
                     <?php if (empty($notificacoes)): ?>
-                        <p style="color: #9ca3af; font-size: 13px; text-align: center; padding: 8px;">Nenhuma notificação.</p>
+                        <p style="color: var(--neutral-400); font-size: 13px; text-align: center; padding: 8px;">Nenhuma notificação.</p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -647,28 +883,33 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
                 <button class="modal-fechar" onclick="fecharModalPagamento()">&times;</button>
             </div>
             <div class="modal-body">
-                <form method="POST" id="formPagamento">
+                <form method="POST" id="formPagamento" onsubmit="return confirmarPagamento()">
                     <input type="hidden" name="acao" value="processar_pagamento">
                     <input type="hidden" name="id_consulta" id="idConsultaPagamento">
 
-                    <div style="background: #f3f4f6; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
                         <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Valor a Pagar</div>
-                        <div style="font-size: 32px; font-weight: 800; color: #6366f1;">
+                        <div style="font-size: 32px; font-weight: 800; color: #059669;">
                             R$ <span id="valorPagamento">0,00</span>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Método de Pagamento</label>
-                        <select name="metodo_pagamento" required>
+                        <label style="display:block; font-weight:600; margin-bottom:6px; color:#374151;">Método de Pagamento *</label>
+                        <select name="metodo_pagamento" required style="width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:8px; font-size:14px;">
+                            <option value="">Selecione um método</option>
                             <option value="Pix">Pix</option>
                             <option value="Cartao">Cartão de Crédito</option>
                             <option value="Boleto">Boleto</option>
                         </select>
                     </div>
 
+                    <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 12px; margin-bottom: 16px; font-size: 13px; color: #92400e;">
+                        <strong>Atenção:</strong> Ao confirmar, o pagamento será registrado e sua consulta estará confirmada.
+                    </div>
+
                     <div class="modal-acoes">
-                        <button type="submit" class="btn btn-primary">Confirmar Pagamento</button>
+                        <button type="submit" class="btn btn-primary" id="btnConfirmarPagamento">Confirmar Pagamento</button>
                         <button type="button" class="btn btn-secondary" onclick="fecharModalPagamento()">Cancelar</button>
                     </div>
                 </form>
@@ -699,12 +940,26 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
         // Funções de Modal de Pagamento
         function abrirModalPagamento(idConsulta, valor) {
             document.getElementById('idConsultaPagamento').value = idConsulta;
-            document.getElementById('valorPagamento').textContent = valor.toFixed(2).replace('.', ',');
+            const valorNum = parseFloat(valor);
+            document.getElementById('valorPagamento').textContent = isNaN(valorNum) ? '0,00' : valorNum.toFixed(2).replace('.', ',');
+            document.getElementById('formPagamento').querySelector('select[name="metodo_pagamento"]').value = '';
             document.getElementById('modalPagamento').classList.add('show');
         }
 
         function fecharModalPagamento() {
             document.getElementById('modalPagamento').classList.remove('show');
+        }
+
+        function confirmarPagamento() {
+            const metodo = document.getElementById('formPagamento').querySelector('select[name="metodo_pagamento"]').value;
+            if (!metodo) {
+                alert('Por favor, selecione um método de pagamento.');
+                return false;
+            }
+            const btn = document.getElementById('btnConfirmarPagamento');
+            btn.disabled = true;
+            btn.textContent = 'Processando...';
+            return true;
         }
 
         // Fechar modal ao clicar fora
@@ -723,6 +978,8 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
             });
             document.getElementById('btn-editar-perfil').style.display = 'none';
             document.getElementById('botoes-edicao').style.display = 'flex';
+            document.getElementById('btn-alterar-foto').style.display = 'flex';
+            document.getElementById('foto-upload-hint').style.display = 'block';
         }
 
         function cancelarEdicaoPerfil() {
@@ -733,6 +990,19 @@ $datas_disponiveis = obter_datas_disponiveis($pdo);
             });
             document.getElementById('btn-editar-perfil').style.display = 'block';
             document.getElementById('botoes-edicao').style.display = 'none';
+            document.getElementById('btn-alterar-foto').style.display = 'none';
+            document.getElementById('foto-upload-hint').style.display = 'none';
+        }
+
+        function previewFotoPerfilPaciente(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var preview = document.getElementById('foto-preview-paciente');
+                    preview.innerHTML = '<img src="' + e.target.result + '" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;">';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
         }
     </script>
 </body>

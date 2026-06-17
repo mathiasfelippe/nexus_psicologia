@@ -1,0 +1,109 @@
+.stats {
+  background-color: #ffffff; 
+  width: 100%;
+}
+
+.stats .container {
+  background: var(--gradiente-principal);
+  max-width: 1120px; /* Largura*/
+  width: 92%; /* Margem de segurança nas laterais */
+  margin: 0 auto; /* Centraliza dentro do fundo branco */
+  padding-block: 2.2rem;
+  border-radius: 4rem; /* Cantos arredondados */
+  position: relative;
+  overflow: hidden;
+  /* Sombra para destacar a flutuação no fundo branco */
+  box-shadow: var(--shadow-lg); 
+}
+
+ /* Itens Internos --- */ 
+.stats_inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.stats_item {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: .5rem 1.5rem;
+  position: relative;
+}
+
+/* Linha vertical divisória entre os itens */
+/* Aplique isso a todos os itens, menos (:not) se ele for o último filho (:last-child) do grupo */
+.stats_item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -5%;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 40px; 
+  width: 1px;
+  background: rgba(255,255,255,.3);
+}
+
+/* Estilização do círculo do ícone com Glassmorphism */
+.stats_icon {
+  /* Cor do ícone interno */
+  color: var(--branco);
+  /* Tamanho do círculo */
+  width: 52px;
+  height: 52px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  /* Fundo branco bem claro e transparente */
+  background: rgba(255, 255, 255, 0.15); 
+  /* O desfoque no que estiver passando por trás do círculo */
+  backdrop-filter: blur(8px);            
+  /* Uma sombra interna para dar profundidade de vidro */
+  box-shadow: var(--shadow-lg); 
+}
+
+/* Alinhamento dos Textos */
+.stats_text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.stats_value {
+  font-family: var(--font-body);
+  font-size: 1.9rem;
+  font-weight: 300; 
+  color: var(--branco);
+  line-height: 1.1;
+}
+
+.stats_label {
+  font-size: 1rem;
+  color: rgba(255,255,255,.85);
+  letter-spacing: .02em;
+  text-transform: none; 
+  margin-top: .15rem;
+}
+
+/* --- 4. Responsividade (Celulares) --- */
+@media (max-width: 768px) {
+  .stats {
+    padding: 3rem 0; /* Reduz o fundo branco em cima e embaixo no celular */
+  }
+  .stats .container {
+    border-radius: 2rem; /* Bordas um pouco menores */
+    padding-inline: 1rem;
+  }
+  .stats__item:not(:last-child)::after { 
+    display: none; /* Esconde a linha separadora */
+  }
+  .stats__item { 
+    flex: 1 1 200px; 
+    justify-content: center; 
+  }
+}

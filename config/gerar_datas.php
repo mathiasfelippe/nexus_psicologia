@@ -1,8 +1,4 @@
 <?php
-/**
- * Script para gerar datas automáticas de segunda a sexta
- * Ignora feriados nacionais brasileiros
- */
 
 // Feriados nacionais brasileiros fixos (mês-dia)
 $feriados_fixos = [
@@ -70,7 +66,7 @@ function gerar_datas_automaticas($meses = 6) {
  * Insere as datas no banco de dados
  */
 function inserir_datas_banco($pdo, $datas) {
-    $stmt = $pdo->prepare("INSERT IGNORE INTO datas_disponiveis (data_calendario, status_dia) VALUES (?, 'Disponivel')");
+    $stmt = $pdo->prepare("INSERT OR IGNORE INTO datas_disponiveis (data_calendario, status_dia) VALUES (?, 'Disponivel')");
     
     $inseridas = 0;
     $duplicadas = 0;

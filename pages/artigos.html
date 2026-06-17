@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artigos e Publicações | Nexus Psicologia</title>
+    
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    
+    <style>
+        body {
+            padding-top: 80px; 
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        .catalog-hero {
+            padding: 4rem 0 2rem 0;
+            text-align: center;
+            background: radial-gradient(circle at top right, rgba(128, 161, 212, 0.08) 0%, transparent 70%);
+        }
+
+        .catalog-hero h1 {
+            font-family: var(--font-titulo);
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            margin-bottom: 1rem;
+            color: var(--azul-sereno);
+        }
+
+        .categories-nav {
+            margin: 2rem 0 4rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .category-pill {
+            background: var(--branco);
+            border: 1px solid var(--perola);
+            padding: 0.6rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--speed) var(--ease);
+            font-family: var(--font-body);
+        }
+
+        .category-pill:hover, 
+        .category-pill.active {
+            background: var(--verde-agua);
+            color: var(--branco);
+            border-color: var(--verde-agua);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 6rem;
+        }
+
+        .article-card {
+            background: var(--branco);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            transition: all var(--speed) var(--ease);
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid rgba(117, 201, 200, 0.1);
+        }
+
+        .article-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--verde-agua);
+        }
+
+        .card-image {
+            height: 220px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--speed) var(--ease);
+        }
+
+        .article-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+        .badge-category {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--azul-sereno);
+            letter-spacing: 0.05em;
+            z-index: 1;
+        }
+
+        .card-body {
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            font-family: var(--font-titulo);
+            font-size: 1.3rem;
+            color: var(--grafite);
+            margin-bottom: 0.8rem;
+            line-height: 1.3;
+            font-weight: 700;
+        }
+
+        .card-excerpt {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--grafite);
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            color: var(--verde-agua);
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .article-card.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+      <nav class="navbar" id="navbar">
+    <div class="container">
+      <div class="navbar-conteudo">
+
+        <!-- Logo -->
+        <a href="../index.html" class="navbar-logo">
+          <img src="../assets/logo.png" alt="Nexus Logo" class="logo-img" />
+        </a>
+
+        <!-- Navegação -->
+        <ul class="navbar-links" role="list">
+          <li><a href="../index.html#about">Sobre</a></li>
+          <li><a href="../index.html#specializations">Especializações</a></li>
+          <li><a href="../index.html#contact">Contato</a></li>
+          <li><a href="../pages/artigos.html">Artigos</a></li>
+        </ul>
+
+        <!-- Botão login -->
+        <div class="navbar-acao">
+          <a href="../login.php" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+              <polyline points="10 17 15 12 10 7"></polyline>
+              <line x1="15" y1="12" x2="3" y2="12"></line>
+            </svg>
+            Login
+          </a>
+        </div>
+
+        <!-- Menu hambúrguer -->
+        <button class="navbar-botao" id="hamburger" aria-label="Menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <ul class="navbar-celular" id="mobile-menu" role="list">
+        <li><a href="../index.html#about">Sobre</a></li>
+        <li><a href="../index.html#specializations">Especializações</a></li>
+        <li><a href="../index.html#contact">Contato</a></li>
+        <li><a href="../login.php" class="btn btn-primary" style="width:fit-content">Agendar</a></li>
+      </ul>
+    </div>
+  </nav>
+
+    <div class="main-content">
+        <header class="catalog-hero">
+            <div class="container reveal">
+                <h1>Acervo Nexus Psicologia</h1>
+                <p>Conhecimento especializado e acolhimento para sua saúde mental.</p>
+            </div>
+        </header>
+
+        <div class="container">
+            
+            <nav class="categories-nav reveal">
+                <button class="category-pill active" data-filter="all">Todos</button>
+                <button class="category-pill" data-filter="saude">Saúde Mental</button>
+                <button class="category-pill" data-filter="auto">Autoconhecimento</button>
+                <button class="category-pill" data-filter="relacionamento">Relacionamentos</button>
+            </nav>
+
+            <main class="articles-grid">
+                
+                <a href="artigo-ansiedade.html" class="article-card reveal" data-category="saude">
+                    <div class="card-image">
+                        <span class="badge-category">Saúde Mental</span>
+                        <img src="../assets/artigo-ansiedade.jpg" alt="Ansiedade">
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title">Navegando pela Ansiedade no Século XXI</h2>
+                        <p class="card-excerpt">Identifique os gatilhos da ansiedade moderna e aprenda práticas essenciais de regulação.</p>
+                        <div class="card-footer">Ler artigo &rarr;</div>
+                    </div>
+                </a>
+
+                <a href="artigo-autoconhecimento.html" class="article-card reveal" data-category="auto">
+                    <div class="card-image">
+                        <span class="badge-category">Autoconhecimento</span>
+                        <img src="../assets/artigo-autoconhecimento.png" alt="Autoconhecimento">
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title">O Caminho para a Própria Essência</h2>
+                        <p class="card-excerpt">Como a jornada interior serve de alicerce para uma vida mais autêntica e linear.</p>
+                        <div class="card-footer">Ler artigo &rarr;</div>
+                    </div>
+                </a>
+
+                <a href="artigo-relacionamentos.html" class="article-card reveal" data-category="relacionamento">
+                    <div class="card-image">
+                        <span class="badge-category">Relacionamentos</span>
+                        <img src="../assets/artigo-relacionamentos.jpg" alt="Relacionamentos">
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title">A Arte de Cultivar Vínculos Saudáveis</h2>
+                        <p class="card-excerpt">Entenda os pilares da comunicação empática e do respeito mútuo nas relações.</p>
+                        <div class="card-footer">Ler artigo &rarr;</div>
+                    </div>
+                </a>
+
+                <a href="artigo-burnout.html" class="article-card reveal" data-category="saude">
+                    <div class="card-image">
+                        <span class="badge-category">Saúde Mental</span>
+                        <img src="../assets/artigo-burnout.jpg" alt="Burnout">
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title">Burnout: Quando o Trabalho Exaure a Mente</h2>
+                        <p class="card-excerpt">Sinais de alerta e estratégias de recuperação para o esgotamento profissional.</p>
+                        <div class="card-footer">Ler artigo &rarr;</div>
+                    </div>
+                </a>
+
+                <a href="artigo-medofalha.html" class="article-card reveal" data-category="auto">
+                    <div class="card-image">
+                        <span class="badge-category">Autoconhecimento</span>
+                        <img src="../assets/artigo-medo.jpg" alt="Medo de falhar">
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title">O Medo de Falhar e a Paralisia Criativa</h2>
+                        <p class="card-excerpt">Transforme sua relação com o erro e descubra novas possibilidades de crescimento.</p>
+                        <div class="card-footer">Ler artigo &rarr;</div>
+                    </div>
+                </a>
+
+                <a href="artigo-bem.html" class="article-card reveal" data-category="saude">
+                    <div class="card-image">
+                        <span class="badge-category">Saúde Mental</span>
+                        <img src="../assets/artigo-bem.jpg" alt="Bem-estar">
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title">Pequenos Hábitos, Grandes Transformações</h2>
+                        <p class="card-excerpt">Como rituais diários de autocuidado podem revolucionar seu bem-estar emocional.</p>
+                        <div class="card-footer">Ler artigo &rarr;</div>
+                    </div>
+                </a>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+      <footer class="footer" id="contact">
+    <div class="container">
+      <div class="footer__grade">
+
+        <div class="footer__coluna footer__brand">
+          <div class="footer__logo">
+            <img src="../assets/logo.png" alt="Nexus Psicologia" class="footer__imagem-logo">
+          </div>
+        </div>
+
+        <div class="footer__coluna">
+          <p class="footer__slogan">
+            Psicoterapia com acolhimento,<br>respeito e propósito.
+          </p>
+        </div>
+
+        <div class="footer__coluna">
+          <p class="footer__titulo-coluna">Navegação</p>
+          <ul class="footer__links">
+            <li><a href="../index.html#home">Início</a></li>
+            <li><a href="../index.html#about">Sobre</a></li>
+            <li><a href="../index.html#specializations">Especializações</a></li>
+            <li><a href="../login.php">Agendar</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__coluna">
+          <p class="footer__titulo-coluna">Artigos</p>
+          <ul class="footer__links">
+            <li><a href="../pages/artigo-ansiedade.html">Ansiedade</a></li>
+            <li><a href="../pages/artigo-autoconhecimento.html">Autoconhecimento</a></li>
+            <li><a href="../pages/artigo-relacionamentos.html">Relacionamentos</a></li>
+            <li><a href="../pages/artigos.html">Mais . . .</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__coluna footer__contato-lista">
+          <p class="footer__titulo-coluna">Contato</p>
+          
+          <div class="footer__item-contato">
+            <span class="footer__icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+            </span>
+            <span>(11) 99999-9999</span>
+          </div>
+
+          <div class="footer__item-contato">
+            <span class="footer__icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </span>
+            <span>contato@nexuspsi.com.br</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer__barra-inferior">
+        <p class="footer__texto-direitos">© 2026 Nexus Psicologia. Todos os direitos reservados.</p>
+        <div class="footer__redes-sociais">
+          <a href="#" class="footer__link-rede-social" aria-label="Instagram">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a href="#" class="footer__link-rede-social" aria-label="LinkedIn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+              <rect x="2" y="9" width="4" height="12"/>
+              <circle cx="4" cy="4" r="2"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Lógica simples de filtro
+        const filters = document.querySelectorAll('.category-pill');
+        const cards = document.querySelectorAll('.article-card');
+
+        filters.forEach(filter => {
+            filter.addEventListener('click', () => {
+                // Remove active de todos
+                filters.forEach(f => f.classList.remove('active'));
+                filter.classList.add('active');
+
+                const category = filter.getAttribute('data-filter');
+
+                cards.forEach(card => {
+                    if (category === 'all' || card.getAttribute('data-category') === category) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -4,7 +4,7 @@ $bloqueios = obter_bloqueios_agenda($pdo);
 
 <div class="secao">
     <div class="header-top">
-        <h2>Configurações de Disponibilidade</h2>
+        <h2>Disponibilidade</h2>
         <button class="btn btn-primary" onclick="abrirModalBloqueio()">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="18" height="18">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -13,11 +13,11 @@ $bloqueios = obter_bloqueios_agenda($pdo);
         </button>
     </div>
 
-    <!-- Abas de Configuração -->
+    <!-- Abas de Disponibilidade -->
     <div style="display: flex; gap: 12px; margin-bottom: 32px; border-bottom: 1px solid #e5e7eb;">
-        <button class="btn-tab ativo" onclick="mudarAbaBloqueio('dias')">Dias Inteiros</button>
-        <button class="btn-tab" onclick="mudarAbaBloqueio('horarios')">Horários Específicos</button>
-        <button class="btn-tab" onclick="mudarAbaBloqueio('ferias')">Férias</button>
+        <button class="btn-tab ativo" onclick="mudarAbaBloqueio('dias', this)">Dias Inteiros</button>
+        <button class="btn-tab" onclick="mudarAbaBloqueio('horarios', this)">Horários Específicos</button>
+        <button class="btn-tab" onclick="mudarAbaBloqueio('ferias', this)">Férias</button>
     </div>
 
     <!-- Dias Inteiros -->
@@ -60,7 +60,7 @@ $bloqueios = obter_bloqueios_agenda($pdo);
     </div>
 
     <!-- Horários Específicos -->
-    <div id="tab-horarios" class="tab-conteudo" style="display: none;">
+    <div id="tab-horarios" class="tab-conteudo">
         <div style="background: white; border-radius: 16px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
             <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 24px; color: #111827;">Horários Bloqueados</h3>
             
@@ -73,8 +73,10 @@ $bloqueios = obter_bloqueios_agenda($pdo);
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #f9fafb; border-radius: 12px; border-left: 4px solid #f59e0b;">
                         <div>
                             <div style="font-weight: 600; color: #111827;">
-                                <?php echo date('d/m/Y', strtotime($bloqueio['data_inicio'])); ?> • 
-                                <?php echo htmlspecialchars($bloqueio['horario_inicio']); ?> - <?php echo htmlspecialchars($bloqueio['horario_fim']); ?>
+                                <?php echo date('d/m/Y', strtotime($bloqueio['data_inicio'])); ?>
+                                <?php if (!empty($bloqueio['horario_texto'])): ?>
+                                    &bull; <?php echo htmlspecialchars(substr($bloqueio['horario_texto'], 0, 5)); ?>
+                                <?php endif; ?>
                             </div>
                             <div style="font-size: 13px; color: #6b7280; margin-top: 4px;">
                                 <?php echo htmlspecialchars($bloqueio['motivo'] ?? 'Sem motivo'); ?>
@@ -97,7 +99,7 @@ $bloqueios = obter_bloqueios_agenda($pdo);
     </div>
 
     <!-- Férias -->
-    <div id="tab-ferias" class="tab-conteudo" style="display: none;">
+    <div id="tab-ferias" class="tab-conteudo">
         <div style="background: white; border-radius: 16px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
             <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 24px; color: #111827;">Períodos de Férias</h3>
             
@@ -166,13 +168,16 @@ $bloqueios = obter_bloqueios_agenda($pdo);
                 </div>
 
                 <div class="form-group" id="horarioGroup" style="display: none;">
-                    <label>Horário Início</label>
-                    <input type="time" name="horario_inicio">
-                </div>
-
-                <div class="form-group" id="horarioFimGroup" style="display: none;">
-                    <label>Horário Fim</label>
-                    <input type="time" name="horario_fim">
+                    <label>Horário</label>
+                    <select name="horario_inicio">
+                        <option value="">Selecione um horário</option>
+                        <?php 
+                        $horarios = obter_horarios($pdo);
+                        foreach ($horarios as $h): 
+                        ?>
+                            <option value="<?php echo $h['id_horario']; ?>"><?php echo substr($h['horario'], 0, 5); ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -218,14 +223,28 @@ $bloqueios = obter_bloqueios_agenda($pdo);
     .tab-conteudo.ativo {
         display: block;
     }
+
+    body.dark-mode .btn-tab {
+        color: rgba(255,255,255,.5);
+    }
+    body.dark-mode .btn-tab:hover {
+        color: var(--branco);
+    }
+    body.dark-mode .btn-tab.ativo {
+        color: var(--azul-sereno);
+        border-bottom-color: var(--azul-sereno);
+    }
 </style>
 
 <script>
-    function mudarAbaBloqueio(aba) {
-        document.querySelectorAll('.tab-conteudo').forEach(el => el.classList.remove('ativo'));
-        document.querySelectorAll('.btn-tab').forEach(el => el.classList.remove('ativo'));
+    function mudarAbaBloqueio(aba, btn) {
+        document.querySelectorAll('.tab-conteudo').forEach(function(el) {
+            el.classList.remove('ativo');
+            el.style.display = '';
+        });
+        document.querySelectorAll('.btn-tab').forEach(function(el) { el.classList.remove('ativo'); });
         document.getElementById('tab-' + aba).classList.add('ativo');
-        event.target.classList.add('ativo');
+        if (btn) btn.classList.add('ativo');
     }
 
     function abrirModalBloqueio() {
@@ -240,7 +259,6 @@ $bloqueios = obter_bloqueios_agenda($pdo);
         const tipo = document.getElementById('tipoBloqueio').value;
         document.getElementById('dataFimGroup').style.display = tipo === 'ferias' ? 'block' : 'none';
         document.getElementById('horarioGroup').style.display = tipo === 'horario_especifico' ? 'block' : 'none';
-        document.getElementById('horarioFimGroup').style.display = tipo === 'horario_especifico' ? 'block' : 'none';
     }
 
     function removerBloqueio(id) {

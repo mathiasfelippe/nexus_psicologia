@@ -62,7 +62,7 @@ $receita_mensal = obter_receita_mensal_ano($pdo);
                                     <?php echo $transacao['status']; ?>
                                 </span>
                             </td>
-                            <td><?php echo date('d/m/Y', strtotime($transacao['data_pagamento'] ?? date('Y-m-d'))); ?></td>
+                            <td><?php echo date('d/m/Y', strtotime($transacao['data_pagamento'] ?? $transacao['data_criacao'])); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

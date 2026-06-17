@@ -10,23 +10,6 @@ if (!isset($_SESSION['id_psicologa'])) {
 }
 
 $consultas = obter_todas_consultas($pdo);
-$cores_pacientes = [
-    '#2563eb',
-    '#7c3aed',
-    '#0891b2',
-    '#059669',
-    '#d97706',
-    '#dc2626',
-    '#be185d',
-    '#4f46e5',
-    '#0f766e',
-    '#9333ea'
-];
-
-function cor_paciente_calendario($id_paciente, $cores) {
-    return $cores[abs(intval($id_paciente)) % count($cores)];
-}
-
 $eventos = [];
 $agora = time();
 
@@ -44,25 +27,24 @@ foreach ($consultas as $c) {
 
     $inicio = strtotime($c['data_calendario'] . ' ' . $horario);
     $passada = $inicio && $inicio < $agora;
-    $cor_paciente = cor_paciente_calendario($c['id_paciente'], $cores_pacientes);
-    $cor_status = '#6366f1';
 
+    // Cor por status — mesmo padrão do perfil Paciente
+    $cor = '#6366f1'; // padrão (primary)
     if ($c['status'] === 'Pendente') {
-        $cor_status = '#f59e0b';
+        $cor = '#f59e0b';   // warning
     } elseif ($c['status'] === 'Confirmada') {
-        $cor_status = '#10b981';
+        $cor = '#10b981';   // success
     }
 
     $eventos[] = [
         'id' => $c['id_consulta'],
-        'title' => $c['horario'] . 'h - ' . $c['paciente_nome'] . ' (' . $c['especializacao'] . ')',
+        'title' => substr($c['horario'], 0, 5) . 'h - ' . $c['paciente_nome'] . ' (' . $c['especializacao'] . ')',
         'start' => $c['data_calendario'] . 'T' . $horario,
-        'backgroundColor' => $cor_paciente,
-        'borderColor' => $passada ? '#6b7280' : $cor_status,
+        'backgroundColor' => $cor,
+        'borderColor' => $passada ? '#6b7280' : $cor,
         'textColor' => '#ffffff',
         'classNames' => [
             'consulta-calendario',
-            'paciente-' . intval($c['id_paciente']),
             $passada ? 'consulta-passada-evento' : 'consulta-futura-evento',
             'consulta-status-' . strtolower($c['status'])
         ],
@@ -71,7 +53,6 @@ foreach ($consultas as $c) {
             'paciente' => $c['paciente_nome'],
             'especializacao' => $c['especializacao'],
             'pagamento' => $c['pagamento_status'],
-            'corPaciente' => $cor_paciente,
             'passada' => $passada
         ]
     ];
