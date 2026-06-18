@@ -1,133 +1,195 @@
+/* ============================================================
+   ARQUIVO: css/navbar.css
+   DESCRIÇÃO: Estilos da barra de navegação (navbar) do site.
+   Define o posicionamento fixo, efeito de scroll, layout em grid,
+   links com sublinhado animado, botão de login e menu mobile.
+   ============================================================ */
+
+/* Estilo base da navbar: fixada no topo, transparente inicialmente */
 .navbar {
   position: fixed;
+  /* Fica fixada na tela mesmo ao rolar a página */
   top: 0;
   z-index: 100;
+  /* z-index alto: fica acima do conteúdo da página */
   /* Início e o fim da barra na horizontal. */
   inset-inline: 0;
+  /* Equivale a left: 0; right: 0; — faz a navbar ocupar toda a largura da tela */
   padding: 1rem 0;
   /* Transições suaves quando rolar para baixo.*/
   transition: background var(--speed) var(--ease),
               box-shadow var(--speed) var(--ease),
               padding var(--speed) var(--ease);
+  /* Anima suavemente a mudança de fundo, sombra e espaçamento ao rolar */
 }
 
-/* Ocorre quando rola para baixo */
+/* Estado da navbar após o usuário rolar mais de 40px (classe adicionada pelo JS) */
 .navbar.scrolled {
   background: rgba(245,242,238,.92);
+  /* Fundo semi-transparente levemente bege ao rolar */
   backdrop-filter: blur(14px);
+  /* Efeito de desfoque no conteúdo atrás da navbar (glassmorphism) */
   box-shadow: var(--shadow-sm);
+  /* Sombra sutil para separar a navbar do conteúdo */
   padding: .6rem 0;
+  /* Reduz o espaçamento vertical: navbar fica mais compacta ao rolar */
 }
 
+/* Layout interno da navbar usando CSS Grid */
 .navbar-conteudo {
   display: grid;
   /* Cria 3 colunas: a da esquerda e a da direita terão tamanhos idênticose a do meio vai se ajustar ao tamanho do texto (auto). Isso garante que fique no centro */
-  grid-template-columns: 1fr auto 1fr; 
+  grid-template-columns: 1fr auto 1fr;
+  /* 1fr: coluna flexível (logo) | auto: coluna que se ajusta ao conteúdo (links) | 1fr: coluna flexível (botão) */
+  /* Isso garante que os links de navegação fiquem perfeitamente centralizados */
   align-items: center;
-  max-width: 1200px; 
+  /* Alinha verticalmente todos os itens ao centro */
+  max-width: 1200px;
+  /* Largura máxima do conteúdo da navbar */
   margin: 0 auto;      /* Centraliza a barra inteira na tela */
 }
 
-/* Identidade Visual */
+/* Identidade Visual - Logo */
 .navbar-logo {
   display: flex;
+  /* Usa flexbox para alinhar a imagem do logo */
 }
 
 .logo-img {
   width: 300px;
   height: 100px;
+  /* Dimensões fixas do logo */
 }
 
-/* Links de Navegação */
+/* Links de Navegação - lista central da navbar */
 .navbar-links {
   display: flex;
+  /* Exibe os links em linha */
   justify-self: center;
+  /* Centraliza o grupo de links na coluna do grid */
   gap: 5rem;
+  /* Espaço generoso entre os links */
 }
 
 .navbar-links a {
   font-size: .875rem;
+  /* Tamanho de fonte levemente menor que o padrão */
   color: var(--grafite);
   font-weight: 550;
+  /* Peso semi-negrito para os links */
   position: relative;
+  /* Necessário para posicionar o pseudo-elemento ::after (linha de hover) */
   padding-bottom: 2px;
+  /* Espaço para a linha de hover aparecer abaixo do texto */
 }
 
-/* Linha efeito hover */
+/* Linha animada que aparece abaixo do link ao passar o mouse */
 .navbar-links a::after {
   content: '';
+  /* Pseudo-elemento sem conteúdo de texto */
   position: absolute;
+  /* Posicionado em relação ao link pai */
   bottom: 0; left: 0;
   width: 0; height: 1.5px;
+  /* Começa com largura 0 (invisível) e 1.5px de altura */
   background: var(--gradiente-linha);
+  /* Linha com gradiente de azul para pérola */
   transition: width var(--speed) var(--ease);
+  /* Anima a largura suavemente */
 }
 
+/* Ao passar o mouse OU quando o link está ativo (seção visível na tela): */
 .navbar-links a:hover::after,
 .navbar-links a.active::after { 
   width: 100%;  /* A linha estica e ocupa toda a extensão do texto */
 }
 
-/* Container do Botão de Login */
+/* Container do Botão de Login - alinhado à direita */
 .navbar-acao {
   display: flex;
   align-items: center;
   gap: .75rem;
   justify-self: end;
+  /* Empurra o botão para o lado direito da coluna do grid */
 }
 
-/* Customização do Botão de Login */
+/* Customização do Botão de Login (sobrescreve o estilo base de .btn-primary) */
 .btn-primary {
   min-width: 200px;
+  /* Largura mínima para o botão não ficar muito pequeno */
   padding: .8rem 1rem; 
-  gap: 1rem; 
+  gap: 1rem;
+  /* Espaço entre o ícone SVG e o texto "Login" */
   display: inline-flex;
   align-items: center;      /* Centraliza verticalmente */
   justify-content: center;  /* Centraliza horizontalmente o conjunto (ícone + texto) */
   border-radius: 50px;
+  /* Bordas totalmente arredondadas (estilo pílula) */
   background: var(--gradiente-principal);
+  /* Fundo com gradiente de azul para verde-água */
   color: var(--branco);
   box-shadow: var(--shadow-lg);
+  /* Sombra pronunciada para dar destaque ao botão */
   transition: transform var(--speed) var(--ease),
               box-shadow var(--speed) var(--ease),
               background var(--speed) var(--ease),
               color var(--speed) var(--ease); 
+  /* Anima todas as propriedades visuais ao interagir */
 }
 
+/* Efeito hover do botão: inverte as cores (fundo claro, texto escuro) */
 .btn-primary:hover {
   background: var(--gradiente-fundo);
+  /* Fundo muda para o gradiente suave do site */
   color: var(--grafite);
+  /* Texto muda para grafite */
 }
 
 /* ARRUMAR DAQUI PRA BAIXO (RESPONSIVIDADE) */
-/* Botão Hambúrguer (Celular) */
+/* Botão Hambúrguer (Celular) - oculto por padrão, exibido em telas pequenas */
 .navbar-botao {
   display: none;
+  /* Oculto em telas grandes */
   flex-direction: column;
+  /* Empilha as 3 linhas verticalmente */
   gap: 5px;
+  /* Espaço entre as linhas do hambúrguer */
   padding: 4px;
 }
 
+/* Cada linha do ícone hambúrguer */
 .navbar-botao span {
   display: block;
   width: 22px;
   height: 2px;
+  /* Linha fina de 2px de altura */
   background: var(--clr-text);
+  /* Cor do texto (definida em outro arquivo) */
   border-radius: 99px;
+  /* Extremidades arredondadas */
   transition: transform var(--speed) var(--ease), opacity var(--speed);
+  /* Anima a transformação e opacidade para o efeito de "X" */
 }
 
+/* Animação do hambúrguer para "X" quando o menu está aberto (classe .open adicionada pelo JS) */
 .navbar-botao.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+/* Primeira linha: sobe 7px e gira 45° (forma a diagonal superior do X) */
 .navbar-botao.open span:nth-child(2) { opacity: 0; }
+/* Segunda linha (do meio): desaparece */
 .navbar-botao.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+/* Terceira linha: desce 7px e gira -45° (forma a diagonal inferior do X) */
 
-/* Menu Desdobrável do Celular */
+/* Menu Desdobrável do Celular - oculto por padrão */
 .navbar-celular {
   display: none;
+  /* Oculto por padrão; exibido quando a classe .open é adicionada pelo JS */
   flex-direction: column;
+  /* Links empilhados verticalmente */
   gap: 1rem;
+  /* Espaço entre os links */
   padding: 1.5rem 0 1rem;
   border-top: 1px solid var(--clr-lavender);
+  /* Linha separadora acima do menu mobile */
   margin-top: .5rem;
 }
 
@@ -136,13 +198,16 @@
   color: var(--clr-text);
 }
 
+/* Quando o JS adiciona a classe .open, o menu mobile é exibido */
 .navbar-celular.open { 
   display: flex; 
 }
 
-/* Adaptação para Telas Menores */
+/* Adaptação para Telas Menores (max-width: 768px = tablets e celulares) */
 @media (max-width: 768px) {
   .navbar-links,
   .navbar-acao { display: none; }
+  /* Oculta os links e o botão de login em telas pequenas */
   .navbar-botao { display: flex; }
+  /* Exibe o botão hambúrguer em telas pequenas */
 }

@@ -1,115 +1,183 @@
 /* ============================================================
-   global.css — CSS variables, reset, base typography
+   ARQUIVO: css/global.css
+   DESCRIÇÃO: Estilos globais do site Nexus Psicologia.
+   Este arquivo é o mais importante do projeto CSS pois define:
+   - Variáveis de design (cores, tipografia, espaçamentos, sombras)
+   - Reset CSS (remove estilos padrão inconsistentes dos navegadores)
+   - Estilos base para elementos HTML (body, img, a, ul, button)
+   - Classes utilitárias reutilizáveis (.container, .btn, .reveal)
+   - Estilos para páginas de artigos e especializações
    ============================================================ */
+
 /* Import Google Fonts = Lora e Comfortaa */
+/* Importa as fontes do Google Fonts via CDN:
+   - Lora: fonte serifada elegante, usada nos títulos
+   - Comfortaa: fonte arredondada e amigável, usada no corpo do texto */
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
 
+/* ── Variáveis CSS (Custom Properties) ──
+   Definidas em :root (elemento raiz = <html>), ficam disponíveis
+   em todo o projeto. Usar var(--nome) para acessá-las.
+   Isso facilita manutenção: mudar uma cor aqui reflete em todo o site. */
 :root {
   /* ── Paleta de cores ── */
-  --areia:            #F7F4EA; /* Cor 1 (Fundo claro/suave) */
-  --perola:           #DED9E2; /* Cor 2 (Tom neutro) */
-  --lavanda:          #C0B9DD; /* Cor 3 (Roxo suave) */
-  --azul-sereno:      #80A1D4; /* Cor 4 (Azul calmo) */
-  --verde-agua:       #75C9C8; /* Cor 5 (Destaque/Acento) */
+  --areia:            #F7F4EA; /* Cor 1 (Fundo claro/suave) - usado como fundo principal */
+  --perola:           #DED9E2; /* Cor 2 (Tom neutro) - bordas e separadores */
+  --lavanda:          #C0B9DD; /* Cor 3 (Roxo suave) - acentos e detalhes */
+  --azul-sereno:      #80A1D4; /* Cor 4 (Azul calmo) - links, labels e destaques */
+  --verde-agua:       #75C9C8; /* Cor 5 (Destaque/Acento) - botões e elementos de ação */
 
   /* ── Cores de suporte ── */
   --branco:           #FFFFFF;
   --grafite:          #484848; /* Seu substituto do preto (ótimo para leitura!) */
+  /* #484848 é mais suave que preto puro (#000), reduzindo o cansaço visual */
 
-  /* ── Gradientes ── */
+  /* ── Gradientes ──
+     Combinações de cores usadas em fundos e elementos decorativos */
   --gradiente-principal: linear-gradient(135deg, var(--azul-sereno) 0%, var(--verde-agua) 100%);
+  /* Gradiente diagonal de azul para verde-água: usado em botões e CTAs */
   --gradiente-fundo: linear-gradient(160deg, var(--areia) 0%, var(--perola) 50%, var(--lavanda) 100%);
+  /* Gradiente suave de areia para lavanda: fundo do body da página */
   --gradiente-linha: linear-gradient(90deg, var(--azul-sereno) 0%, var(--perola) 100%);
+  /* Gradiente horizontal: usado na linha decorativa do hero */
   --gradiente-radial: radial-gradient(circle at top right, var(--lavanda) 0%, var(--areia) 70%);
+  /* Gradiente radial (circular): fundo do hero das páginas de artigo */
 
   /* Tipografia */
   --font-titulo: 'Lora', sans-serif ;
+  /* Fonte para títulos (h1, h2, h3): elegante e serifada */
   --font-body: 'Comfortaa', serif;
+  /* Fonte para o corpo do texto: arredondada e de fácil leitura */
 
   /* Espaçamento entre seções */
   --section-gap: 6rem;
+  /* Espaço vertical padrão entre as seções da página (96px) */
   --container:   1200px;
+  /* Largura máxima do container de conteúdo */
 
-  /* Arredondamento - pequeno, medio, largo,extra largo */
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 28px;
-  --radius-xl: 48px;
+  /* Arredondamento - pequeno, medio, largo, extra largo */
+  --radius-sm: 8px;   /* Arredondamento pequeno: botões, tags */
+  --radius-md: 16px;  /* Arredondamento médio: cards */
+  --radius-lg: 28px;  /* Arredondamento largo: painéis, modais */
+  --radius-xl: 48px;  /* Arredondamento extra largo: botões pill (pílula) */
 
-  /* Sombras - pequeno, medio , largo */
+  /* Sombras - pequeno, medio, largo */
   --shadow-sm: 0 2px 12px rgba(123,111,191,.10);
+  /* Sombra sutil: elementos em repouso */
   --shadow-md: 0 8px 32px rgba(123,111,191,.15);
+  /* Sombra média: cards e painéis */
   --shadow-lg: 0 16px 56px rgba(123,111,191,.18);
+  /* Sombra grande: elementos em hover ou em destaque */
+  /* A cor rgba(123,111,191) é um roxo suave derivado da paleta do site */
 
   /* Transições */
   --ease: cubic-bezier(.4,0,.2,1);
+  /* Curva de aceleração personalizada para animações suaves (similar ao "ease-in-out") */
   --speed: 0.3s;
+  /* Duração padrão das transições CSS */
 }
 
-/* ── Reset ── */
-/* limpa a bagunça e as regras invisíveis que os navegadores vêm de fábrica - ex: site lindo no chrome, no safari vira feio */
+/* ── Reset CSS ──
+   limpa a bagunça e as regras invisíveis que os navegadores vêm de fábrica - ex: site lindo no chrome, no safari vira feio */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* box-sizing: border-box: padding e border são incluídos no tamanho total do elemento
+   (evita que um elemento com width:100px + padding:10px fique com 120px de largura)
+   margin: 0; padding: 0: remove margens e espaçamentos padrão de todos os elementos
+   *::before, *::after: aplica também nos pseudo-elementos CSS */
 
 html {
   scroll-behavior: smooth;
-  font-size: 16px; }
+  /* Ativa rolagem suave nativa do navegador para links âncora (#) */
+  font-size: 16px;
+  /* Tamanho base da fonte: 1rem = 16px em todo o site */
+}
 
 body {
   font-family: var(--font-body);
+  /* Aplica a fonte Comfortaa como padrão para todo o texto da página */
   background: var(--gradiente-fundo);
+  /* Fundo gradiente suave de areia para lavanda */
   color: var(--grafite);
+  /* Cor do texto padrão: grafite (#484848) */
   line-height: 1.6;
+  /* Altura da linha: 1.6x o tamanho da fonte, melhorando a legibilidade */
   /* Esconde qualquer barra de rolagem horizontal. */
   overflow-x: hidden;
+  /* Impede que elementos que "vazam" horizontalmente criem barra de scroll */
 }
 
 img {
-  display: block; 
+  display: block;
+  /* Remove o espaço extra que imagens inline têm abaixo delas (alinhamento de linha de base) */
   max-width: 100%;
+  /* Imagens nunca ultrapassam a largura do container pai (responsividade) */
 }
 
 a {
   text-decoration: none;
+  /* Remove o sublinhado padrão dos links */
   color: inherit;
+  /* Links herdam a cor do elemento pai (não ficam azul por padrão) */
 }
 
 ul, ol {
-  list-style: none; 
+  list-style: none;
+  /* Remove os marcadores padrão das listas (bolinhas e números) */
 }
 
 button {
   cursor: pointer;
+  /* Muda o cursor para "mãozinha" ao passar sobre botões */
   border: none;
+  /* Remove a borda padrão dos botões */
   background: none;
+  /* Remove o fundo padrão cinza dos botões */
   font: inherit;
+  /* Botões herdam a fonte do elemento pai (por padrão, botões têm fonte diferente) */
 }
 
-/* ── Container ── */
+/* ── Container ──
+   Classe que centraliza e limita a largura do conteúdo na página */
 /* Segura o conteúdo do site */
 .container {
   width: min(var(--container), 100% - 2.5rem);
+  /* min(): usa o menor valor entre 1200px e (100% da tela - 2.5rem de margem)
+     Em telas menores que 1200px, o container usa 100% - 2.5rem (com margem lateral)
+     Em telas maiores, limita em 1200px */
   margin-inline: auto;
+  /* Centraliza o container horizontalmente (equivale a margin-left: auto; margin-right: auto) */
 }
 
-/* Etiquetas acima dos títulos principais de cada seção */
+/* Etiquetas acima dos títulos principais de cada seção
+   Ex: "SOBRE MIM", "ÁREAS DE ATUAÇÃO" */
 .section-label {
   font-family: var(--font-body);
   font-size: .7rem;
+  /* Texto pequeno (11.2px) */
   font-weight: 500;
   letter-spacing: .18em;
+  /* Espaçamento entre letras: cria o efeito de texto "espalhado" típico de labels */
   text-transform: uppercase;
+  /* Converte o texto para maiúsculas automaticamente */
   color: var(--azul-sereno);
   margin-bottom: .75rem;
 }
 
-/* -- Botões -- */
+/* -- Botões --
+   Estilo base para todos os botões do site */
 btn {
   display: inline-flex;
+  /* inline-flex: o botão se comporta como inline (não ocupa linha inteira)
+     mas seus filhos usam flexbox para alinhamento */
   align-items: center;
+  /* Centraliza verticalmente o ícone e o texto do botão */
   justify-content: center; /* Adicionado aqui para centralizar todos os botões por padrão */
   gap: .5rem;
+  /* Espaço entre o ícone SVG e o texto do botão */
   padding: .65rem 1.4rem;
+  /* Espaçamento interno: vertical (10px) e horizontal (22px) */
   border-radius: var(--radius-xl);
+  /* Bordas arredondadas no estilo "pílula" */
   font-size: .85rem;
   font-weight: 500;
 }
@@ -117,53 +185,81 @@ btn {
 /* Estilo padrão do Botão Principal do sistema */
 .btn-primary {
   background: var(--clr-primary);
+  /* Fundo com a cor primária (definida em outro arquivo CSS) */
   color: var(--clr-white);
+  /* Texto branco para contraste */
   box-shadow: var(--shadow-sm);
+  /* Sombra sutil para dar profundidade */
 }
 
-/* ── Fade-in animation (com JS IntersectionObserver) ── */
-/* o CSS prepara o visual do efeito e o JS avisa o momento exato em que o usuário chegou naquela parte do site para ativar a animação. */
+/* ── Fade-in animation (com JS IntersectionObserver) ──
+   o CSS prepara o visual do efeito e o JS avisa o momento exato em que o usuário chegou naquela parte do site para ativar a animação. */
+
+/* Estado inicial: elemento invisível e deslocado para baixo */
 .reveal {
   opacity: 0;
+  /* Completamente transparente */
   transform: translateY(30px);
+  /* Deslocado 30px abaixo da posição final */
   transition: opacity .7s var(--ease), transform .7s var(--ease);
+  /* Transição suave de 0.7s para opacidade e posição */
 }
+
+/* Estado final: quando o JS adiciona a classe 'visible' */
 .reveal.visible {
   opacity: 1;
+  /* Completamente visível */
   transform: none;
+  /* Sem deslocamento: volta para a posição original */
 }
 
 /* ============================================================
    ARTIGO / ESPECIALIZAÇÃO — Layout de página de conteúdo
+   Estilos usados nas páginas de artigos e especializações
+   (ex: artigo-ansiedade.html, clinica.html, infantil.html)
    ============================================================ */
 
-/* Barra de progresso de leitura no topo da página */
+/* Barra de progresso de leitura no topo da página
+   Aumenta de largura (0% → 100%) conforme o usuário rola a página.
+   O JS controla a largura dinamicamente. */
 #progress-bar {
   position: fixed;
+  /* Fixo no topo da janela, não rola com a página */
   top: 0;
   left: 0;
   height: 4px;
+  /* Barra fina de 4px de altura */
   background: var(--gradiente-principal);
+  /* Gradiente de azul para verde-água */
   width: 0%;
+  /* Começa com 0% de largura (JS atualiza conforme o scroll) */
   z-index: 1000;
+  /* Fica acima de todos os outros elementos */
   transition: width 0.1s ease;
+  /* Animação suave ao atualizar a largura */
 }
 
 /* Hero da página de artigo/especialização — altura reduzida, gradiente radial */
 .artigo-hero {
   min-height: 60vh;
+  /* Altura mínima de 60% da altura da janela */
   display: flex;
   align-items: center;
+  /* Centraliza o conteúdo verticalmente */
   background: var(--gradiente-radial);
+  /* Fundo com gradiente radial suave */
   position: relative;
   padding: 4rem 0;
   border-bottom: 1px solid var(--perola);
+  /* Linha separadora sutil na parte inferior */
 }
 
 .artigo-hero .container {
   max-width: 800px;
+  /* Limita a largura do conteúdo do hero para melhor leitura */
   margin: 0 auto;
   text-align: center;
+  /* Centraliza o texto */
 }
 
 .artigo-hero .section-label {
@@ -177,8 +273,12 @@ btn {
 
 .artigo-hero h1 {
   font-family: var(--font-titulo);
+  /* Usa a fonte Lora (serifada) para o título */
   font-size: clamp(2.5rem, 8vw, 4rem);
+  /* clamp(mínimo, preferido, máximo): fonte responsiva
+     Mínimo: 2.5rem | Preferido: 8% da largura da tela | Máximo: 4rem */
   line-height: 1.1;
+  /* Linhas mais compactas para títulos grandes */
   margin-bottom: 1.5rem;
   color: var(--grafite);
 }
@@ -187,28 +287,39 @@ btn {
   font-size: 1.25rem;
   color: var(--grafite);
   opacity: 0.8;
+  /* Levemente transparente para hierarquia visual */
   max-width: 600px;
   margin: 0 auto;
 }
 
-/* Grid principal: sidebar (TOC) + conteúdo */
+/* Grid principal: sidebar (TOC) + conteúdo
+   Layout de duas colunas: índice à esquerda e texto à direita */
 .artigo-layout {
   display: grid;
   grid-template-columns: 260px 1fr;
+  /* Coluna esquerda fixa de 260px + coluna direita flexível */
   gap: 3rem;
+  /* Espaço entre as colunas */
   padding: 4rem 0;
 }
 
-/* Sidebar fixa com navegação (Table of Contents) */
+/* Sidebar fixa com navegação (Table of Contents - Índice)
+   Fica "grudada" no topo ao rolar a página */
 .artigo-sidebar {
   position: sticky;
+  /* Fica fixo na posição ao rolar, mas apenas dentro do seu container pai */
   top: 13rem;
+  /* Distância do topo da janela quando fixo (abaixo da navbar) */
   height: fit-content;
+  /* Altura se ajusta ao conteúdo */
 }
 
+/* Caixa do índice (TOC - Table of Contents) com efeito de vidro fosco */
 .toc {
   background: rgba(255, 255, 255, 0.5);
+  /* Fundo branco semi-transparente */
   backdrop-filter: blur(10px);
+  /* Efeito de desfoque no fundo (glassmorphism) */
   padding: 2rem;
   border-radius: var(--radius-lg);
   border: 1px solid var(--branco);
@@ -241,19 +352,25 @@ btn {
   gap: 0.75rem;
   font-size: 0.9rem;
   opacity: 0.7;
+  /* Links do índice levemente transparentes */
   transition: var(--speed) var(--ease);
+  /* Transição suave para o hover */
 }
 
+/* Estado hover e link ativo do índice */
 .toc a:hover,
 .toc a.active {
   color: var(--azul-sereno);
   opacity: 1;
+  /* Fica totalmente visível */
   transform: translateX(5px);
+  /* Desloca levemente para a direita ao passar o mouse */
 }
 
-/* Área de conteúdo principal */
+/* Área de conteúdo principal do artigo */
 .artigo-content section {
   margin-bottom: 5rem;
+  /* Espaço generoso entre seções do artigo */
 }
 
 .artigo-content h2 {
@@ -264,6 +381,7 @@ btn {
   display: flex;
   align-items: center;
   gap: 1rem;
+  /* Espaço entre o ícone e o texto do título */
 }
 
 .artigo-content p {
@@ -272,20 +390,24 @@ btn {
   opacity: 0.9;
 }
 
-/* Card de destaque com borda lateral colorida */
+/* Card de destaque com borda lateral colorida
+   Usado para informações importantes ou citações em destaque */
 .info-card {
   background: var(--branco);
   padding: 2.5rem;
   border-radius: var(--radius-lg);
   border-left: 6px solid var(--verde-agua);
+  /* Borda esquerda grossa na cor verde-água: elemento visual de destaque */
   box-shadow: var(--shadow-md);
   margin: 3rem 0;
   position: relative;
   overflow: hidden;
+  /* Garante que elementos filhos não ultrapassem as bordas arredondadas */
 }
 
 .info-card strong {
   display: block;
+  /* Ocupa linha inteira */
   margin-bottom: 0.5rem;
   color: var(--verde-agua);
   text-transform: uppercase;
@@ -293,10 +415,13 @@ btn {
   letter-spacing: 0.1em;
 }
 
-/* Grid de sintomas/itens com ícone */
+/* Grid de sintomas/itens com ícone
+   Layout responsivo de cards com ícone + texto */
 .symptoms-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  /* auto-fit: cria quantas colunas couberem
+     minmax(220px, 1fr): cada coluna tem mínimo de 220px e máximo de 1 fração do espaço */
   gap: 1.25rem;
 }
 
@@ -311,22 +436,29 @@ btn {
   box-shadow: var(--shadow-sm);
 }
 
+/* Efeito hover: card sobe levemente e a sombra aumenta */
 .symptom-item:hover {
   transform: translateY(-5px);
+  /* Sobe 5px ao passar o mouse */
   box-shadow: var(--shadow-md);
+  /* Sombra maior para reforçar o efeito de elevação */
 }
 
 .symptom-icon {
   color: var(--azul-sereno);
   background: var(--areia);
+  /* Fundo areia para o ícone */
   padding: 0.75rem;
   border-radius: var(--radius-sm);
   display: flex;
+  /* Centraliza o ícone SVG dentro do quadrado */
 }
 
-/* CTA final da página */
+/* CTA final da página de artigo/especialização
+   Bloco de chamada para ação com gradiente e botão */
 .cta {
   background: var(--gradiente-principal);
+  /* Fundo com gradiente de azul para verde-água */
   padding: 4rem;
   border-radius: var(--radius-xl);
   color: var(--branco);
@@ -347,6 +479,7 @@ btn {
   opacity: 0.9;
 }
 
+/* Botão primário dentro do CTA: fundo branco com texto azul (inversão do padrão) */
 .cta .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -354,44 +487,56 @@ btn {
   padding: 1rem 2.5rem;
   border-radius: var(--radius-xl);
   background: var(--branco);
+  /* Fundo branco para contrastar com o fundo gradiente do CTA */
   color: var(--azul-sereno);
+  /* Texto azul */
   font-weight: 700;
   box-shadow: var(--shadow-md);
   margin-top: 2rem;
   transition: var(--speed) var(--ease);
 }
 
+/* Efeito hover: botão aumenta levemente de tamanho */
 .cta .btn-primary:hover {
   transform: scale(1.05);
+  /* Escala 105%: efeito de "crescimento" suave */
   box-shadow: var(--shadow-lg);
 }
 
 /* Ajustes da Navbar nas páginas de artigo (sticky + botão login) */
 .navbar {
   position: sticky;
+  /* A navbar fica fixada no topo ao rolar a página */
   top: 0;
   z-index: 999;
+  /* z-index alto: fica acima de todos os outros elementos da página */
   background-color: var(--branco);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  /* Sombra sutil abaixo da navbar para separar do conteúdo */
 }
 
 .navbar-acao .btn-primary {
   margin-top: 0;
+  /* Remove margem superior que poderia desalinhar o botão na navbar */
   padding: 0.5rem 1.5rem;
   font-size: 0.9rem;
 }
 
-/* Responsivo: coluna única em telas menores */
+/* Responsivo: coluna única em telas menores que 992px (tablets e celulares)
+   O sidebar do índice é ocultado e o conteúdo ocupa a largura total */
 @media (max-width: 992px) {
   .artigo-layout {
     grid-template-columns: 1fr;
+    /* Uma única coluna em vez de duas */
   }
   .artigo-sidebar {
     display: none;
+    /* Oculta o índice lateral em telas pequenas (economiza espaço) */
   }
 }
 
-/* Card da psicóloga (página Sobre) */
+/* Card da psicóloga (página Sobre)
+   Layout horizontal com foto circular à esquerda e texto à direita */
 .psicologa-card {
   display: flex;
   gap: 2.5rem;
@@ -407,14 +552,19 @@ btn {
   width: 160px;
   height: 160px;
   border-radius: 50%;
+  /* Torna a imagem circular */
   object-fit: cover;
+  /* A imagem cobre o espaço sem distorcer (corta se necessário) */
   border: 4px solid var(--verde-agua);
+  /* Borda colorida ao redor da foto */
 }
 
-/* Grid de valores (página Sobre) */
+/* Grid de valores (página Sobre)
+   Cards com ícone, título e descrição dos valores da clínica */
 .values-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  /* Grid responsivo: colunas de no mínimo 220px */
   gap: 1.5rem;
 }
 
@@ -428,6 +578,7 @@ btn {
 
 .value-item .symptom-icon {
   margin: 0 auto 1rem;
+  /* Centraliza o ícone horizontalmente */
   width: 48px;
   height: 48px;
   align-items: center;
@@ -438,11 +589,12 @@ btn {
   margin-bottom: 0.5rem;
 }
 
-/* Texto do CRP da psicóloga */
+/* Texto do CRP da psicóloga (número de registro profissional) */
 .psicologa-crp {
   font-size: 1rem;
   margin-bottom: 0.75rem;
   opacity: 0.8;
+  /* Levemente transparente para hierarquia visual */
 }
 
 /* Estilos extras para páginas com listas (infantil, etc.) */
@@ -452,34 +604,46 @@ btn {
   margin-top: 2rem;
   margin-bottom: 1rem;
   color: var(--verde-agua);
+  /* Subtítulos em verde-água para diferenciação visual */
 }
 
 .artigo-content ul {
   list-style: none;
+  /* Remove marcadores padrão */
   padding-left: 0;
   margin-bottom: 1.5rem;
 }
 
 .artigo-content li {
   padding-left: 1.5rem;
+  /* Espaço para o ícone de check à esquerda */
   margin-bottom: 0.75rem;
   position: relative;
+  /* Necessário para posicionar o ::before (ícone de check) */
   color: var(--grafite);
   line-height: 1.6;
   font-size: 1.1rem;
 }
 
+/* Pseudo-elemento: adiciona um "✓" antes de cada item da lista */
 .artigo-content li::before {
   content: "✓";
+  /* Símbolo de check */
   position: absolute;
+  /* Posicionado em relação ao <li> pai */
   left: 0;
+  /* Alinhado à esquerda do padding */
   color: var(--verde-agua);
+  /* Check em verde-água */
   font-weight: bold;
 }
 
+/* Responsivo: card da psicóloga em coluna única em telas menores */
 @media (max-width: 992px) {
   .psicologa-card {
     flex-direction: column;
+    /* Empilha foto e texto verticalmente */
     text-align: center;
+    /* Centraliza o texto */
   }
 }

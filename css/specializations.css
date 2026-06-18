@@ -1,14 +1,28 @@
+/* ============================================================
+   ARQUIVO: css/specializations.css
+   DESCRIÇÃO: Estilos da seção de especializações.
+   Cria um carrossel horizontal de cards com scroll nativo,
+   cada card exibindo uma área de atuação da psicóloga com
+   imagem ilustrativa, título e descrição.
+   ============================================================ */
+
 /* Container principal que envelopa todo o conteúdo de especializações. */
 .specializations {
   padding-block: var(--section-gap);
+  /* Espaçamento vertical padrão entre seções (6rem acima e abaixo) */
   background: #ffffff;
+  /* Fundo branco para a seção */
 }
 
+/* Título da seção de especializações */
 .specializations-titulo {
   font-family: var(--font-titulo);
+  /* Fonte Lora (serifada) para o título */
   /* Responsividade, define o tamanho minimo, o ideal e o máximo da fonte. */
   font-size: clamp(2rem, 3.5vw, 2.9rem);
+  /* Fonte responsiva */
   font-weight: 300;
+  /* Peso leve */
   /* Espaçamento da linha */
   line-height: 1.15;
   /* Faz com que o texto de baixo não fique colado */
@@ -16,45 +30,69 @@
   color: var(--grafite);
 }
 
-/* ── Carrossel ── */
+/* ── Carrossel ──
+   Grade de cards com scroll horizontal nativo.
+   Os cards ficam em linha e o usuário pode rolar horizontalmente. */
 .specializations-grid {
   display: flex;
+  /* Exibe os cards em linha */
   flex-wrap: nowrap;
+  /* Impede que os cards quebrem para a próxima linha (mantém em linha única) */
   gap: 1.5rem;
+  /* Espaço entre os cards */
   /* Habilita o scroll horizontal e esconde o vertical */
   overflow-x: auto;
+  /* Permite scroll horizontal quando os cards ultrapassam a largura da tela */
   overflow-y: hidden;
+  /* Oculta qualquer overflow vertical */
   width: 100%;
   padding-inline: 2rem;
+  /* Espaçamento lateral interno para os cards não ficarem colados nas bordas */
   padding-bottom: 1rem;
+  /* Espaço abaixo para a barra de scroll não sobrepor os cards */
   scroll-behavior: smooth;
+  /* Rolagem suave ao navegar programaticamente */
   scroll-padding-inline: 2rem;
+  /* Garante que o card "encaixe" corretamente ao rolar com teclado */
   /* Informa ao usuário que ele pode clicar e arrastar com o mouse */
   cursor: grab;
+  /* Cursor de "mão aberta" indica que o carrossel é arrastável */
 }
 
 /* Classe ativada via JavaScript quando o usuário está ativamente arrastando o carrossel */
 .specializations-grid.dragging {
   cursor: grabbing;
+  /* Cursor de "mão fechada" durante o arrasto */
   user-select: none; /* Evita que o texto seja selecionado sem querer durante o arrasto */
 }
 
+/* Tamanho de cada card dentro do carrossel */
 .specializations-grid .spec-card {
   /* O flex: 0 0 impede que o card encolha (shrink) ou expanda (grow) distorcendo o layout */
   flex: 0 0 clamp(320px, 35vw, 420px);
+  /* flex-grow: 0 (não cresce) | flex-shrink: 0 (não encolhe) | flex-basis: tamanho fixo */
   min-width: clamp(320px, 35vw, 420px);
+  /* Tamanho responsivo: mínimo 320px, ideal 35% da largura, máximo 420px */
 }
 
-/* ── Cards ── */
+/* ── Cards ──
+   Cada card de especialização com fundo gradiente e efeito hover */
 .spec-card {
   background: var(--gradiente-radial);
+  /* Fundo com gradiente radial suave */
   border-radius: 2.2rem;
+  /* Cantos muito arredondados */
   padding: 1.8rem 1.8rem 2.2rem;
+  /* Espaçamento interno: mais espaço na parte inferior */
   display: flex;
   flex-direction: column;
+  /* Conteúdo empilhado verticalmente: botão → imagem → nome → descrição */
   position: relative;
+  /* Necessário para posicionar o botão circular (spec-card-botao) */
   overflow: hidden;
+  /* Corta elementos que saiam dos cantos arredondados */
   border: 1px solid rgba(255,255,255,0.6);
+  /* Borda branca semi-transparente para efeito de vidro */
   
   /* Transições suaves para a elevação e sombra no hover */
   transition:
@@ -62,42 +100,56 @@
     box-shadow var(--speed) var(--ease);
 }
 
+/* Efeito hover: card sobe levemente */
 .spec-card:hover {
   transform: translateY(-6px);
+  /* Sobe 6px ao passar o mouse */
   box-shadow: var(--shadow-sm);
+  /* Sombra sutil para reforçar a elevação */
 }
 
-/* Botão circular */
+/* Botão circular com seta no canto superior esquerdo do card */
 .spec-card-botao {
   width: 57px;
   height: 57px;
   border-radius: 50%;
+  /* Forma circular */
   background: transparent;
+  /* Fundo transparente */
   border: 1px solid var(--lavanda);
+  /* Borda lavanda */
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Centraliza a seta dentro do círculo */
   position: absolute;
+  /* Posicionado em relação ao .spec-card pai */
   top: 1.8rem;
   left: 1.8rem;
+  /* Canto superior esquerdo do card */
   z-index: 2;
+  /* Fica acima dos outros elementos do card */
   text-decoration: none;
   color: inherit;
+  /* Herda a cor do elemento pai */
 }
 
-/* Seta */
+/* Seta SVG dentro do botão circular */
 .spec-card-botao svg {
   width: 30px;
   height: 30px;
 }
 
 /* Controla o espaço onde a imagem fica */
+/* Container da imagem ilustrativa da especialização */
 .spec-card-ilustracao {
   width: 100%;
   aspect-ratio: 1.1;
+  /* Proporção largura:altura de 1.1:1 (levemente mais largo que alto) */
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Centraliza a imagem dentro do container */
   margin-bottom: 1rem;
 }
 
@@ -105,11 +157,15 @@
 .spec-card-ilustracao img {
   max-width: 85%;
   max-height: 85%;
+  /* A imagem ocupa no máximo 85% do container */
   object-fit: contain;
+  /* Mantém proporções sem cortar */
 }
 
+/* Nome da especialização (ex: "Clínica", "Infantil") */
 .spec-card-nome {
   font-family: var(--font-titulo);
+  /* Fonte Lora para o nome */
   font-size: 1.5rem;
   font-weight: 400;
   color: var(--grafite);
@@ -117,6 +173,7 @@
   margin-top: 0.5rem;
 }
 
+/* Descrição curta da especialização */
 .spec-card-descricao {
   font-size: 0.85rem;
   font-family: var(--font-body);
@@ -124,16 +181,20 @@
   line-height: 1.5;
 }
 
-/* ── Mobile ── */
+/* ── Mobile ──
+   Em telas pequenas, cada card ocupa quase a largura total da tela */
 @media (max-width: 768px) {
   .specializations-grid {
     padding-inline: 1rem;
+    /* Reduz o espaçamento lateral */
   }
 
   .specializations-grid .spec-card {
     /* Em telas pequenas, o card ocupa 82% da largura da tela, deixando uma "ponta" do próximo card visível para sugerir o scroll */
     flex: 0 0 82vw;
+    /* 82% da largura da viewport */
     min-width: 82vw;
+    /* A "ponta" do próximo card visível indica ao usuário que pode rolar */
   }
 
 }

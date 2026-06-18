@@ -1,20 +1,45 @@
+<!--
+    ARQUIVO: components/cta.html
+    DESCRIÇÃO: Componente da seção CTA (Call-to-Action) da landing page.
+
+    Este arquivo é carregado dinamicamente pelo JavaScript (main.js) e injetado
+    no elemento <div id="cta-placeholder"> do index.html.
+
+    ESTRUTURA:
+      - Texto motivacional (título com ênfase em itálico)
+      - Descrição + botão de agendamento
+      - Elemento decorativo (emoji de planta)
+
+    ANIMAÇÕES:
+      - Classe "reveal": ativada pelo IntersectionObserver em main.js
+      - transition-delay:.15s: escalonamento da animação do bloco de ação
+-->
+
+<!-- Seção CTA: id="schedule" é o alvo do link "Agendar" no footer -->
 <section class="cta" id="schedule">
   <div class="container">
     <div class="cta__inner">
 
+      <!-- ── Texto Motivacional ── -->
+      <!-- Classe "reveal": animado ao entrar na viewport -->
       <div class="cta__text reveal">
         <h2 class="cta__title">
           Sua saúde mental<br>merece atenção.<br>
+          <!-- <em>: itálico para dar ênfase emocional à frase de chamada -->
           <em>Vamos começar?</em>
         </h2>
       </div>
 
+      <!-- ── Descrição e Botão de Ação ── -->
+      <!-- transition-delay:.15s: segunda animação da sequência -->
       <div class="cta__action reveal" style="transition-delay:.15s">
         <p class="cta__desc">
           Agende sua sessão e dê o primeiro passo para uma vida com mais leveza e propósito.
         </p>
+        <!-- Botão que rola a página até a seção de contato (#contact no footer) -->
         <a href="#contact" class="btn btn-primary"
           style="font-size:.9rem; padding:.75rem 1.75rem">
+          <!-- Ícone de calendário em SVG -->
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
@@ -27,7 +52,10 @@
         </a>
       </div>
 
+      <!-- ── Elemento Decorativo ── -->
+      <!-- aria-hidden="true": oculto para leitores de tela (puramente decorativo) -->
       <div class="cta__photo" aria-hidden="true">
+        <!-- Emoji de planta como elemento visual decorativo -->
         <div class="cta__photo-inner">🪴</div>
       </div>
 

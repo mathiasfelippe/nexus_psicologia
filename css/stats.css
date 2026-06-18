@@ -1,92 +1,140 @@
+/* ============================================================
+   ARQUIVO: css/stats.css
+   DESCRIÇÃO: Estilos da seção de estatísticas (números de impacto).
+   Cria um painel com gradiente "flutuante" sobre fundo branco,
+   com efeito glassmorphism nos ícones e linhas divisórias entre
+   os itens de estatística.
+   ============================================================ */
+
+/* Seção externa: fundo branco que serve de "palco" para o painel gradiente */
 .stats {
   background-color: #ffffff; 
   width: 100%;
+  /* Ocupa a largura total da tela */
 }
 
+/* Container interno: painel com gradiente que "flutua" sobre o fundo branco */
 .stats .container {
   background: var(--gradiente-principal);
+  /* Fundo com gradiente de azul para verde-água */
   max-width: 1120px; /* Largura*/
   width: 92%; /* Margem de segurança nas laterais */
+  /* 92% da tela: deixa 4% de margem em cada lado */
   margin: 0 auto; /* Centraliza dentro do fundo branco */
   padding-block: 2.2rem;
+  /* Espaçamento vertical interno */
   border-radius: 4rem; /* Cantos arredondados */
+  /* Bordas muito arredondadas para o painel parecer "flutuante" */
   position: relative;
   overflow: hidden;
+  /* Corta qualquer elemento que saia dos cantos arredondados */
   /* Sombra para destacar a flutuação no fundo branco */
   box-shadow: var(--shadow-lg); 
+  /* Sombra pronunciada para reforçar o efeito de elevação */
 }
 
  /* Itens Internos --- */ 
+/* Wrapper que organiza os itens de estatística em linha */
 .stats_inner {
   display: flex;
   align-items: center;
+  /* Alinha verticalmente ao centro */
   justify-content: space-around;
+  /* Distribui os itens com espaço igual entre eles */
   gap: 1rem;
   flex-wrap: wrap;
+  /* Permite que os itens quebrem para a próxima linha em telas pequenas */
 }
 
+/* Cada item de estatística: ícone + texto */
 .stats_item {
   display: flex;
   align-items: center;
   gap: 1.2rem;
+  /* Espaço entre o círculo do ícone e o texto */
   padding: .5rem 1.5rem;
   position: relative;
+  /* Necessário para posicionar a linha divisória ::after */
 }
 
 /* Linha vertical divisória entre os itens */
 /* Aplique isso a todos os itens, menos (:not) se ele for o último filho (:last-child) do grupo */
 .stats_item:not(:last-child)::after {
+  /* :not(:last-child) = todos os itens EXCETO o último */
   content: '';
+  /* Pseudo-elemento sem conteúdo: apenas a linha */
   position: absolute;
   right: -5%;
+  /* Posicionada à direita do item, no meio do espaço entre itens */
   top: 50%;
   transform: translateY(-50%);
+  /* Centraliza verticalmente a linha */
   height: 40px; 
+  /* Altura da linha divisória */
   width: 1px;
+  /* Linha fina de 1px */
   background: rgba(255,255,255,.3);
+  /* Branco semi-transparente para suavidade */
 }
 
 /* Estilização do círculo do ícone com Glassmorphism */
+/* Efeito de "vidro fosco": fundo semi-transparente + desfoque */
 .stats_icon {
   /* Cor do ícone interno */
   color: var(--branco);
+  /* Ícone SVG branco */
   /* Tamanho do círculo */
   width: 52px;
   height: 52px;
   border: 1px solid rgba(255, 255, 255, 0.4);
+  /* Borda branca semi-transparente (efeito vidro) */
   border-radius: 50%;
+  /* Forma circular */
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Centraliza o ícone dentro do círculo */
   flex-shrink: 0;
+  /* Impede que o círculo encolha */
   /* Fundo branco bem claro e transparente */
   background: rgba(255, 255, 255, 0.15); 
+  /* Fundo branco com 15% de opacidade */
   /* O desfoque no que estiver passando por trás do círculo */
   backdrop-filter: blur(8px);            
+  /* Desfoca o gradiente atrás do círculo (efeito glassmorphism) */
   /* Uma sombra interna para dar profundidade de vidro */
   box-shadow: var(--shadow-lg); 
 }
 
-/* Alinhamento dos Textos */
+/* Alinhamento dos Textos: valor + rótulo empilhados verticalmente */
 .stats_text {
   display: flex;
   flex-direction: column;
+  /* Empilha valor e rótulo verticalmente */
   align-items: flex-start;
+  /* Alinha à esquerda */
 }
 
+/* Número/valor principal da estatística (ex: "+200", "98%") */
 .stats_value {
   font-family: var(--font-body);
   font-size: 1.9rem;
+  /* Fonte grande para destaque */
   font-weight: 300; 
+  /* Peso leve para contraste com o rótulo */
   color: var(--branco);
   line-height: 1.1;
+  /* Linhas compactas */
 }
 
+/* Rótulo descritivo abaixo do valor (ex: "pessoas atendidas") */
 .stats_label {
   font-size: 1rem;
   color: rgba(255,255,255,.85);
+  /* Branco levemente transparente para hierarquia visual */
   letter-spacing: .02em;
   text-transform: none; 
+  /* Não converte para maiúsculas (diferente do .section-label) */
   margin-top: .15rem;
 }
 
@@ -98,12 +146,16 @@
   .stats .container {
     border-radius: 2rem; /* Bordas um pouco menores */
     padding-inline: 1rem;
+    /* Reduz o espaçamento lateral interno */
   }
   .stats__item:not(:last-child)::after { 
     display: none; /* Esconde a linha separadora */
+    /* Em telas pequenas, os itens ficam empilhados e a linha não faz sentido */
   }
   .stats__item { 
     flex: 1 1 200px; 
+    /* Cada item ocupa no mínimo 200px e cresce conforme disponível */
     justify-content: center; 
+    /* Centraliza o conteúdo do item */
   }
 }

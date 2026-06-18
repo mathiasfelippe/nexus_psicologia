@@ -1,17 +1,26 @@
 /* ═══════════════════════════════════════════════════════════════
-   NEXUS PSICOLOGIA - LOGIN
+   ARQUIVO: css/login.css
+   DESCRIÇÃO: Estilos da página de login e cadastro do sistema.
+   Define o fundo animado com bolhas orgânicas e partículas,
+   o card central com efeito glassmorphism (vidro fosco),
+   as abas de Login/Cadastro, os formulários com validação visual,
+   e o botão com efeito ripple (ondulação ao clicar).
    Design: Acolhedor, Confortável, Leve
    Cores: Paleta clara global.css (areia, pérola, lavanda)
 ═══════════════════════════════════════════════════════════════ */
 
+/* Importa as fontes do Google Fonts (mesmo conjunto do global.css) */
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
 
+/* Reset CSS: remove margens, espaçamentos e normaliza o box-sizing */
 *, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Variáveis CSS: redefinidas aqui para que login.css seja independente do global.css
+   (a página de login não carrega global.css) */
 :root {
     --areia: #F7F4EA;
     --perola: #DED9E2;
@@ -42,89 +51,124 @@
     --speed: 0.3s;
 }
 
+/* Impede scroll na página de login (o card tem scroll interno próprio) */
 html, body {
     height: 100%;
     overflow: hidden;
+    /* A página de login não deve ter scroll externo */
 }
 
 body {
     font-family: var(--font-body);
     color: var(--grafite);
     -webkit-font-smoothing: antialiased;
+    /* Suaviza a renderização das fontes no macOS/iOS (WebKit) */
     -moz-osx-font-smoothing: grayscale;
+    /* Suaviza a renderização das fontes no Firefox/macOS */
 }
 
 /* ═══════════════════════════════════════════════════════════════
    BACKGROUND - GRADIENTE SUAVE CLARO
+   Fundo animado que se move lentamente (efeito "vivo")
 ═══════════════════════════════════════════════════════════════ */
 
+/* Camada de fundo: cobre toda a tela com gradiente animado */
 .login-scene {
     position: fixed;
+    /* Fixado na tela, não rola */
     inset: 0;
+    /* Equivale a top:0; right:0; bottom:0; left:0 */
     width: 100vw;
     height: 100vh;
     overflow: hidden;
     background: var(--gradiente-fundo);
     background-size: 200% 200%;
+    /* Fundo maior que a tela para permitir o movimento */
     animation: bgShift 20s ease-in-out infinite alternate;
+    /* Anima a posição do fundo de um lado para o outro */
 }
 
+/* Animação do fundo: move o gradiente horizontalmente */
 @keyframes bgShift {
     0% { background-position: 0% 50%; }
+    /* Gradiente posicionado à esquerda */
     100% { background-position: 100% 50%; }
+    /* Gradiente posicionado à direita */
 }
 
+/* Camada de "mesh" (malha): múltiplos gradientes radiais sobrepostos
+   Cria uma textura suave e orgânica sobre o fundo */
 .mesh-bg {
     position: absolute;
     inset: 0;
     background:
         radial-gradient(ellipse 80% 60% at 10% 90%, rgba(128,161,212,.25) 0%, transparent 60%),
+        /* Mancha azul no canto inferior esquerdo */
         radial-gradient(ellipse 70% 50% at 90% 10%, rgba(117,201,200,.22) 0%, transparent 55%),
+        /* Mancha verde-água no canto superior direito */
         radial-gradient(ellipse 60% 80% at 50% 50%, rgba(192,185,221,.18) 0%, transparent 60%),
+        /* Mancha lavanda no centro */
         radial-gradient(ellipse 50% 40% at 80% 80%, rgba(247,244,234,.3) 0%, transparent 50%);
+        /* Mancha areia no canto inferior direito */
     animation: meshMove 25s ease-in-out infinite alternate;
+    /* Anima a malha com leve escala e rotação */
 }
 
+/* Animação da malha: escala e rotação sutis */
 @keyframes meshMove {
     0% { transform: scale(1) rotate(0deg); }
     100% { transform: scale(1.05) rotate(2deg); }
+    /* Aumenta 5% e gira 2° ao longo de 25 segundos */
 }
 
 /* ═══════════════════════════════════════════════════════════════
    PARTÍCULAS
+   Canvas HTML5 onde o JS desenha partículas flutuantes
 ═══════════════════════════════════════════════════════════════ */
 
+/* Canvas de partículas: cobre toda a tela, atrás do card */
 #particles-canvas {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
+    /* Não interfere com cliques */
     z-index: 1;
+    /* Acima do fundo, abaixo do card */
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   BOLBAS ORGÂNICAS
+   BOLHAS ORGÂNICAS
+   4 círculos grandes e desfocados que flutuam no fundo
 ═══════════════════════════════════════════════════════════════ */
 
+/* Estilo base de todas as bolhas */
 .blob {
     position: absolute;
     border-radius: 50%;
+    /* Forma circular */
     filter: blur(120px);
+    /* Desfoque extremo: transforma o círculo em uma "mancha de luz" */
     opacity: 0.35;
+    /* Semi-transparente */
     pointer-events: none;
     z-index: 0;
+    /* Atrás de tudo */
 }
 
+/* Bolha 1: azul, canto superior esquerdo */
 .blob-1 {
     width: 500px;
     height: 500px;
     background: radial-gradient(circle, var(--azul-sereno) 0%, transparent 70%);
     top: -10%;
     left: -5%;
+    /* Parcialmente fora da tela */
     animation: blobFloat1 22s ease-in-out infinite;
 }
 
+/* Bolha 2: verde-água, canto inferior direito */
 .blob-2 {
     width: 400px;
     height: 400px;
@@ -134,6 +178,7 @@ body {
     animation: blobFloat2 26s ease-in-out infinite;
 }
 
+/* Bolha 3: lavanda, centro da tela */
 .blob-3 {
     width: 350px;
     height: 350px;
@@ -141,9 +186,11 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    /* Centraliza a bolha na tela */
     animation: blobFloat3 20s ease-in-out infinite;
 }
 
+/* Bolha 4: areia, área superior direita */
 .blob-4 {
     width: 250px;
     height: 250px;
@@ -153,6 +200,8 @@ body {
     animation: blobFloat4 24s ease-in-out infinite;
 }
 
+/* Animações de flutuação: cada bolha se move em um padrão diferente
+   para criar a sensação de movimento orgânico e independente */
 @keyframes blobFloat1 {
     0%, 100% { transform: translate(0, 0) scale(1); }
     33% { transform: translate(50px, 35px) scale(1.04); }
@@ -165,6 +214,7 @@ body {
     66% { transform: translate(30px, -15px) scale(0.96); }
 }
 
+/* A bolha 3 usa translate(-50%, -50%) para manter a centralização durante a animação */
 @keyframes blobFloat3 {
     0%, 100% { transform: translate(-50%, -50%) scale(1); }
     33% { transform: translate(calc(-50% + 35px), calc(-50% - 25px)) scale(1.05); }
@@ -178,44 +228,64 @@ body {
 
 /* ═══════════════════════════════════════════════════════════════
    LAYOUT CENTRAL
+   Container que centraliza o card de login na tela
 ═══════════════════════════════════════════════════════════════ */
 
+/* Container central: usa flexbox para centralizar o card */
 .login-container {
     position: relative;
     z-index: 10;
+    /* Acima das bolhas (z-index: 0) e das partículas (z-index: 1) */
     display: flex;
     align-items: center;
     justify-content: center;
+    /* Centraliza o card horizontal e verticalmente */
     width: 100%;
     height: 100vh;
     padding: 24px;
+    /* Margem de segurança para telas pequenas */
 }
 
 /* ═══════════════════════════════════════════════════════════════
    CARD - GLASSMORPHISM CLARO
+   O card principal com efeito de vidro fosco
 ═══════════════════════════════════════════════════════════════ */
 
+/* Card de login: efeito glassmorphism (vidro fosco) */
 .login-card {
     position: relative;
     width: 100%;
     max-width: 480px;
+    /* Largura máxima do card */
     max-height: 92vh;
+    /* Altura máxima: 92% da tela (deixa margem acima e abaixo) */
     overflow-y: auto;
+    /* Scroll interno vertical quando o conteúdo excede a altura */
     overflow-x: hidden;
     background: rgba(255,255,255,.55);
+    /* Fundo branco com 55% de opacidade (semi-transparente) */
     backdrop-filter: blur(24px) saturate(1.2);
+    /* Desfoca e satura o conteúdo atrás do card (efeito glassmorphism) */
     -webkit-backdrop-filter: blur(24px) saturate(1.2);
+    /* Prefixo para Safari/iOS */
     border: 1px solid rgba(255,255,255,.6);
+    /* Borda branca semi-transparente */
     border-radius: var(--radius-xl);
     padding: 44px 40px;
     box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,.8);
+    /* Sombra externa + sombra interna no topo (efeito de brilho) */
     transition: transform 0.4s var(--ease);
     transform-style: preserve-3d;
+    /* Habilita transformações 3D (para efeito de inclinação com mouse) */
     perspective: 1200px;
+    /* Distância da perspectiva 3D */
     scrollbar-width: thin;
+    /* Barra de scroll fina (Firefox) */
     scrollbar-color: var(--perola) transparent;
+    /* Cor da barra de scroll (Firefox) */
 }
 
+/* Estilização da barra de scroll interna (Chrome/Safari) */
 .login-card::-webkit-scrollbar { width: 6px; }
 .login-card::-webkit-scrollbar-track { background: transparent; }
 .login-card::-webkit-scrollbar-thumb {
@@ -223,6 +293,7 @@ body {
     border-radius: 3px;
 }
 
+/* Linha de brilho horizontal no topo do card */
 .login-card::before {
     content: '';
     position: absolute;
@@ -231,30 +302,39 @@ body {
     right: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,.9), transparent);
+    /* Linha que aparece e desaparece nas extremidades */
 }
 
+/* Barra de gradiente colorida no topo do card (acento visual) */
 .login-card::after {
     content: '';
     position: absolute;
     top: -1px;
     left: 50%;
     transform: translateX(-50%);
+    /* Centraliza a barra horizontalmente */
     width: 120px;
     height: 3px;
     background: var(--gradiente-principal);
+    /* Gradiente de azul para verde-água */
     border-radius: 0 0 4px 4px;
+    /* Arredonda apenas os cantos inferiores */
 }
 
 /* ═══════════════════════════════════════════════════════════════
    HEADER
+   Logo + título + subtítulo do card de login
 ═══════════════════════════════════════════════════════════════ */
 
+/* Cabeçalho do card: centralizado, com animação de entrada */
 .login-header {
     text-align: center;
     margin-bottom: 36px;
     animation: fadeInUp 0.7s var(--ease) both;
+    /* Entra de baixo para cima ao carregar a página */
 }
 
+/* Círculo com o logo da clínica */
 .login-logo {
     display: inline-flex;
     align-items: center;
@@ -262,10 +342,12 @@ body {
     width: 72px;
     height: 72px;
     border-radius: 50%;
+    /* Forma circular */
     background: var(--branco);
     border: 2px solid rgba(255,255,255,.7);
     margin-bottom: 20px;
     animation: logoBreath 5s ease-in-out infinite;
+    /* Animação de "respiração": pulsa suavemente */
     box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,.6);
 }
 
@@ -273,13 +355,17 @@ body {
     height: 40px;
     width: auto;
     filter: drop-shadow(0 1px 3px rgba(123,111,191,.15));
+    /* Sombra sutil na imagem do logo */
 }
 
+/* Animação de "respiração" do logo: aumenta e diminui levemente */
 @keyframes logoBreath {
     0%, 100% { box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,.6); transform: scale(1); }
     50% { box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,.8); transform: scale(1.02); }
+    /* No meio da animação: sombra maior e escala 102% */
 }
 
+/* Título principal do card ("Bem-vindo de volta") */
 .login-header h1 {
     font-family: var(--font-titulo);
     font-size: 26px;
@@ -287,33 +373,44 @@ body {
     color: var(--grafite);
     margin-bottom: 8px;
     letter-spacing: -0.3px;
+    /* Letras levemente mais próximas para títulos grandes */
 }
 
+/* Subtítulo descritivo abaixo do título */
 .login-header .subtitle {
     font-family: var(--font-body);
     font-size: 13px;
     color: var(--grafite);
     font-weight: 400;
     opacity: 0.55;
+    /* Levemente transparente para hierarquia visual */
 }
 
 /* ═══════════════════════════════════════════════════════════════
    ABAS
+   Alternância entre "Entrar" e "Criar conta"
 ═══════════════════════════════════════════════════════════════ */
 
+/* Container das abas: fundo areia com dois botões */
 .login-tabs {
     display: flex;
     gap: 4px;
+    /* Espaço mínimo entre as abas */
     margin-bottom: 32px;
     background: var(--areia);
+    /* Fundo areia para o container */
     padding: 4px;
+    /* Espaço interno para as abas "flutuarem" dentro do container */
     border-radius: var(--radius-md);
     border: 1px solid rgba(222,217,226,.3);
     animation: fadeInUp 0.7s var(--ease) 0.1s both;
+    /* Entra 0.1s após o header */
 }
 
+/* Cada botão de aba */
 .tab-btn {
     flex: 1;
+    /* Cada aba ocupa metade do espaço */
     padding: 13px 16px;
     background: transparent;
     border: none;
@@ -323,42 +420,52 @@ body {
     font-weight: 600;
     color: var(--grafite);
     opacity: 0.4;
+    /* Aba inativa: levemente transparente */
     cursor: pointer;
     transition: all var(--speed) var(--ease);
 }
 
+/* Hover na aba inativa */
 .tab-btn:hover {
     opacity: 0.65;
 }
 
+/* Aba ativa: fundo branco, texto azul, sombra */
 .tab-btn.ativa {
     opacity: 1;
     background: var(--branco);
     box-shadow: var(--shadow-sm);
     color: var(--azul-sereno);
+    /* Texto azul para indicar aba selecionada */
 }
 
 /* ═══════════════════════════════════════════════════════════════
    FORMULÁRIOS
+   Campos de entrada, seleção de tipo de usuário e validação
 ═══════════════════════════════════════════════════════════════ */
 
+/* Formulário oculto por padrão (JS alterna entre Login e Cadastro) */
 .formulario {
     display: none;
 }
 
+/* Formulário ativo: exibido com animação de entrada */
 .formulario.ativo {
     display: block;
     animation: fadeInUp 0.5s var(--ease) both;
 }
 
+/* Seleção de tipo de usuário: "Paciente" ou "Psicóloga" */
 .tipo-usuario {
     display: flex;
     gap: 10px;
     margin-bottom: 28px;
 }
 
+/* Cada opção de tipo de usuário */
 .tipo-option {
     flex: 1;
+    /* Cada opção ocupa metade do espaço */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -374,25 +481,32 @@ body {
     font-weight: 600;
     color: var(--grafite);
     opacity: 0.6;
+    /* Opção não selecionada: levemente transparente */
     text-align: center;
 }
 
+/* Hover na opção de tipo */
 .tipo-option:hover {
     border-color: var(--lavanda);
     background: rgba(192,185,221,.1);
     opacity: 0.85;
 }
 
+/* Oculta o radio button nativo (substituído pelo estilo customizado) */
 .tipo-option input[type="radio"] { display: none; }
 
+/* Opção selecionada: borda verde-água e fundo levemente colorido */
 .tipo-option:has(input:checked) {
+    /* :has(input:checked) = opção que contém um radio button marcado */
     border-color: var(--verde-agua);
     background: rgba(117,201,200,.08);
     color: var(--grafite);
     opacity: 1;
     box-shadow: 0 0 12px rgba(117,201,200,.1);
+    /* Brilho verde-água suave ao redor da opção selecionada */
 }
 
+/* Círculo indicador de seleção (substitui o radio button nativo) */
 .tipo-check {
     width: 18px;
     height: 18px;
@@ -405,11 +519,13 @@ body {
     flex-shrink: 0;
 }
 
+/* Quando o radio está marcado: círculo fica verde */
 .tipo-option input:checked + .tipo-check {
     border-color: var(--verde-agua);
     background: var(--verde-agua);
 }
 
+/* Ponto branco dentro do círculo verde (indicador de seleção) */
 .tipo-option input:checked + .tipo-check::after {
     content: '';
     width: 6px;
@@ -418,12 +534,14 @@ body {
     border-radius: 50%;
 }
 
-/* Grupos */
+/* Grupos de campos do formulário */
 .form-group {
     margin-bottom: 22px;
     animation: fadeInUp 0.5s var(--ease) both;
+    /* Cada grupo entra com animação */
 }
 
+/* Atraso escalonado: cada campo entra um pouco depois do anterior */
 .form-group:nth-child(1) { animation-delay: 0.05s; }
 .form-group:nth-child(2) { animation-delay: 0.1s; }
 .form-group:nth-child(3) { animation-delay: 0.15s; }
@@ -431,6 +549,7 @@ body {
 .form-group:nth-child(5) { animation-delay: 0.25s; }
 .form-group:nth-child(6) { animation-delay: 0.3s; }
 
+/* Label do campo: texto pequeno em maiúsculas acima do input */
 .form-group label {
     display: block;
     font-family: var(--font-body);
@@ -441,62 +560,79 @@ body {
     margin-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 1px;
+    /* Letras espaçadas para estilo de label */
 }
 
+/* Container do input com ícone à esquerda */
 .input-wrapper {
     position: relative;
+    /* Necessário para posicionar o ícone absolutamente */
     display: flex;
     align-items: center;
 }
 
+/* Ícone SVG à esquerda do campo de texto */
 .input-icon {
     position: absolute;
     left: 16px;
+    /* Posicionado dentro do campo, à esquerda */
     color: var(--lavanda);
     pointer-events: none;
+    /* Não interfere com cliques no input */
     transition: all var(--speed) var(--ease);
     z-index: 2;
 }
 
+/* Campos de texto e select */
 .form-group input,
 .form-group select {
     width: 100%;
     padding: 15px 16px 15px 46px;
+    /* padding-left: 46px para não sobrepor o ícone */
     border: 1.5px solid var(--perola);
     border-radius: var(--radius-sm);
     font-family: var(--font-body);
     font-size: 14px;
     transition: all var(--speed) var(--ease);
     background: rgba(255,255,255,.6);
+    /* Fundo branco semi-transparente */
     color: var(--grafite);
     height: 52px;
     outline: none;
+    /* Remove o outline padrão do navegador (substituído pelo box-shadow no focus) */
 }
 
-.form-group input:focus,
+/* Estado de foco do select */
 .form-group select:focus {
     border-color: var(--azul-sereno);
     background: var(--branco);
     box-shadow: 0 0 0 3px rgba(128,161,212,.1);
+    /* Anel azul suave ao redor do campo em foco */
 }
 
+/* Quando o input está em foco, o ícone muda para azul */
 .input-wrapper:focus-within .input-icon {
+    /* :focus-within = quando qualquer filho do wrapper está em foco */
     color: var(--azul-sereno);
 }
 
+/* Placeholder (texto de dica) dos inputs */
 .form-group input::placeholder {
     color: var(--grafite);
     opacity: 0.3;
+    /* Muito transparente quando o campo está vazio */
 }
 
+/* Placeholder levemente mais visível quando o campo está em foco */
 .form-group input:focus::placeholder {
     opacity: 0.45;
 }
 
-/* Toggle senha */
+/* Toggle senha: botão para mostrar/ocultar a senha */
 .toggle-senha {
     position: absolute;
     right: 16px;
+    /* Posicionado à direita dentro do input */
     background: none;
     border: none;
     color: var(--lavanda);
@@ -513,15 +649,17 @@ body {
     color: var(--azul-sereno);
 }
 
-/* Opcoes */
+/* Opcoes do formulário: "Lembrar-me" + "Esqueci a senha" */
 .form-options {
     display: flex;
     justify-content: space-between;
+    /* Um à esquerda, outro à direita */
     align-items: center;
     margin-bottom: 28px;
     font-size: 12px;
 }
 
+/* Checkbox "Lembrar-me" */
 .lembrar-me {
     display: flex;
     align-items: center;
@@ -537,9 +675,11 @@ body {
     width: 16px;
     height: 16px;
     accent-color: var(--verde-agua);
+    /* Cor do checkbox quando marcado (propriedade nativa) */
     cursor: pointer;
 }
 
+/* Link "Esqueci minha senha" */
 .link-esqueci {
     color: var(--azul-sereno);
     text-decoration: none;
@@ -555,10 +695,13 @@ body {
 
 /* ═══════════════════════════════════════════════════════════════
    BOTÃO PRINCIPAL
+   Botão de login/cadastro com efeito ripple (ondulação)
 ═══════════════════════════════════════════════════════════════ */
 
+/* Botão principal de ação */
 .btn-login {
     width: 100%;
+    /* Ocupa toda a largura do card */
     padding: 16px;
     background: var(--gradiente-principal);
     color: white;
@@ -578,56 +721,75 @@ body {
     height: 54px;
     letter-spacing: 0.5px;
     position: relative;
+    /* Necessário para o efeito ripple (::before) e o overflow: hidden */
     overflow: hidden;
+    /* Corta o efeito ripple nos cantos do botão */
 }
 
+/* Camada de gradiente invertido para o hover (azul → verde em vez de verde → azul) */
 .btn-login::before {
     content: '';
     position: absolute;
     inset: 0;
     background: linear-gradient(135deg, var(--verde-agua), var(--azul-sereno));
+    /* Gradiente invertido */
     opacity: 0;
+    /* Invisível por padrão */
     transition: opacity 0.4s ease;
     border-radius: inherit;
 }
 
+/* Hover: botão sobe e a sombra aumenta */
 .btn-login:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(123,111,191,.22);
 }
 
+/* Hover: o gradiente invertido aparece */
 .btn-login:hover::before {
     opacity: 1;
 }
 
+/* Clique: botão volta para a posição original */
 .btn-login:active {
     transform: translateY(0);
 }
 
+/* Texto e ícone do botão ficam acima do ::before (z-index) */
 .btn-login span,
 .btn-login svg {
     position: relative;
     z-index: 1;
+    /* Garante que fiquem visíveis acima do gradiente ::before */
 }
 
-/* Ripple */
+/* Ripple: elemento criado pelo JS ao clicar no botão */
+/* Efeito de ondulação que se expande a partir do ponto de clique */
 .btn-login .ripple {
     position: absolute;
     border-radius: 50%;
+    /* Forma circular */
     background: rgba(255,255,255,.3);
+    /* Branco semi-transparente */
     transform: scale(0);
+    /* Começa invisível (tamanho zero) */
     animation: rippleEffect 0.6s ease-out;
+    /* Expande e desaparece em 0.6s */
     pointer-events: none;
 }
 
+/* Animação do ripple: expande e desaparece */
 @keyframes rippleEffect {
     to { transform: scale(4); opacity: 0; }
+    /* Aumenta 4x e fica transparente */
 }
 
 /* ═══════════════════════════════════════════════════════════════
    FOTO
+   Upload de foto de perfil no formulário de cadastro
 ═══════════════════════════════════════════════════════════════ */
 
+/* Container do upload de foto */
 .foto-upload-container {
     display: flex;
     flex-direction: column;
@@ -635,13 +797,17 @@ body {
     margin-bottom: 28px;
 }
 
+/* Círculo clicável para selecionar a foto */
 .foto-preview-wrapper {
     position: relative;
     width: 100px;
     height: 100px;
     border-radius: 50%;
+    /* Forma circular */
     overflow: hidden;
+    /* Corta a imagem nos cantos circulares */
     border: 2px dashed var(--perola);
+    /* Borda tracejada indica área de upload */
     cursor: pointer;
     transition: all var(--speed) var(--ease);
     background: rgba(247,244,234,.5);
@@ -650,18 +816,22 @@ body {
     justify-content: center;
 }
 
+/* Hover: borda muda para verde-água com brilho */
 .foto-preview-wrapper:hover {
     border-color: var(--verde-agua);
     background: rgba(117,201,200,.06);
     box-shadow: 0 0 20px rgba(117,201,200,.12);
 }
 
+/* Imagem de preview após seleção */
 .foto-preview-wrapper img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    /* Cobre o círculo sem distorcer */
 }
 
+/* Placeholder: ícone + texto "Adicionar foto" antes de selecionar */
 .foto-preview-wrapper .foto-placeholder {
     display: flex;
     flex-direction: column;
@@ -675,8 +845,11 @@ body {
 }
 
 .foto-preview-wrapper .foto-placeholder svg { margin-bottom: 4px; }
+
+/* Input de arquivo oculto (ativado pelo clique no círculo) */
 .foto-upload-input { display: none; }
 
+/* Label clicável para abrir o seletor de arquivo */
 .foto-upload-label {
     margin-top: 10px;
     font-family: var(--font-body);
@@ -693,8 +866,10 @@ body {
 
 /* ═══════════════════════════════════════════════════════════════
    ALERTAS
+   Mensagens de sucesso e erro exibidas pelo JS
 ═══════════════════════════════════════════════════════════════ */
 
+/* Estilo base de todos os alertas */
 .alerta {
     display: flex;
     align-items: center;
@@ -706,39 +881,52 @@ body {
     font-size: 13px;
     font-weight: 500;
     animation: fadeInUp 0.3s var(--ease);
+    /* Entra com animação suave */
 }
 
+/* Alerta de erro: fundo vermelho suave */
 .alerta-erro {
     background: rgba(239,68,68,.06);
     color: #b45454;
+    /* Vermelho escuro para o texto */
     border: 1px solid rgba(239,68,68,.12);
 }
 
+/* Alerta de sucesso: fundo verde-água suave */
 .alerta-sucesso {
     background: rgba(117,201,200,.08);
     color: #4a8c8b;
+    /* Verde-água escuro para o texto */
     border: 1px solid rgba(117,201,200,.15);
 }
 
+/* Ícone SVG do alerta */
 .alerta svg {
     flex-shrink: 0;
+    /* Impede que o ícone encolha */
     width: 18px;
     height: 18px;
 }
 
 /* ═══════════════════════════════════════════════════════════════
    ERROS
+   Estilo dos campos com erro de validação
 ═══════════════════════════════════════════════════════════════ */
 
+/* Campo com erro: borda vermelha */
 .input-erro {
     border-color: rgba(239,68,68,.4) !important;
+    /* !important sobrescreve o estilo de foco */
     box-shadow: 0 0 0 3px rgba(239,68,68,.08) !important;
+    /* Anel vermelho suave ao redor do campo com erro */
 }
 
+/* Mensagem de erro abaixo do campo */
 .mensagem-erro {
     font-family: var(--font-body);
     font-size: 11px;
     color: #b45454;
+    /* Vermelho escuro */
     margin-top: 6px;
     display: flex;
     align-items: center;
@@ -747,17 +935,21 @@ body {
 
 /* ═══════════════════════════════════════════════════════════════
    FOOTER
+   Rodapé do card com link para voltar ao site
 ═══════════════════════════════════════════════════════════════ */
 
+/* Rodapé do card de login */
 .login-footer {
     text-align: center;
     margin-top: 24px;
     padding-top: 20px;
     border-top: 1px solid rgba(222,217,226,.4);
+    /* Linha separadora sutil */
     font-family: var(--font-body);
     font-size: 12px;
     color: var(--grafite);
     opacity: 0.4;
+    /* Texto discreto */
 }
 
 .login-footer a {
@@ -773,8 +965,10 @@ body {
 
 /* ═══════════════════════════════════════════════════════════════
    FRASE INFERIOR
+   Citação motivacional fixa no canto inferior esquerdo da tela
 ═══════════════════════════════════════════════════════════════ */
 
+/* Container da citação: fixado no canto inferior esquerdo */
 .login-bottom-quote {
     position: fixed;
     bottom: 32px;
@@ -783,50 +977,67 @@ body {
     text-align: left;
     max-width: 320px;
     animation: fadeInUp 1s var(--ease) 0.5s both;
+    /* Entra 0.5s após o carregamento da página */
 }
 
+/* Texto da citação: itálico, discreto */
 .login-bottom-quote p {
     font-family: var(--font-titulo);
+    /* Fonte Lora para a citação */
     font-style: italic;
     font-size: 14px;
     color: var(--grafite);
     opacity: 0.45;
+    /* Bem discreto */
     letter-spacing: 0.3px;
     line-height: 1.6;
 }
 
 /* ═══════════════════════════════════════════════════════════════
    ANIMAÇÕES
+   Keyframes reutilizados em múltiplos elementos
 ═══════════════════════════════════════════════════════════════ */
 
+/* Entrada de baixo para cima com fade */
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(20px); }
+    /* Começa invisível e 20px abaixo */
     to { opacity: 1; transform: translateY(0); }
+    /* Termina visível na posição original */
 }
 
+/* Saída para baixo com fade (ao trocar de formulário) */
 .formulario.saindo {
     animation: fadeOutDown 0.2s var(--ease) forwards;
+    /* forwards: mantém o estado final da animação */
 }
 
 @keyframes fadeOutDown {
     from { opacity: 1; transform: translateY(0); }
     to { opacity: 0; transform: translateY(10px); }
+    /* Desce 10px e desaparece */
 }
 
 /* ═══════════════════════════════════════════════════════════════
    RESPONSIVO
+   Adaptações para telas menores (celulares)
 ═══════════════════════════════════════════════════════════════ */
 
+/* Telas pequenas (≤640px): celulares */
 @media (max-width: 640px) {
     .login-container {
         padding: 16px;
         align-items: flex-start;
+        /* Card alinhado ao topo em vez de centralizado */
         padding-top: 5vh;
+        /* 5% da altura da tela de espaço acima do card */
     }
 
     .login-card {
         padding: 32px 24px;
+        /* Espaçamento interno menor */
         border-radius: var(--radius-lg);
+        /* Arredondamento menor */
         max-height: 90vh;
     }
 
@@ -835,10 +1046,12 @@ body {
     .login-logo img { height: 32px; }
 
     .tipo-usuario { flex-direction: column; gap: 8px; }
+    /* Opções de tipo de usuário empilhadas verticalmente */
 
     .form-group input,
     .form-group select {
         height: 48px;
+        /* Campos um pouco menores */
         padding: 12px 12px 12px 42px;
         font-size: 13px;
     }
@@ -847,19 +1060,23 @@ body {
 
     .form-options {
         flex-direction: column;
+        /* "Lembrar-me" e "Esqueci a senha" empilhados */
         gap: 12px;
         align-items: flex-start;
     }
 
+    /* Bolhas menores em telas pequenas para não poluir visualmente */
     .blob-1 { width: 300px; height: 300px; }
     .blob-2 { width: 250px; height: 250px; }
     .blob-3 { width: 200px; height: 200px; }
     .blob-4 { display: none; }
+    /* Bolha 4 oculta em telas pequenas */
 
     .login-bottom-quote { bottom: 16px; left: 16px; max-width: 250px; }
     .login-bottom-quote p { font-size: 12px; }
 }
 
+/* Telas muito pequenas (≤480px) */
 @media (max-width: 480px) {
     .login-card { padding: 28px 20px; }
     .login-header h1 { font-size: 20px; }

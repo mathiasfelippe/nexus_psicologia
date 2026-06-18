@@ -1,87 +1,130 @@
+/* ============================================================
+   ARQUIVO: css/about.css
+   DESCRIÇÃO: Estilos da seção "Sobre" da psicóloga.
+   Define o layout de duas colunas (foto | texto), o anel
+   decorativo giratório ao redor da foto, a tag de status
+   flutuante, e os destaques de diferenciais.
+   ============================================================ */
+
 /* Foto e texto da psicóloga */
+/* Seção "Sobre": fundo branco com cantos superiores arredondados */
 .sobre {
   /* Separa as seções */
   padding-block: var(--section-gap);
+  /* Espaçamento vertical igual ao gap padrão entre seções (6rem) */
   background: var(--branco);
+  /* Fundo branco para contrastar com o gradiente do hero acima */
   /* Fundo da seção arredondado */
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  /* Arredonda apenas os cantos superiores: cria efeito de "cartão" sobre o hero */
   position: relative;
+  /* Necessário para posicionar o pseudo-elemento ::before */
   /* Garante que o pedaço da bolha de luz que sair da tela seja cortado */
   overflow: hidden;
 }
 
 /* "Caixa" fantasma direto pelo CSS para fins estéticos, sem precisar adicionar uma tag no HTML */
+/* Bolha de luz decorativa no canto superior direito da seção */
 .sobre::before {
   content: '';
+  /* Pseudo-elemento sem conteúdo: apenas decoração visual */
   /* Ignora o grid, ignora os textos e flutua livremente por cima do fundo branco. */
   position: absolute;
   /* Posiciona a bolha de luz. Valores negativos significam que foi empurrada para fora da seção */
   top: -60px; right: -80px;
+  /* Parcialmente fora da seção para efeito de "luz vindo de fora" */
   /* Cria um quadrado */
   width: 340px; height: 340px;
   /* Modifica os cantos desse quadrado até ele virar um círculo. */
   border-radius: 50%;
+  /* Transforma o quadrado em círculo */
   background: var(--gradiente-radial);
+  /* Gradiente radial suave como "mancha de luz" */
   /* Faz com que ela não atrapalhe o clique do  usuário caso haja um botão em cima */
   pointer-events: none;
+  /* Não interfere com interações do usuário */
 }
 
 /* Organiza as colunas lado a lado */
+/* Layout de duas colunas: foto (menor) à esquerda, texto (maior) à direita */
 .conteudo-sobre {
   display: grid;
   /* Separação de espaço */
   grid-template-columns: 1.2fr 1.4fr;
+  /* Coluna da foto: 1.2 partes | Coluna do texto: 1.4 partes
+     A coluna do texto é levemente maior para acomodar mais conteúdo */
   gap: 1.5rem;
   align-items: center;
+  /* Alinha verticalmente ao centro */
 }
 
-/* Lado da Foto */
+/* Lado da Foto - container relativo para posicionar elementos filhos */
 .foto-bloco {
   position: relative;
+  /* Necessário para posicionar o anel e a tag de status */
   max-width: 550px; 
   width: 100%;
  }
 
+/* Imagem da psicóloga */
 .foto-bloco img {
   width: 100%;
   height: auto;
+  /* Mantém a proporção da imagem */
   display: block;
+  /* Remove espaço extra abaixo da imagem (linha de base inline) */
   /* sombra suave que dá profundidade */
   filter: drop-shadow(0 8px 16px rgba(168, 159, 216, 0.393));
+  /* drop-shadow: sombra que respeita a forma da imagem (incluindo transparência)
+     Diferente de box-shadow, que cria sombra retangular */
 }
 
-/* Anel decorativo giratório */
+/* Anel decorativo giratório ao redor da foto */
 .foto-anel {
   /* Faz flutuar */
   position: absolute;
+  /* Posicionado em relação ao .foto-bloco pai */
   /* Faz como que o anel se estique para fora das quatro bordas da caixa pai */
   inset: -8px;
+  /* Equivale a top:-8px; right:-8px; bottom:-8px; left:-8px
+     O anel fica 8px maior que a foto em todas as direções */
   border-radius: 50%;
+  /* Forma circular */
   /* Espessura, estilo e cor */
   border: 2px dashed var(--lavanda);
+  /* Borda tracejada na cor lavanda */
   /* Animação, quanto maior o tempo mais lento */
   animation: girar-anel 100s linear infinite;
+  /* Gira continuamente em 100 segundos (rotação muito lenta e suave) */
   pointer-events: none;
+  /* Não interfere com cliques */
 }
 
-/* Define a animação */
+/* Define a animação de rotação do anel */
 @keyframes girar-anel {
   from { transform: rotate(0deg); }
+  /* Começa sem rotação */
   to   { transform: rotate(360deg); }
+  /* Termina com uma volta completa (360°) */
 }
 
-/* Tag flutuante de status */
+/* Tag flutuante de status "Disponível para novos pacientes" */
 .status-tag {
   position: absolute;
+  /* Posicionada em relação ao .foto-bloco */
   /* Distância de 1.5rem da foto */
   bottom: 1.5rem;
+  /* Próxima à parte inferior da foto */
   /* Faz com que ela "saia" para fora do limite da foto */
   right: 2rem;
+  /* Levemente para fora da borda direita */
   background: var(--gradiente-radial);
+  /* Fundo com gradiente radial suave */
   border-radius: var(--radius-md);
   /* Espaçamento interno */
   padding: .75rem 1.1rem;
   box-shadow: var(--shadow-lg);
+  /* Sombra pronunciada para destacar a tag */
   display: flex;
   align-items: center;
   /* Espaço entre o ícone (status-ponto) e o texto */
@@ -89,29 +132,40 @@
   font-size: .8rem;
   /* Proíbe o navegador de quebrar o texto em duas linhas */
   white-space: nowrap;
+  /* O texto "Disponível para novos pacientes" fica em uma linha só */
 }
 
+/* Ponto verde animado que indica status "online/disponível" */
 .status-ponto {
   width: 10px; height: 10px;
   border-radius: 50%;
+  /* Forma circular */
   background: #6BCB77;
+  /* Verde vivo para indicar disponibilidade */
   box-shadow: 0 0 0 3px rgba(107,203,119,.25);
+  /* Halo verde semi-transparente ao redor do ponto (efeito "pulse" estático) */
    /* Proibe que o elemento seja encolhido pelo navegador quando a tela ficar pequena. */
   flex-shrink: 0;
+  /* Mantém o tamanho do ponto mesmo em layouts flex comprimidos */
 }
 
 /* ── Lado do Texto ── */
+/* Título da seção "Sobre" */
 .sobre-titulo {
   font-family: var(--font-titulo);
+  /* Fonte Lora (serifada) para o título */
   /* Responsividade, define o tamanho minimo, o ideal e o máximo da fonte. */
   font-size: clamp(2rem, 3.5vw, 2.9rem);
+  /* Fonte responsiva: mínimo 2rem, ideal 3.5% da largura, máximo 2.9rem */
   font-weight: 300;
+  /* Peso leve para o texto normal */
   /* Espaçamento da linha */
   line-height: 1.15;
   /* Faz com que o texto de baixo não fique colado */
   margin-bottom: 3rem;
 }
 
+/* Texto em negrito do título: efeito de gradiente na cor */
 .sobre-titulo strong {
   /* Adiciona o gradiente */
   background: var(--gradiente-principal);
@@ -119,76 +173,92 @@
   background-clip: text;
   /* Deixa a cor original da letra invisível para o gradiente de fundo aparecer */ 
   color: transparent;
+  /* Mesmo efeito do .titulo strong no hero.css */
   font-weight: 400;
 }
 
+/* Parágrafo de apresentação da psicóloga */
 .sobre-texto {
   font-family: var(--font-body);
   font-size: .93rem;
   color: var(--grafite);
   line-height: 1.85;
+  /* Altura de linha generosa para facilitar a leitura */
   max-width: 480px;
+  /* Limita a largura para melhor legibilidade */
   margin-bottom: 2rem;
 }
 
 /* - Destaques - */
-/* Container principal, alinha as 3 colunas */
+/* Container principal, alinha as 3 colunas de destaques */
 .destaques {
   display: flex;
   gap: 2.5rem;
+  /* Espaço entre os 3 destaques */
   margin-bottom: 2rem;
   /* Força os três círculos a começarem exatamente na mesma linha pelo topo */
   align-items: flex-start;
+  /* Alinha os itens pelo topo (não pelo centro) */
 }
 
-/* Cada coluna individual */
+/* Cada coluna individual de destaque */
 .destaques .item {
   display: flex;
-  /* Empilhan na vertical */
+  /* Empilham na vertical */
   flex-direction: column;
+  /* Ícone → Título → Descrição, de cima para baixo */
   gap: 0.4rem;
+  /* Espaço entre ícone, título e descrição */
   /* Divide o espaço de forma igual entre as 3 colunas. */
   flex: 1;
+  /* Cada item ocupa 1/3 do espaço disponível */
 }
 
-/* Círculo */
+/* Círculo com ícone SVG */
 .item-icone {
   width: 44px;
   height: 44px;
   border: 1px solid var(--grafite); /* Borda escura combinando com o texto */
   border-radius: 50%;
+  /* Forma circular */
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Centraliza o ícone SVG dentro do círculo */
   margin-bottom: 0.5rem;
 }
 
-/* Títulos das colunas */
+/* Títulos das colunas de destaque */
 .item-titulo, 
 .btn-saiba-mais {
   font-size: .80rem;
   font-weight: 800;
+  /* Peso muito negrito para destaque */
   color: var(--grafite);
 }
 
-/* Descrições */
+/* Descrições curtas abaixo dos títulos */
 .item-desc {
   font-size: 0.70rem;
+  /* Texto pequeno para a descrição */
   color: var(--grafite);
   line-height: 1.4;
 }
 
-/*Saiba Mais */
+/* Botão "Saiba Mais" com texto sublinhado e seta */
 .btn-saiba-mais {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
+  /* Espaço entre o texto e a seta */
 }
 
 /* Sublinhado exclusivo para o texto, deixando a seta de fora */
 .btn-saiba-mais .link-texto {
   border-bottom: 1.5px solid var(--grafite);
+  /* Sublinhado manual com border-bottom (mais controlável que text-decoration) */
   padding-bottom: 2px;
+  /* Espaço entre o texto e a linha */
   margin-right: 0.3rem;
 }
 
@@ -196,17 +266,24 @@
 .btn-saiba-mais .seta {
   display: flex;
   align-items: center;
+  /* Centraliza a seta verticalmente com o texto */
 }
 
 
-/* ── Responsivo (Celular/Tablet) ── */
+/* ── Responsivo (Celular/Tablet) ──
+   Em telas menores que 900px, o layout muda para uma coluna */
 @media (max-width: 900px) {
   .conteudo-sobre {
     grid-template-columns: 1fr;
+    /* Uma única coluna: foto acima, texto abaixo */
     gap: 3rem;
   }
   .foto-moldura   { max-width: 340px; margin-inline: auto; }
+  /* Centraliza e limita o tamanho da foto */
   .status-tag     { right: 0; }
+  /* Reposiciona a tag de status para não sair da tela */
   .sobre-texto    { max-width: 100%; }
+  /* Texto ocupa a largura total disponível */
   .destaques      { gap: 1.5rem; }
+  /* Reduz o espaço entre os destaques */
 }

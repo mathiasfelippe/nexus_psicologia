@@ -1,17 +1,29 @@
 /* ═══════════════════════════════════════════════════════════════
-   NEXUS PSICOLOGIA - DASHBOARD
+   ARQUIVO: css/dashboards.css
+   DESCRIÇÃO: Estilos dos dashboards do paciente e da psicóloga.
+   Este é o maior arquivo CSS do projeto. Define:
+   - Layout principal em 3 colunas (sidebar | conteúdo | widgets)
+   - Sidebar de navegação com glassmorphism
+   - Calendário FullCalendar com customizações visuais
+   - Widgets da coluna direita (consultas, notificações, métricas)
+   - Componentes reutilizáveis: tabelas, modais, botões, alertas
+   - Modo escuro completo (dark mode)
+   - Responsividade para tablets e celulares
    Design: Moderno, Tecnológico, Acolhedor
    Cores: Paleta Nexus (areia, pérola, lavanda, azul-sereno, verde-água)
 ═══════════════════════════════════════════════════════════════ */
 
+/* Importa as fontes do Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
 
+/* Reset CSS */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Variáveis CSS: redefinidas aqui para que dashboards.css seja independente do global.css */
 :root {
     --areia: #F7F4EA;
     --perola: #DED9E2;
@@ -28,10 +40,12 @@
     --font-titulo: 'Lora', Georgia, serif;
     --font-body: 'Comfortaa', -apple-system, sans-serif;
 
+    /* Sombras com opacidade levemente menor que no login (ambiente mais "produtivo") */
     --shadow-sm: 0 2px 12px rgba(123,111,191,.08);
     --shadow-md: 0 8px 32px rgba(123,111,191,.12);
     --shadow-lg: 0 16px 56px rgba(123,111,191,.16);
 
+    /* Sistema de espaçamentos padronizados (evita valores "mágicos" espalhados) */
     --spacing-xs: 4px;
     --spacing-sm: 8px;
     --spacing-md: 16px;
@@ -44,9 +58,10 @@
     --radius-lg: 28px;
     --radius-xl: 48px;
 
-    --success: #10b981;
-    --warning: #f59e0b;
-    --danger: #ef4444;
+    /* Cores semânticas para estados do sistema */
+    --success: #10b981; /* Verde: consulta confirmada, pagamento aprovado */
+    --warning: #f59e0b; /* Amarelo: consulta pendente, lembrete */
+    --danger: #ef4444;  /* Vermelho: cancelamento, erro, logout */
 }
 
 html {
@@ -56,6 +71,7 @@ html {
 body {
     font-family: var(--font-body);
     background: var(--areia);
+    /* Fundo areia como base (o gradiente do container sobrepõe) */
     color: var(--grafite);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
@@ -64,19 +80,28 @@ body {
 
 /* ═══════════════════════════════════════════════════════════════
    LAYOUT PRINCIPAL
+   Grid de 3 colunas: sidebar | conteúdo principal | widgets
 ═══════════════════════════════════════════════════════════════ */
 
+/* Container principal do dashboard: grid de 3 colunas */
 .dashboard-container {
     display: grid;
     grid-template-columns: 280px 1fr 320px;
+    /* Sidebar fixa (280px) | Conteúdo flexível | Widgets fixos (320px) */
     min-height: 100vh;
+    /* Ocupa pelo menos a altura total da tela */
     background: var(--gradiente-fundo);
     background-size: 200% 200%;
+    /* Fundo maior para a animação de movimento */
     animation: bgShift 25s ease-in-out infinite alternate;
+    /* Gradiente animado (mais lento que no login: 25s vs 20s) */
     gap: var(--spacing-lg);
+    /* Espaço entre as colunas */
     padding: var(--spacing-lg);
+    /* Espaçamento interno */
 }
 
+/* Animação do gradiente de fundo */
 @keyframes bgShift {
     0% { background-position: 0% 50%; }
     100% { background-position: 100% 50%; }
@@ -84,62 +109,80 @@ body {
 
 /* ═══════════════════════════════════════════════════════════════
    SIDEBAR
+   Coluna esquerda com logo, navegação e informações do usuário
 ═══════════════════════════════════════════════════════════════ */
 
+/* Sidebar com efeito glassmorphism */
 .sidebar {
     background: rgba(255,255,255,.65);
+    /* Fundo branco com 65% de opacidade */
     backdrop-filter: blur(20px) saturate(1.2);
+    /* Desfoque e saturação do conteúdo atrás */
     -webkit-backdrop-filter: blur(20px) saturate(1.2);
     border: 1px solid rgba(255,255,255,.5);
     border-radius: var(--radius-lg);
     padding: var(--spacing-lg);
     box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,.7);
+    /* Sombra externa + brilho interno no topo */
     height: fit-content;
+    /* Altura se ajusta ao conteúdo */
     position: sticky;
     top: var(--spacing-lg);
+    /* Fica "grudada" no topo ao rolar, com margem de 24px */
 }
 
+/* Cabeçalho da sidebar: logo da clínica */
 .sidebar-header {
     margin-bottom: var(--spacing-xl);
 }
 
+/* Link clicável ao redor do logo (volta para a home) */
 .logo-link {
     display: block;
     text-decoration: none;
 }
 
+/* Logo da clínica na sidebar */
 .sidebar-logo {
     width: 100%;
     max-width: 180px;
     height: auto;
 }
 
+/* Título de seção da navegação (ex: "MENU", "CONFIGURAÇÕES") */
 .sidebar-title {
     font-family: var(--font-body);
     font-size: 11px;
     font-weight: 700;
     color: var(--lavanda);
+    /* Lavanda para diferenciar do texto normal */
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-top: var(--spacing-lg);
     margin-bottom: var(--spacing-md);
     padding-left: var(--spacing-md);
+    /* Alinhado com os ícones dos itens de navegação */
 }
 
+/* Lista de itens de navegação */
 .sidebar-nav {
     display: flex;
     flex-direction: column;
+    /* Itens empilhados verticalmente */
     gap: var(--spacing-sm);
 }
 
+/* Cada item de navegação: ícone + texto */
 .nav-item {
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
+    /* Espaço entre ícone e texto */
     padding: var(--spacing-md);
     border-radius: var(--radius-md);
     color: var(--grafite);
     opacity: 0.6;
+    /* Itens inativos levemente transparentes */
     text-decoration: none;
     font-family: var(--font-body);
     font-size: 13px;
@@ -149,31 +192,39 @@ body {
     position: relative;
 }
 
+/* Hover: fundo lavanda suave */
 .nav-item:hover {
     background: rgba(192,185,221,.12);
     opacity: 0.85;
 }
 
+/* Item ativo (aba atual): fundo gradiente, texto branco */
 .nav-item.ativo {
     background: var(--gradiente-principal);
+    /* Gradiente de azul para verde-água */
     color: white;
     opacity: 1;
     font-weight: 600;
     box-shadow: 0 4px 16px rgba(123,111,191,.2);
 }
 
+/* Ícone SVG do item de navegação */
 .nav-item svg {
     width: 20px;
     height: 20px;
     flex-shrink: 0;
+    /* Impede que o ícone encolha */
 }
 
+/* Rodapé da sidebar: informações do usuário + botão de logout */
 .sidebar-footer {
     margin-top: var(--spacing-xl);
     padding-top: var(--spacing-lg);
     border-top: 1px solid rgba(222,217,226,.4);
+    /* Linha separadora sutil */
 }
 
+/* Container das informações do usuário: avatar + nome + email */
 .usuario-info {
     display: flex;
     align-items: center;
@@ -181,11 +232,13 @@ body {
     margin-bottom: var(--spacing-md);
 }
 
+/* Avatar circular com iniciais do usuário */
 .usuario-avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     background: var(--gradiente-principal);
+    /* Fundo gradiente para o avatar */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -196,11 +249,14 @@ body {
     box-shadow: 0 2px 8px rgba(123,111,191,.2);
 }
 
+/* Container dos dados textuais do usuário */
 .usuario-dados {
     flex: 1;
     min-width: 0;
+    /* Necessário para que text-overflow: ellipsis funcione em flex */
 }
 
+/* Nome do usuário: truncado com "..." se for longo */
 .usuario-nome {
     font-family: var(--font-body);
     font-size: 13px;
@@ -209,8 +265,10 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    /* Texto longo é cortado com "..." */
 }
 
+/* Email do usuário: truncado com "..." se for longo */
 .usuario-email {
     font-family: var(--font-body);
     font-size: 11px;
@@ -221,6 +279,7 @@ body {
     text-overflow: ellipsis;
 }
 
+/* Botão de logout: fundo vermelho suave */
 .btn-logout {
     width: 100%;
     display: flex;
@@ -229,7 +288,9 @@ body {
     gap: var(--spacing-sm);
     padding: var(--spacing-md);
     background: rgba(239,68,68,.06);
+    /* Fundo vermelho muito transparente */
     color: var(--danger);
+    /* Texto vermelho */
     border: 1px solid rgba(239,68,68,.12);
     border-radius: var(--radius-md);
     font-family: var(--font-body);
@@ -239,6 +300,7 @@ body {
     transition: all 0.25s cubic-bezier(.4,0,.2,1);
 }
 
+/* Hover do botão de logout: fundo vermelho sólido */
 .btn-logout:hover {
     background: var(--danger);
     color: white;
@@ -248,20 +310,25 @@ body {
 
 /* ═══════════════════════════════════════════════════════════════
    CONTEÚDO CENTRAL
+   Área principal com cabeçalho, calendário e seções de conteúdo
 ═══════════════════════════════════════════════════════════════ */
 
+/* Coluna central: empilha as seções verticalmente */
 .main-content {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-lg);
 }
 
+/* Cabeçalho da área principal: título + ações */
 .header-top {
     display: flex;
     justify-content: space-between;
+    /* Título à esquerda, ações à direita */
     align-items: center;
 }
 
+/* Título principal do dashboard (ex: "Olá, Maria!") */
 .header-top h1 {
     font-family: var(--font-titulo);
     font-size: 30px;
@@ -270,13 +337,16 @@ body {
     letter-spacing: -0.3px;
 }
 
+/* Container dos botões de ação no cabeçalho */
 .header-actions {
     display: flex;
     gap: var(--spacing-md);
 }
 
+/* Botão de notificações: círculo com ícone de sino */
 .btn-notificacoes {
     position: relative;
+    /* Necessário para posicionar o badge de contagem */
     width: 42px;
     height: 42px;
     border-radius: var(--radius-md);
@@ -294,6 +364,7 @@ body {
     box-shadow: var(--shadow-sm);
 }
 
+/* Hover do botão de notificações */
 .btn-notificacoes:hover {
     background: rgba(255,255,255,.9);
     opacity: 1;
@@ -301,18 +372,22 @@ body {
     border-color: var(--azul-sereno);
 }
 
+/* Posicionamento do badge no botão de notificações */
 .btn-notificacoes .badge {
     position: absolute;
     top: -6px;
     right: -6px;
+    /* Canto superior direito do botão */
     margin-left: 0;
 }
 
+/* Badge de contagem (número de notificações não lidas) */
 .badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     background: var(--danger);
+    /* Fundo vermelho */
     color: white;
     border-radius: 50%;
     min-width: 20px;
@@ -328,8 +403,10 @@ body {
 
 /* ═══════════════════════════════════════════════════════════════
    CALENDÁRIO
+   Seção do calendário com FullCalendar e controles customizados
 ═══════════════════════════════════════════════════════════════ */
 
+/* Container da seção do calendário */
 .calendario-secao {
     background: rgba(255,255,255,.65);
     backdrop-filter: blur(20px) saturate(1.2);
@@ -340,6 +417,7 @@ body {
     box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,.7);
 }
 
+/* Cabeçalho do calendário: título + controles */
 .calendario-header {
     display: flex;
     justify-content: space-between;
@@ -347,6 +425,7 @@ body {
     margin-bottom: var(--spacing-lg);
 }
 
+/* Título do calendário */
 .calendario-header h2 {
     font-family: var(--font-titulo);
     font-size: 20px;
@@ -354,11 +433,14 @@ body {
     color: var(--grafite);
 }
 
+/* Cabeçalho com legenda lateral (variante com legenda de cores) */
 .calendario-header-com-legenda {
     gap: var(--spacing-lg);
     align-items: flex-start;
+    /* Alinha pelo topo quando a legenda tem múltiplas linhas */
 }
 
+/* Descrição abaixo do título do calendário */
 .calendario-descricao {
     margin-top: 6px;
     color: var(--grafite);
@@ -367,14 +449,17 @@ body {
     font-size: 13px;
 }
 
+/* Legenda de cores do calendário (ex: "Confirmada", "Pendente") */
 .calendario-legenda-inline {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
+    /* Alinhada à direita */
     gap: 10px 14px;
     max-width: 420px;
 }
 
+/* Cada item da legenda: quadrado colorido + texto */
 .legenda-item {
     display: inline-flex;
     align-items: center;
@@ -386,18 +471,22 @@ body {
     font-weight: 600;
 }
 
+/* Quadrado colorido da legenda */
 .legenda-cor {
     width: 14px;
     height: 14px;
     border-radius: 4px;
     display: inline-block;
+    /* A cor de fundo é definida inline no HTML */
 }
 
+/* Container dos botões de controle do calendário */
 .calendario-controles {
     display: flex;
     gap: var(--spacing-md);
 }
 
+/* Botão de controle do calendário (ex: "Semana", "Mês", "Lista") */
 .btn-calendario {
     padding: var(--spacing-md) var(--spacing-lg);
     border: 1.5px solid var(--perola);
@@ -411,12 +500,14 @@ body {
     transition: all 0.25s cubic-bezier(.4,0,.2,1);
 }
 
+/* Hover do botão de controle */
 .btn-calendario:hover {
     background: rgba(128,161,212,.08);
     border-color: var(--azul-sereno);
     color: var(--azul-sereno);
 }
 
+/* Botão ativo (visualização atual selecionada) */
 .btn-calendario.ativo {
     background: var(--gradiente-principal);
     color: white;
@@ -424,36 +515,45 @@ body {
     box-shadow: 0 4px 12px rgba(123,111,191,.18);
 }
 
+/* Customização do FullCalendar via variáveis CSS
+   O FullCalendar expõe variáveis CSS para personalização */
 #calendar,
 #calendar-paciente {
     --fc-border-color: rgba(222,217,226,.35);
+    /* Cor das bordas das células */
     --fc-button-bg-color: var(--azul-sereno);
+    /* Fundo dos botões do FullCalendar */
     --fc-button-border-color: transparent;
     --fc-button-hover-bg-color: var(--verde-agua);
     --fc-button-hover-border-color: transparent;
     --fc-button-active-bg-color: var(--verde-agua);
     --fc-button-active-border-color: transparent;
     --fc-button-border-radius: 12px;
+    /* Arredondamento dos botões */
     --fc-today-bg-color: rgba(128,161,212,.06);
+    /* Fundo do dia atual */
     --fc-page-bg-color: transparent;
+    /* Fundo do calendário: transparente */
     --fc-neutral-bg-color: rgba(247,244,234,.3);
     --fc-list-event-hover-bg-color: rgba(128,161,212,.06);
     width: 100%;
     min-height: 560px;
 }
 
+/* Fonte do FullCalendar */
 #calendar .fc,
 #calendar-paciente .fc {
     min-height: 560px;
     font-family: var(--font-body);
 }
 
+/* Margem superior do calendário na aba do paciente */
 .calendario-paciente-secao #calendar,
 .calendario-paciente-secao #calendar-paciente {
     margin-top: var(--spacing-xl);
 }
 
-/* FullCalendar Button Overrides */
+/* Customização dos botões nativos do FullCalendar */
 #calendar .fc-button,
 #calendar-paciente .fc-button {
     padding: 8px 16px;
@@ -465,23 +565,27 @@ body {
     transition: all 0.25s cubic-bezier(.4,0,.2,1);
 }
 
+/* Hover dos botões do FullCalendar: sobe levemente */
 #calendar .fc-button:hover,
 #calendar-paciente .fc-button:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(123,111,191,.15);
 }
 
+/* Clique: volta para a posição original */
 #calendar .fc-button:active,
 #calendar-paciente .fc-button:active {
     transform: translateY(0);
 }
 
+/* Botão ativo do FullCalendar (ex: visualização selecionada) */
 #calendar .fc-button-active,
 #calendar-paciente .fc-button-active {
     background: var(--verde-agua) !important;
     box-shadow: 0 4px 12px rgba(117,201,200,.25);
 }
 
+/* Título do mês/semana no FullCalendar */
 #calendar .fc-toolbar-title,
 #calendar-paciente .fc-toolbar-title {
     font-family: var(--font-titulo);
@@ -490,6 +594,7 @@ body {
     color: var(--grafite);
 }
 
+/* Número do dia nas células do calendário */
 #calendar .fc-daygrid-day-number,
 #calendar-paciente .fc-daygrid-day-number {
     font-family: var(--font-body);
@@ -501,11 +606,13 @@ body {
     transition: background 0.2s ease;
 }
 
+/* Hover no número do dia */
 #calendar .fc-daygrid-day-number:hover,
 #calendar-paciente .fc-daygrid-day-number:hover {
     background: rgba(128,161,212,.08);
 }
 
+/* Cabeçalho dos dias da semana (DOM, SEG, TER...) */
 #calendar .fc-col-header-cell-cushion,
 #calendar-paciente .fc-col-header-cell-cushion {
     font-family: var(--font-body);
@@ -518,17 +625,21 @@ body {
     padding: 12px 0;
 }
 
+/* Célula do dia atual: fundo azul suave */
 #calendar .fc-daygrid-day.fc-day-today,
 #calendar-paciente .fc-daygrid-day.fc-day-today {
     background: rgba(128,161,212,.06);
 }
 
+/* Número do dia atual: círculo gradiente */
 #calendar .fc-daygrid-day.fc-day-today .fc-daygrid-day-number,
 #calendar-paciente .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
     background: var(--gradiente-principal);
+    /* Fundo gradiente para destacar o dia atual */
     color: white;
     font-weight: 700;
     border-radius: 50%;
+    /* Forma circular */
     width: 32px;
     height: 32px;
     display: flex;
@@ -536,11 +647,12 @@ body {
     justify-content: center;
 }
 
-/* Calendar Events */
+/* Eventos do calendário (consultas agendadas) */
 #calendar .fc-event,
 #calendar-paciente .fc-event {
     border-radius: 8px;
     border-left-width: 4px !important;
+    /* Borda esquerda colorida para identificar o tipo/status */
     border-left-style: solid !important;
     padding: 4px 8px;
     font-family: var(--font-body);
@@ -549,15 +661,18 @@ body {
     cursor: pointer;
     transition: all 0.2s ease;
     border: none !important;
+    /* Remove a borda padrão do FullCalendar */
     box-shadow: 0 2px 8px rgba(0,0,0,.08);
 }
 
+/* Hover nos eventos: sobe levemente */
 #calendar .fc-event:hover,
 #calendar-paciente .fc-event:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0,0,0,.12);
 }
 
+/* Título do evento no calendário */
 #calendar .fc-event-title,
 #calendar-paciente .fc-event-title {
     font-weight: 600;
@@ -565,6 +680,7 @@ body {
     padding-left: 2px;
 }
 
+/* Horário do evento no calendário */
 #calendar .fc-event-time,
 #calendar-paciente .fc-event-time {
     font-size: 11px;
@@ -572,27 +688,33 @@ body {
     font-weight: 500;
 }
 
+/* Evento de consulta no calendário */
 .fc .consulta-calendario {
     border-radius: 8px !important;
 }
 
+/* Evento de consulta passada: mais transparente e levemente dessaturado */
 .fc .consulta-passada-evento {
     opacity: 0.5;
     filter: grayscale(0.3);
+    /* Reduz a saturação das cores */
 }
 
+/* Texto "Passada" adicionado automaticamente após o título da consulta passada */
 .fc .consulta-passada-evento .fc-event-title::after {
     content: "  Passada";
+    /* Espaços antes para separar do título */
     font-size: 10px;
     font-weight: 700;
     opacity: 0.8;
 }
 
-/* Grid de Horários */
+/* Grid de horários disponíveis abaixo do calendário */
 .horarios-grid {
     margin-top: var(--spacing-xl);
     padding-top: var(--spacing-xl);
     border-top: 1px solid rgba(222,217,226,.3);
+    /* Linha separadora */
 }
 
 .horarios-grid h3 {
@@ -603,12 +725,15 @@ body {
     color: var(--grafite);
 }
 
+/* Container dos botões de horário */
 .horarios-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    /* Cria automaticamente quantas colunas couberem com mínimo de 80px */
     gap: var(--spacing-md);
 }
 
+/* Cada botão de horário disponível */
 .horario-item {
     padding: var(--spacing-md);
     background: rgba(247,244,234,.5);
@@ -623,22 +748,27 @@ body {
     transition: all 0.25s cubic-bezier(.4,0,.2,1);
 }
 
+/* Hover no horário disponível */
 .horario-item:hover {
     border-color: var(--azul-sereno);
     background: rgba(128,161,212,.08);
     color: var(--azul-sereno);
 }
 
+/* Horário indisponível: aparência "desabilitada" */
 .horario-item.indisponivel {
     opacity: 0.35;
     cursor: not-allowed;
+    /* Cursor de "proibido" */
     background: rgba(222,217,226,.2);
 }
 
 /* ═══════════════════════════════════════════════════════════════
    WIDGETS DIREITA
+   Coluna direita com próximas consultas, notificações e métricas
 ═══════════════════════════════════════════════════════════════ */
 
+/* Coluna de widgets: empilhados verticalmente, fixa ao rolar */
 .widgets-coluna {
     display: flex;
     flex-direction: column;
@@ -646,8 +776,10 @@ body {
     height: fit-content;
     position: sticky;
     top: var(--spacing-lg);
+    /* Fica fixo no topo ao rolar */
 }
 
+/* Cada widget individual */
 .widget {
     background: rgba(255,255,255,.65);
     backdrop-filter: blur(20px) saturate(1.2);
@@ -658,13 +790,16 @@ body {
     box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,.7);
 }
 
+/* Cabeçalho do widget: título + link "Ver todos" */
 .widget-header {
     display: flex;
     justify-content: space-between;
+    /* Título à esquerda, link à direita */
     align-items: center;
     margin-bottom: var(--spacing-md);
 }
 
+/* Título do widget em maiúsculas */
 .widget-header h3 {
     font-family: var(--font-body);
     font-size: 12px;
@@ -675,6 +810,7 @@ body {
     opacity: 0.6;
 }
 
+/* Link "Ver todos" do widget */
 .widget-link {
     font-family: var(--font-body);
     font-size: 12px;
@@ -689,20 +825,23 @@ body {
     color: var(--verde-agua);
 }
 
-/* Próximas Consultas */
+/* Próximas Consultas: lista de cards de consulta */
 .proximas-consultas {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
 }
 
+/* Card de cada consulta próxima */
 .consulta-card {
     padding: var(--spacing-md);
     background: rgba(247,244,234,.4);
     border-radius: var(--radius-md);
     border-left: 4px solid var(--azul-sereno);
+    /* Borda esquerda azul para identificação visual */
 }
 
+/* Título do card de consulta (nome do paciente ou da psicóloga) */
 .consulta-card-titulo {
     font-family: var(--font-body);
     font-size: 13px;
@@ -711,6 +850,7 @@ body {
     margin-bottom: var(--spacing-xs);
 }
 
+/* Informações da consulta: data, horário, modalidade */
 .consulta-card-info {
     font-family: var(--font-body);
     font-size: 12px;
@@ -721,11 +861,13 @@ body {
     gap: var(--spacing-sm);
 }
 
+/* Ícone SVG nas informações da consulta */
 .consulta-card-info svg {
     width: 14px;
     height: 14px;
 }
 
+/* Subtítulo de subseção dentro de uma seção */
 .subsecao-titulo {
     margin: 24px 0 14px;
     font-family: var(--font-titulo);
@@ -734,12 +876,14 @@ body {
     color: var(--grafite);
 }
 
+/* Subtítulo de consultas passadas: mais discreto */
 .subsecao-titulo-passadas {
     opacity: 0.5;
     border-top: 1px solid rgba(222,217,226,.3);
     padding-top: 20px;
 }
 
+/* Linha de consulta passada na tabela: mais transparente */
 .consulta-passada-row {
     background: rgba(247,244,234,.3);
     color: var(--grafite);
@@ -750,12 +894,14 @@ body {
     border-color: rgba(222,217,226,.3);
 }
 
+/* Badge de status "Passada" */
 .status-passada {
     background: rgba(222,217,226,.3);
     color: var(--grafite);
     opacity: 0.6;
 }
 
+/* Célula vazia da tabela (quando não há dados) */
 .tabela-vazio {
     text-align: center;
     color: var(--grafite);
@@ -764,16 +910,19 @@ body {
     font-family: var(--font-body);
 }
 
+/* Evento de consulta no calendário (versão com borda mais espessa) */
 .fc .consulta-calendario {
     border-left-width: 5px !important;
     border-left-style: solid !important;
     border-radius: 6px !important;
 }
 
+/* Evento passado no calendário: tracejado e dessaturado */
 .fc .consulta-passada-evento {
     opacity: 0.5;
     filter: grayscale(0.3);
     border-style: dashed !important;
+    /* Borda tracejada para eventos passados */
 }
 
 .fc .consulta-passada-evento .fc-event-title::after {
@@ -783,20 +932,23 @@ body {
     opacity: 0.8;
 }
 
-/* Notificações Widget */
+/* Widget de Notificações */
 .notificacoes-lista {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
 }
 
+/* Cada item de notificação */
 .notificacao-item {
     padding: var(--spacing-md);
     background: rgba(247,244,234,.4);
     border-radius: var(--radius-md);
     border-left: 4px solid var(--warning);
+    /* Borda esquerda amarela por padrão */
 }
 
+/* Cores de borda por tipo de notificação */
 .notificacao-item.sucesso { border-left-color: var(--verde-agua); }
 .notificacao-item.erro { border-left-color: var(--danger); }
 .notificacao-item.agendamento { border-left-color: var(--azul-sereno); }
@@ -807,6 +959,7 @@ body {
 .notificacao-item.nova_consulta { border-left-color: var(--azul-sereno); }
 .notificacao-item.comentario_psicologa { border-left-color: var(--lavanda); }
 
+/* Título da notificação */
 .notificacao-titulo {
     font-family: var(--font-body);
     font-size: 13px;
@@ -815,6 +968,7 @@ body {
     margin-bottom: var(--spacing-xs);
 }
 
+/* Descrição da notificação */
 .notificacao-desc {
     font-family: var(--font-body);
     font-size: 12px;
@@ -822,13 +976,15 @@ body {
     opacity: 0.5;
 }
 
-/* Métricas */
+/* Métricas: grid de 2 cards com números de impacto */
 .metricas-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    /* Duas colunas iguais */
     gap: var(--spacing-md);
 }
 
+/* Cada card de métrica com fundo gradiente */
 .metrica-card {
     background: var(--gradiente-principal);
     color: white;
@@ -837,6 +993,7 @@ body {
     box-shadow: 0 4px 16px rgba(123,111,191,.18);
 }
 
+/* Rótulo da métrica (ex: "CONSULTAS", "PACIENTES") */
 .metrica-label {
     font-family: var(--font-body);
     font-size: 11px;
@@ -847,6 +1004,7 @@ body {
     margin-bottom: var(--spacing-sm);
 }
 
+/* Valor numérico da métrica */
 .metrica-valor {
     font-family: var(--font-titulo);
     font-size: 28px;
@@ -854,6 +1012,7 @@ body {
     letter-spacing: -0.5px;
 }
 
+/* Card financeiro com glassmorphism */
 .financeiro-card {
     background: rgba(255,255,255,.65);
     backdrop-filter: blur(20px) saturate(1.2);
@@ -873,6 +1032,7 @@ body {
     color: var(--grafite);
 }
 
+/* Aviso de política de cancelamento para o paciente */
 .aviso-cancelamento-paciente {
     background: rgba(128,161,212,.08);
     border-left: 4px solid var(--azul-sereno);
@@ -887,8 +1047,10 @@ body {
 
 /* ═══════════════════════════════════════════════════════════════
    COMPONENTES GERAIS
+   Elementos reutilizáveis em todo o dashboard
 ═══════════════════════════════════════════════════════════════ */
 
+/* Seção genérica com glassmorphism */
 .secao {
     background: rgba(255,255,255,.65);
     backdrop-filter: blur(20px) saturate(1.2);
@@ -920,6 +1082,7 @@ body {
     margin-bottom: var(--spacing-lg);
 }
 
+/* Label do campo de formulário */
 .form-group label {
     display: block;
     font-family: var(--font-body);
@@ -932,6 +1095,7 @@ body {
     letter-spacing: 0.8px;
 }
 
+/* Campos de input, select e textarea */
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -946,15 +1110,18 @@ body {
     background: rgba(255,255,255,.6);
 }
 
+/* Estado de foco dos campos */
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
     border-color: var(--azul-sereno);
     box-shadow: 0 0 0 3px rgba(128,161,212,.1);
+    /* Anel azul suave */
     background: var(--branco);
 }
 
+/* Linha de formulário com 2 colunas */
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -962,6 +1129,7 @@ body {
 }
 
 /* Botões */
+/* Estilo base de todos os botões do dashboard */
 .btn {
     padding: var(--spacing-md) var(--spacing-lg);
     border: none;
@@ -978,6 +1146,7 @@ body {
     text-decoration: none;
 }
 
+/* Botão primário: gradiente azul-verde */
 .btn-primary {
     background: var(--gradiente-principal);
     color: white;
@@ -989,6 +1158,7 @@ body {
     transform: translateY(-2px);
 }
 
+/* Botão secundário: fundo branco semi-transparente */
 .btn-secondary {
     background: rgba(255,255,255,.6);
     color: var(--grafite);
@@ -1001,11 +1171,13 @@ body {
     border-color: var(--lavanda);
 }
 
+/* Botão pequeno: espaçamento reduzido */
 .btn-pequeno {
     padding: var(--spacing-sm) var(--spacing-md);
     font-size: 12px;
 }
 
+/* Botão de confirmar: verde-água */
 .btn-confirmar {
     background: var(--verde-agua);
     color: white;
@@ -1015,6 +1187,7 @@ body {
     opacity: 0.9;
 }
 
+/* Botão de cancelar: vermelho */
 .btn-cancelar {
     background: var(--danger);
     color: white;
@@ -1024,26 +1197,32 @@ body {
     opacity: 0.9;
 }
 
+/* Botão que ocupa a largura total */
 .btn-bloco {
     width: 100%;
 }
 
 /* Tabelas */
+/* Container com scroll horizontal para tabelas em telas pequenas */
 .tabela-container {
     overflow-x: auto;
 }
 
+/* Tabela principal */
 .tabela {
     width: 100%;
     border-collapse: collapse;
+    /* Remove espaços entre células */
     font-family: var(--font-body);
     font-size: 13px;
 }
 
+/* Cabeçalho da tabela */
 .tabela thead {
     background: rgba(247,244,234,.5);
 }
 
+/* Células do cabeçalho */
 .tabela th {
     padding: var(--spacing-md);
     text-align: left;
@@ -1056,49 +1235,56 @@ body {
     letter-spacing: 0.8px;
 }
 
+/* Células de dados */
 .tabela td {
     padding: var(--spacing-md);
     border-bottom: 1px solid rgba(222,217,226,.25);
     color: var(--grafite);
 }
 
+/* Animação de hover nas linhas */
 .tabela tbody tr {
     transition: background 0.2s ease;
 }
 
 .tabela tbody tr:hover {
     background: rgba(128,161,212,.04);
+    /* Fundo azul muito suave ao passar o mouse */
 }
 
-/* Status Badges */
+/* Status Badges: pílulas coloridas para status de consulta */
 .status-badge {
     display: inline-block;
     padding: var(--spacing-sm) var(--spacing-md);
     border-radius: 20px;
+    /* Forma de pílula */
     font-family: var(--font-body);
     font-size: 11px;
     font-weight: 600;
     text-align: center;
 }
 
+/* Status "Confirmada": verde-água suave */
 .status-confirmada {
     background: rgba(117,201,200,.12);
     color: #4a8c8b;
 }
 
+/* Status "Pendente": amarelo suave */
 .status-pendente {
     background: rgba(245,158,11,.1);
     color: #b8860b;
 }
 
-.status-cancelada {
-    background: rgba(239,68,68,.08);
-    color: #b45454;
-}
+/* Status "Cancelada": vermelho suave (linha 1094 do original) */
+/* .status-cancelada foi definida na linha 1094 do arquivo original */
+/* background: rgba(239,68,68,.08); color: #b45454; */
 
 /* Modal */
+/* Overlay do modal: cobre toda a tela com fundo semi-transparente */
 .modal {
     display: none;
+    /* Oculto por padrão; JS adiciona .show para exibir */
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -1106,16 +1292,20 @@ body {
     width: 100%;
     height: 100%;
     background: rgba(72,72,72,.3);
+    /* Fundo grafite semi-transparente */
     align-items: center;
     justify-content: center;
     backdrop-filter: blur(8px);
+    /* Desfoca o conteúdo atrás do modal */
     -webkit-backdrop-filter: blur(8px);
 }
 
+/* Modal visível: JS adiciona a classe .show */
 .modal.show {
     display: flex;
 }
 
+/* Conteúdo do modal: card com glassmorphism */
 .modal-conteudo {
     background: rgba(255,255,255,.85);
     backdrop-filter: blur(24px) saturate(1.3);
@@ -1124,11 +1314,14 @@ body {
     border-radius: var(--radius-lg);
     max-width: 500px;
     width: 90%;
+    /* 90% da tela em telas pequenas */
     max-height: 90vh;
     overflow-y: auto;
+    /* Scroll interno se o conteúdo for muito longo */
     box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,.8);
 }
 
+/* Cabeçalho do modal: título + botão de fechar */
 .modal-header {
     display: flex;
     justify-content: space-between;
@@ -1144,6 +1337,7 @@ body {
     color: var(--grafite);
 }
 
+/* Botão "×" para fechar o modal */
 .modal-fechar {
     background: none;
     border: none;
@@ -1158,10 +1352,12 @@ body {
     opacity: 0.8;
 }
 
+/* Corpo do modal */
 .modal-body {
     padding: var(--spacing-xl);
 }
 
+/* Ações do modal: botões de confirmar/cancelar */
 .modal-acoes {
     display: flex;
     gap: var(--spacing-md);
@@ -1170,7 +1366,7 @@ body {
     border-top: 1px solid rgba(222,217,226,.3);
 }
 
-/* Alertas */
+/* Alertas dentro do dashboard */
 .alerta {
     display: flex;
     align-items: center;
@@ -1195,16 +1391,18 @@ body {
     border: 1px solid rgba(239,68,68,.12);
 }
 
-/* Abas */
+/* Abas de conteúdo: ocultas por padrão, exibidas pelo JS */
 .aba-conteudo {
     display: none;
 }
 
+/* Aba ativa: exibida com animação de entrada */
 .aba-conteudo.ativo {
     display: block;
     animation: fadeIn 0.3s ease;
 }
 
+/* Animação de entrada das abas */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
@@ -1212,44 +1410,57 @@ body {
 
 /* ═══════════════════════════════════════════════════════════════
    RESPONSIVO
+   Adaptações para diferentes tamanhos de tela
 ═══════════════════════════════════════════════════════════════ */
 
+/* Telas médias (≤1400px): oculta a coluna de widgets */
 @media (max-width: 1400px) {
     .dashboard-container {
         grid-template-columns: 260px 1fr;
+        /* Remove a terceira coluna (widgets) */
     }
 
     .widgets-coluna {
         display: none;
+        /* Widgets ocultos: informações aparecem nas seções principais */
     }
 }
 
+/* Telas menores (≤1024px): sidebar deslizante */
 @media (max-width: 1024px) {
     .dashboard-container {
         grid-template-columns: 1fr;
+        /* Uma única coluna */
         padding: var(--spacing-md);
     }
 
     .sidebar {
         position: fixed;
+        /* Sidebar sai da grade e fica fixada fora da tela */
         left: -280px;
+        /* Escondida à esquerda */
         top: 0;
         width: 280px;
         height: 100vh;
         z-index: 999;
         border-radius: 0;
         transition: left 0.3s ease;
+        /* Animação de deslizamento */
     }
 
+    /* Sidebar visível: JS adiciona a classe .ativo */
     .sidebar.ativo {
         left: 0;
+        /* Desliza para dentro da tela */
     }
 
     .form-row {
         grid-template-columns: 1fr;
+        /* Formulários em coluna única */
     }
 }
 
+/* Telas pequenas (≤768px): celulares */
 @media (max-width: 768px) {
     .dashboard-container {
         padding: var(--spacing-md);
@@ -1257,6 +1468,7 @@ body {
 
     .header-top {
         flex-direction: column;
+        /* Título e ações empilhados */
         align-items: flex-start;
         gap: var(--spacing-md);
     }
@@ -1271,14 +1483,17 @@ body {
 
     .metricas-grid {
         grid-template-columns: 1fr;
+        /* Métricas em coluna única */
     }
 
     .horarios-container {
         grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        /* Botões de horário menores */
     }
 
     .calendario-header-com-legenda {
         flex-direction: column;
+        /* Título e legenda empilhados */
     }
 
     .calendario-legenda-inline {
@@ -1289,8 +1504,10 @@ body {
     .sidebar {
         position: fixed;
         left: -100%;
+        /* Oculta à esquerda (largura total da tela) */
         top: 0;
         width: 100%;
+        /* Sidebar ocupa a tela inteira em celulares */
         height: 100vh;
         z-index: 999;
         border-radius: 0;
@@ -1323,6 +1540,7 @@ body {
         padding: var(--spacing-sm);
     }
 
+    /* Botões de ação da tabela em coluna */
     .acoes-btn {
         display: flex;
         flex-direction: column;
@@ -1336,6 +1554,7 @@ body {
     }
 }
 
+/* Telas muito pequenas (≤480px) */
 @media (max-width: 480px) {
     .dashboard-container {
         padding: var(--spacing-sm);
@@ -1377,10 +1596,11 @@ body {
     .form-group select,
     .form-group textarea {
         font-size: 16px;
+        /* Tamanho mínimo para evitar zoom automático no iOS */
     }
 }
 
-/* Card White (glass morphism) */
+/* Card White com glassmorphism mais opaco */
 .card-white {
     background: rgba(255,255,255,.85);
     backdrop-filter: blur(24px) saturate(1.3);
@@ -1390,10 +1610,15 @@ body {
 
 /* ═══════════════════════════════════════════════════════════════
    MODO ESCURO
+   Todos os componentes adaptados para fundo escuro.
+   Ativado pelo JS quando o usuário clica no botão de dark mode.
+   A classe .dark-mode é adicionada ao <body>.
 ═══════════════════════════════════════════════════════════════ */
 
+/* Fundo escuro do body */
 body.dark-mode {
     background: #0d0d1a;
+    /* Azul muito escuro quase preto */
     color: var(--branco);
 }
 
@@ -1401,21 +1626,25 @@ body.dark-mode .dashboard-container {
     background: #0d0d1a;
 }
 
+/* Painéis principais: fundo escuro semi-transparente */
 body.dark-mode .sidebar,
 body.dark-mode .widget,
 body.dark-mode .secao,
 body.dark-mode .calendario-secao,
 body.dark-mode .financeiro-card {
     background: rgba(30,30,50,.7);
+    /* Azul-escuro com 70% de opacidade */
     border-color: rgba(255,255,255,.08);
     box-shadow: var(--shadow-md);
 }
 
+/* Bordas dos cabeçalho e rodapé da sidebar */
 body.dark-mode .sidebar-header,
 body.dark-mode .sidebar-footer {
     border-color: rgba(255,255,255,.08);
 }
 
+/* Itens de navegação no dark mode */
 body.dark-mode .nav-item {
     color: rgba(255,255,255,.55);
 }
@@ -1425,16 +1654,19 @@ body.dark-mode .nav-item:hover {
     color: rgba(255,255,255,.8);
 }
 
+/* Item ativo mantém o gradiente colorido */
 body.dark-mode .nav-item.ativo {
     background: var(--gradiente-principal);
     color: white;
 }
 
+/* Textos de descrição e legenda no dark mode */
 body.dark-mode .calendario-descricao,
 body.dark-mode .legenda-item {
     color: rgba(255,255,255,.5);
 }
 
+/* Campos de formulário no dark mode */
 body.dark-mode .form-group input,
 body.dark-mode .form-group select,
 body.dark-mode .form-group textarea {
@@ -1450,6 +1682,7 @@ body.dark-mode .form-group textarea:focus {
     background: rgba(255,255,255,.1);
 }
 
+/* Botão secundário no dark mode */
 body.dark-mode .btn-secondary {
     background: rgba(255,255,255,.06);
     color: var(--branco);
@@ -1461,6 +1694,7 @@ body.dark-mode .btn-secondary:hover {
     border-color: var(--azul-sereno);
 }
 
+/* Notificações e consultas no dark mode */
 body.dark-mode .notificacao-item {
     background: rgba(255,255,255,.05);
 }
@@ -1469,6 +1703,7 @@ body.dark-mode .consulta-card {
     background: rgba(255,255,255,.05);
 }
 
+/* Tabelas no dark mode */
 body.dark-mode .tabela thead {
     background: rgba(255,255,255,.05);
 }
@@ -1487,6 +1722,7 @@ body.dark-mode .tabela tbody tr:hover {
     background: rgba(255,255,255,.03);
 }
 
+/* Horários no dark mode */
 body.dark-mode .horario-item {
     background: rgba(255,255,255,.05);
     border-color: rgba(255,255,255,.1);
@@ -1499,6 +1735,7 @@ body.dark-mode .horario-item:hover {
     color: var(--branco);
 }
 
+/* Botão de notificações no dark mode */
 body.dark-mode .btn-notificacoes {
     background: rgba(255,255,255,.06);
     border-color: rgba(255,255,255,.1);
@@ -1511,6 +1748,7 @@ body.dark-mode .btn-notificacoes:hover {
     border-color: var(--azul-sereno);
 }
 
+/* Títulos no dark mode */
 body.dark-mode .widget-header h3,
 body.dark-mode .secao h2,
 body.dark-mode .secao h3,
@@ -1529,6 +1767,7 @@ body.dark-mode .metrica-valor {
     color: var(--branco);
 }
 
+/* Textos secundários no dark mode */
 body.dark-mode .consulta-card-info,
 body.dark-mode .notificacao-desc,
 body.dark-mode .usuario-email,
@@ -1536,6 +1775,7 @@ body.dark-mode .widget-link {
     color: rgba(255,255,255,.45);
 }
 
+/* Modal no dark mode */
 body.dark-mode .modal-conteudo {
     background: rgba(30,30,50,.9);
     border-color: rgba(255,255,255,.1);
@@ -1553,13 +1793,14 @@ body.dark-mode .usuario-nome {
     color: var(--branco);
 }
 
+/* Aviso de cancelamento no dark mode */
 body.dark-mode .aviso-cancelamento-paciente {
     background: rgba(128,161,212,.1);
     border-left-color: var(--azul-sereno);
     color: rgba(255,255,255,.7);
 }
 
-/* Dark Mode - Calendar Improvements */
+/* Dark Mode - Calendário Moderno */
 body.dark-mode .calendario-header-moderno,
 body.dark-mode .calendario-acoes-moderno,
 body.dark-mode .calendario-wrapper-moderno {
@@ -1596,7 +1837,7 @@ body.dark-mode .legenda-item-moderno {
     color: rgba(255,255,255,.6);
 }
 
-/* Dark Mode - Modal Calendar */
+/* Dark Mode - Modal do Calendário */
 body.dark-mode .modal-header-moderno,
 body.dark-mode .modal-body-moderno {
     color: var(--branco);
@@ -1616,6 +1857,7 @@ body.dark-mode .modal-fechar-moderno:hover {
     color: var(--danger);
 }
 
+/* Inputs e selects do modal no dark mode */
 body.dark-mode .input-moderno,
 body.dark-mode .select-moderno {
     background: rgba(255,255,255,.06);
@@ -1632,6 +1874,7 @@ body.dark-mode .label-moderno {
     color: rgba(255,255,255,.5);
 }
 
+/* Cards de modalidade no dark mode */
 body.dark-mode .modalidade-card {
     background: rgba(255,255,255,.05);
     border-color: rgba(255,255,255,.1);
@@ -1655,6 +1898,7 @@ body.dark-mode .form-hint-moderno {
     color: rgba(255,255,255,.4);
 }
 
+/* Resumo do agendamento no dark mode */
 body.dark-mode .resumo-agendamento-moderno {
     background: rgba(128,161,212,.1);
     border-color: rgba(128,161,212,.2);
@@ -1674,6 +1918,7 @@ body.dark-mode .btn-cancelar-agendamento {
     color: rgba(255,255,255,.7);
 }
 
+/* Consulta atual no dark mode */
 body.dark-mode .consulta-atual-moderno {
     background: rgba(192,185,221,.1);
     border-color: rgba(192,185,221,.15);
@@ -1687,6 +1932,7 @@ body.dark-mode .consulta-atual-info-moderno strong {
     color: var(--branco);
 }
 
+/* Status badges no dark mode: cores mais claras para contraste */
 body.dark-mode .status-confirmada {
     background: rgba(117,201,200,.15);
     color: #a0e6e5;
@@ -1702,6 +1948,7 @@ body.dark-mode .status-cancelada {
     color: #f59494;
 }
 
+/* Alertas no dark mode */
 body.dark-mode .alerta-sucesso {
     background: rgba(117,201,200,.1);
     color: #a0e6e5;
@@ -1714,6 +1961,7 @@ body.dark-mode .alerta-erro {
     border-color: rgba(239,68,68,.12);
 }
 
+/* Subtítulos no dark mode */
 body.dark-mode .subsecao-titulo {
     color: var(--branco);
 }
@@ -1722,6 +1970,7 @@ body.dark-mode .subsecao-titulo-passadas {
     border-top-color: rgba(255,255,255,.08);
 }
 
+/* Linhas de consultas passadas no dark mode */
 body.dark-mode .consulta-passada-row {
     background: rgba(255,255,255,.03);
     color: rgba(255,255,255,.45);
@@ -1740,6 +1989,7 @@ body.dark-mode .tabela-vazio {
     color: rgba(255,255,255,.35);
 }
 
+/* Botões do calendário no dark mode */
 body.dark-mode .btn-calendario {
     background: rgba(255,255,255,.08);
     color: var(--branco);
@@ -1750,6 +2000,7 @@ body.dark-mode .btn-calendario:hover {
     color: var(--branco);
 }
 
+/* Modal no dark mode */
 body.dark-mode .modal-header h2 {
     color: var(--branco);
 }
@@ -1767,6 +2018,7 @@ body.dark-mode .form-group label {
     color: rgba(255,255,255,.5);
 }
 
+/* Card de métrica no dark mode */
 body.dark-mode .metrica-card {
     background: rgba(30,30,50,.7);
     border-color: rgba(255,255,255,.08);
@@ -1776,6 +2028,7 @@ body.dark-mode .header-top h1 {
     color: var(--branco);
 }
 
+/* FullCalendar no dark mode */
 body.dark-mode .fc {
     color: rgba(255,255,255,.8);
 }
@@ -1822,6 +2075,7 @@ body.dark-mode .fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
     color: var(--azul-sereno);
 }
 
+/* Dias de outros meses no calendário */
 body.dark-mode .fc .fc-daygrid-day.fc-day-other {
     background: rgba(255,255,255,.02);
 }
@@ -1830,6 +2084,7 @@ body.dark-mode .fc .fc-daygrid-day.fc-day-other .fc-daygrid-day-number {
     color: rgba(255,255,255,.25);
 }
 
+/* Popover do calendário (ao clicar em "+X eventos") */
 body.dark-mode .fc .fc-popover {
     background: rgba(30,30,50,.95);
     border-color: rgba(255,255,255,.1);
@@ -1849,6 +2104,7 @@ body.dark-mode .fc .fc-more-popover .fc-popover-body {
     background: transparent;
 }
 
+/* Visualização de lista do calendário */
 body.dark-mode .fc .fc-list-day-cushion {
     background: rgba(255,255,255,.04);
 }
@@ -1862,6 +2118,7 @@ body.dark-mode .fc .fc-list-empty {
     color: rgba(255,255,255,.35);
 }
 
+/* Visualização de grade de horários */
 body.dark-mode .fc .fc-timegrid-slot {
     background: transparent;
 }
@@ -1870,8 +2127,10 @@ body.dark-mode .fc .fc-timegrid-axis {
     background: transparent;
 }
 
+/* Indicador de hora atual no calendário */
 body.dark-mode .fc .fc-timegrid-now-indicator-line {
     border-color: var(--danger);
+    /* Linha vermelha indicando o horário atual */
 }
 
 body.dark-mode .fc .fc-timegrid-now-indicator-arrow {
@@ -1879,6 +2138,7 @@ body.dark-mode .fc .fc-timegrid-now-indicator-arrow {
     color: var(--danger);
 }
 
+/* Informações do paciente no dark mode */
 body.dark-mode .paciente-info {
     background: rgba(255,255,255,.04);
     border-color: rgba(255,255,255,.08);
@@ -1888,6 +2148,7 @@ body.dark-mode .paciente-info-rotulo {
     color: rgba(255,255,255,.4);
 }
 
+/* Seção de perfil no dark mode */
 body.dark-mode .profile-section {
     background: rgba(255,255,255,.04);
     border-color: rgba(255,255,255,.08);
@@ -1906,12 +2167,14 @@ body.dark-mode .profile-email {
     color: rgba(255,255,255,.45);
 }
 
+/* Horário indisponível no dark mode */
 body.dark-mode .horario-indisponivel {
     background: rgba(239,68,68,.08);
     color: rgba(255,255,255,.4);
     border-color: rgba(239,68,68,.12);
 }
 
+/* Perfil na sidebar no dark mode */
 body.dark-mode .sidebar .profile-section {
     background: rgba(255,255,255,.04);
     border-color: rgba(255,255,255,.08);
@@ -1925,6 +2188,7 @@ body.dark-mode .sidebar .profile-email {
     color: rgba(255,255,255,.45);
 }
 
+/* Linhas de consulta na tabela no dark mode */
 body.dark-mode .consulta-row {
     background: transparent !important;
     opacity: 1 !important;
@@ -1934,11 +2198,13 @@ body.dark-mode .consulta-row td {
     color: rgba(255,255,255,.7);
 }
 
+/* Consultas passadas e com opacidade inline no dark mode */
 body.dark-mode .consulta-passada-row td,
 body.dark-mode tr.consulta-row[style*="opacity"] td {
     color: rgba(255,255,255,.45) !important;
 }
 
+/* Caixas de informação no dark mode */
 body.dark-mode .info-box {
     background: rgba(128,161,212,.1) !important;
     border-left-color: var(--azul-sereno) !important;
@@ -1948,10 +2214,12 @@ body.dark-mode .info-box h3 {
     color: var(--azul-sereno) !important;
 }
 
+/* Tabela de consultas no dark mode */
 body.dark-mode .consultas-tabela {
     --border-color: rgba(255,255,255,.08);
 }
 
+/* Filtros no dark mode */
 body.dark-mode .filtros .btn-secondary {
     background: rgba(255,255,255,.06);
     border-color: rgba(255,255,255,.1);
@@ -1969,6 +2237,7 @@ body.dark-mode .filtros .btn-secondary.ativo {
     border-color: transparent;
 }
 
+/* Cards de consulta modernos no dark mode */
 body.dark-mode .card-grid .consulta-card-moderno {
     background: rgba(30,30,50,.7);
     border-color: rgba(255,255,255,.1);
@@ -1982,6 +2251,7 @@ body.dark-mode .card-grid .consulta-card-moderno .card-meta {
     color: rgba(255,255,255,.5);
 }
 
+/* Formulários de perfil no dark mode */
 body.dark-mode #form-perfil .form-group label,
 body.dark-mode .form-row .form-group label {
     color: rgba(255,255,255,.5);
@@ -1996,11 +2266,13 @@ body.dark-mode .form-row .form-group select {
     border-color: rgba(255,255,255,.1);
 }
 
+/* Widget no dark mode */
 body.dark-mode .widget {
     background: rgba(30,30,50,.7);
     border-color: rgba(255,255,255,.08);
 }
 
+/* Consulta atual no dark mode */
 body.dark-mode .consulta-atual-moderno {
     background: rgba(192,185,221,.1);
     border-color: rgba(192,185,221,.15);
@@ -2014,6 +2286,7 @@ body.dark-mode .consulta-atual-info-moderno strong {
     color: var(--branco);
 }
 
+/* Legenda do calendário no dark mode */
 body.dark-mode .legenda-cor {
     opacity: 0.8;
 }
@@ -2026,6 +2299,7 @@ body.dark-mode .alerta {
     color: rgba(255,255,255,.8);
 }
 
+/* Botões no dark mode */
 body.dark-mode .btn-primary {
     background: var(--gradiente-principal);
     color: var(--branco);
@@ -2084,12 +2358,16 @@ body.dark-mode .modal-badge-acao {
     opacity: 0.9;
 }
 
+/* Sobrescreve cores inline de células da tabela no dark mode
+   Necessário porque o PHP gera estilos inline para cores de status */
 body.dark-mode table.tabela td[style*="color: #10b981"] {
     color: #a0e6e5 !important;
+    /* Verde claro para dark mode */
 }
 
 body.dark-mode table.tabela td[style*="color: #ef4444"] {
     color: #f59494 !important;
+    /* Vermelho claro para dark mode */
 }
 
 body.dark-mode table.tabela td[style*="color: #9ca3af"] {
@@ -2101,6 +2379,7 @@ body.dark-mode table.tabela td[style*="text-align: center"] {
     color: rgba(255,255,255,.35) !important;
 }
 
+/* Campos de formulário (segunda declaração para garantir especificidade) */
 body.dark-mode .form-group input,
 body.dark-mode .form-group select,
 body.dark-mode .form-group textarea {
@@ -2116,6 +2395,7 @@ body.dark-mode .form-group textarea:focus {
     border-color: var(--azul-sereno);
 }
 
+/* Consulta atual (versão sem sufixo -moderno) */
 body.dark-mode .consulta-atual {
     background: rgba(192,185,221,.1);
     border-color: rgba(192,185,221,.15);
@@ -2125,11 +2405,13 @@ body.dark-mode .paciente-consulta-info {
     color: rgba(255,255,255,.7);
 }
 
+/* Card white no dark mode */
 body.dark-mode .card-white {
     background: rgba(30,30,50,.85);
     border-color: rgba(255,255,255,.1);
 }
 
+/* Sobrescreve fundos inline claros gerados pelo PHP no dark mode */
 body.dark-mode div[style*="background: #f9fafb"],
 body.dark-mode div[style*="background-color: #f9fafb"],
 body.dark-mode tr[style*="background-color: #f9fafb"] {
@@ -2142,6 +2424,7 @@ body.dark-mode div[style*="background: white;"] {
     border-color: rgba(255,255,255,.1) !important;
 }
 
+/* Sobrescreve cores de texto inline no dark mode */
 body.dark-mode [style*="color: #111827"],
 body.dark-mode [style*="color: #333"],
 body.dark-mode [style*="color: #374151"] {
@@ -2155,70 +2438,34 @@ body.dark-mode [style*="color: #e5e7eb"] {
     color: rgba(255,255,255,.5) !important;
 }
 
+/* Sobrescreve bordas inline no dark mode */
 body.dark-mode [style*="border: 1px solid #d1d5db"],
 body.dark-mode [style*="border: 1px solid #e5e7eb"],
 body.dark-mode [style*="border: 1px solid #e0e0e0"] {
     border-color: rgba(255,255,255,.1) !important;
 }
 
+/* Inputs desabilitados no dark mode */
 body.dark-mode input[disabled][style*="background:#f9fafb"],
 body.dark-mode input[disabled][style*="background: #f9fafb"] {
     background: rgba(255,255,255,.04) !important;
     color: rgba(255,255,255,.4) !important;
 }
 
+/* Bordas inferiores inline no dark mode */
 body.dark-mode [style*="border-bottom: 1px solid #f3f4f6"],
 body.dark-mode [style*="border-bottom: 1px solid #e5e7eb"] {
     border-bottom-color: rgba(255,255,255,.08) !important;
 }
 
+/* Fundos de status inline no dark mode */
 body.dark-mode [style*="background: #f0fdf4"] {
     background: rgba(117,201,200,.1) !important;
+    /* Verde suave para dark mode */
     border-color: rgba(117,201,200,.15) !important;
 }
 
 body.dark-mode [style*="background: #fffbeb"] {
     background: rgba(245,158,11,.1) !important;
-    border-color: rgba(245,158,11,.15) !important;
-    color: #f5c842 !important;
-}
-
-body.dark-mode [style*="border-left: 4px solid #ef4444"] {
-    border-left-color: rgba(239,68,68,.5) !important;
-}
-
-body.dark-mode [style*="border-left: 4px solid #f59e0b"] {
-    border-left-color: rgba(245,158,11,.5) !important;
-}
-
-body.dark-mode [style*="border-left: 4px solid #10b981"] {
-    border-left-color: rgba(117,201,200,.5) !important;
-}
-
-body.dark-mode [style*="color: #1e40af"] {
-    color: var(--azul-sereno) !important;
-}
-
-body.dark-mode [style*="background: linear-gradient(135deg, #667eea"] {
-    opacity: 0.85;
-}
-
-body.dark-mode [style*="background: linear-gradient(135deg, #f093fb"] {
-    opacity: 0.85;
-}
-
-body.dark-mode [style*="background: #f3f4f6"] {
-    background: rgba(255,255,255,.06) !important;
-}
-
-body.dark-mode [style*="color: #6366f1"] {
-    color: var(--azul-sereno) !important;
-}
-
-body.dark-mode span[style*="color: #ef4444"] {
-    color: #f59494 !important;
-}
-
-body.dark-mode span[style*="color: #9ca3af"] {
-    color: rgba(255,255,255,.4) !important;
+    /* Amarelo suave para dark mode */
 }

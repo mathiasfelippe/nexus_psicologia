@@ -1,10 +1,33 @@
+<!--
+    ARQUIVO: components/footer_interno.html
+    DESCRIÇÃO: Rodapé simplificado para as páginas internas do site (pages/*.html).
+
+    DIFERENÇAS em relação ao footer.html (landing page):
+      - Sem o mapa do Google Maps (apenas o grid de colunas)
+      - Logo e slogan ficam na mesma coluna (4 colunas em vez de 5)
+      - Os links de navegação apontam para index.html#secao (caminho relativo)
+      - Os links de artigos apontam para arquivos no mesmo diretório (sem prefixo pages/)
+      - Ícones de redes sociais maiores (18x18 em vez de 14x14)
+      - id="contact" está no elemento <footer> (não em uma coluna específica)
+
+    USADO NAS PÁGINAS:
+      - pages/artigos.html
+      - pages/artigo-*.html
+      - pages/clinica.html, casal.html, infantil.html, neuropsicologia.html
+      - pages/sobre_nexus.html
+-->
+
+<!-- Rodapé interno: id="contact" para compatibilidade com links de âncora -->
 <footer class="footer" id="contact">
   <div class="container">
 
+    <!-- ── Grade de Colunas (4 colunas) ── -->
     <div class="footer__grade">
 
+      <!-- Coluna 1: Logo + Slogan (combinados em uma única coluna) -->
       <div class="footer__coluna">
         <div class="footer__logo">
+          <!-- Caminho relativo: ../assets/ (sobe um nível da pasta pages/) -->
           <img src="../assets/logo.png" alt="Nexus Psicologia" class="footer__imagem-logo">
         </div>
         <p class="footer__slogan">
@@ -12,6 +35,8 @@
         </p>
       </div>
 
+      <!-- Coluna 2: Links de Navegação -->
+      <!-- Links apontam para index.html#secao (caminho relativo a partir de pages/) -->
       <div class="footer__coluna">
         <p class="footer__titulo-coluna">Navegação</p>
         <ul class="footer__links">
@@ -22,6 +47,8 @@
         </ul>
       </div>
 
+      <!-- Coluna 3: Links de Artigos -->
+      <!-- Links sem prefixo: arquivos estão no mesmo diretório pages/ -->
       <div class="footer__coluna">
         <p class="footer__titulo-coluna">Artigos</p>
         <ul class="footer__links">
@@ -32,11 +59,14 @@
         </ul>
       </div>
 
+      <!-- Coluna 4: Informações de Contato -->
       <div class="footer__coluna footer__contato-lista">
         <p class="footer__titulo-coluna">Contato</p>
-        
+
+        <!-- Item: Telefone -->
         <div class="footer__item-contato">
           <span class="footer__icone">
+            <!-- Ícone de telefone em SVG -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
             </svg>
@@ -44,8 +74,10 @@
           <span>(11) 99999-9999</span>
         </div>
 
+        <!-- Item: Email -->
         <div class="footer__item-contato">
           <span class="footer__icone">
+            <!-- Ícone de envelope (email) em SVG -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
               <polyline points="22,6 12,13 2,6"/>
@@ -54,8 +86,10 @@
           <span>contato@nexuspsi.com.br</span>
         </div>
 
+        <!-- Item: Localização -->
         <div class="footer__item-contato">
           <span class="footer__icone">
+            <!-- Ícone de pin de localização em SVG -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
               <circle cx="12" cy="10" r="3"/>
@@ -67,9 +101,11 @@
 
     </div>
 
+    <!-- ── Barra Inferior: Direitos Autorais + Redes Sociais ── -->
     <div class="footer__barra-inferior">
       <p class="footer__texto-direitos">© 2026 Nexus Psicologia. Todos os direitos reservados.</p>
       <div class="footer__redes-sociais">
+        <!-- Ícones maiores (18x18) em comparação com o footer da landing page (14x14) -->
         <a href="#" class="footer__link-rede-social" aria-label="Instagram">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="2" width="20" height="20" rx="5"/>

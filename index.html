@@ -1,46 +1,90 @@
+<!-- ============================================================
+     ARQUIVO: index.html
+     DESCRIÇÃO: Página principal (home) do site Nexus Psicologia.
+     Contém todas as seções visíveis ao visitante: navbar, hero,
+     sobre, estatísticas, especializações, CTA e rodapé.
+     ============================================================ -->
 <!DOCTYPE html>
+<!-- Define o tipo do documento como HTML5 -->
 <html lang="pt-BR">
+<!-- O atributo lang="pt-BR" informa ao navegador e leitores de tela que o idioma da página é Português do Brasil -->
 <head>
+  <!-- A tag <head> contém metadados (informações sobre a página que não aparecem diretamente na tela) -->
+
   <meta charset="UTF-8" />
+  <!-- Define a codificação de caracteres como UTF-8, permitindo o uso de acentos e caracteres especiais do português -->
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Torna a página responsiva: ajusta a largura da viewport ao tamanho da tela do dispositivo (celular, tablet, desktop) -->
+
   <title>Nexus Psicologia</title>
+  <!-- Define o título que aparece na aba do navegador -->
+
   <link rel="icon" href="assets/simbologo.png" />
+  <!-- Define o ícone (favicon) que aparece na aba do navegador, usando a imagem do símbolo do logo -->
 
   <!-- ── Estilos ── -->
+  <!-- Importação dos arquivos CSS externos. Cada arquivo cuida da estilização de uma seção específica da página -->
   <link rel="stylesheet" href="css/global.css" />
+  <!-- Estilos globais: variáveis de cor, tipografia, reset e classes utilitárias usadas em todo o site -->
   <link rel="stylesheet" href="css/navbar.css" />
+  <!-- Estilos exclusivos da barra de navegação (menu) -->
   <link rel="stylesheet" href="css/hero.css" />
+  <!-- Estilos da seção de destaque (banner principal) -->
   <link rel="stylesheet" href="css/about.css" />
+  <!-- Estilos da seção "Sobre mim" da psicóloga -->
   <link rel="stylesheet" href="css/stats.css" />
+  <!-- Estilos da seção de estatísticas (números de atendimento) -->
   <link rel="stylesheet" href="css/specializations.css" />
+  <!-- Estilos da seção de especializações (cards de serviços) -->
   <link rel="stylesheet" href="css/cta.css" />
+  <!-- Estilos da seção de chamada para ação (CTA - Call to Action) -->
   <link rel="stylesheet" href="css/footer.css" />
+  <!-- Estilos do rodapé da página -->
 </head>
 <body>
+<!-- A tag <body> contém todo o conteúdo visível da página -->
 
   <!-- ══════════════════════════════════════════
-       NAVBAR
+       NAVBAR - Barra de Navegação Principal
+       Aparece fixada no topo da página e contém:
+       - Logo da Nexus Psicologia
+       - Links de navegação para as seções da página
+       - Botão de login
+       - Menu hambúrguer para dispositivos móveis
   ══════════════════════════════════════════ -->
   <nav class="navbar" id="navbar">
+  <!-- <nav> é um elemento semântico que representa a área de navegação principal do site -->
+  <!-- id="navbar" é usado pelo JavaScript para adicionar efeito de scroll -->
     <div class="container">
+    <!-- .container é uma classe CSS que centraliza e limita a largura máxima do conteúdo -->
       <div class="navbar-conteudo">
+      <!-- Wrapper interno que organiza os elementos da navbar em linha (logo + links + botão) -->
 
-        <!-- Logo -->
+        <!-- Logo: clicável, leva de volta ao topo da página -->
         <a href="#" class="navbar-logo">
           <img src="assets/logo.png" alt="Nexus Logo" class="logo-img" />
+          <!-- Imagem do logo. O atributo alt descreve a imagem para acessibilidade e SEO -->
         </a>
 
-        <!-- Navegação -->
+        <!-- Navegação principal: lista de links que rolam a página até cada seção -->
         <ul class="navbar-links" role="list">
+        <!-- role="list" melhora a acessibilidade informando leitores de tela que é uma lista de navegação -->
           <li><a href="#about">Sobre</a></li>
+          <!-- href="#about" rola a página até o elemento com id="about" (seção Sobre) -->
           <li><a href="#specializations">Especializações</a></li>
+          <!-- Rola até a seção de especializações -->
           <li><a href="#contact">Contato</a></li>
+          <!-- Rola até a seção de contato no rodapé -->
           <li><a href="pages/artigos.html">Artigos</a></li>
+          <!-- Navega para a página de artigos (arquivo separado) -->
         </ul>
 
-        <!-- Botão login -->
+        <!-- Botão de login: leva o usuário para a página de autenticação -->
         <div class="navbar-acao">
           <a href="login.php" class="btn btn-primary">
+          <!-- btn btn-primary: classes CSS que estilizam o botão com a cor principal do site -->
+            <!-- Ícone SVG de "entrar/login" (seta apontando para dentro) -->
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
               fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
@@ -52,50 +96,73 @@
           </a>
         </div>
 
-        <!-- Menu hambúrguer -->
+        <!-- Menu hambúrguer: botão visível apenas em telas pequenas (mobile) -->
+        <!-- Ao ser clicado (via JavaScript), exibe o menu mobile abaixo -->
         <button class="navbar-botao" id="hamburger" aria-label="Menu" aria-expanded="false">
+        <!-- aria-label e aria-expanded são atributos de acessibilidade para leitores de tela -->
           <span></span>
+          <!-- Cada <span> representa uma das três linhas horizontais do ícone hambúrguer -->
           <span></span>
           <span></span>
         </button>
       </div>
 
+      <!-- Menu de navegação para dispositivos móveis (oculto por padrão, exibido pelo JS ao clicar no hambúrguer) -->
       <ul class="navbar-celular" id="mobile-menu" role="list">
         <li><a href="#about">Sobre</a></li>
         <li><a href="#specializations">Especializações</a></li>
         <li><a href="#contact">Contato</a></li>
         <li><a href="pages/artigos.html">Artigos</a></li>
         <li><a href="login.php" class="btn btn-primary" style="width:fit-content">Agendar</a></li>
+        <!-- No menu mobile, o botão de login exibe "Agendar" como texto alternativo -->
       </ul>
     </div>
   </nav>
 
   <main>
+  <!-- <main> é um elemento semântico que envolve o conteúdo principal da página -->
 
     <!-- ══════════════════════════════════════════
-         HERO
+         HERO (Seção de Destaque)
+         É o primeiro bloco visual que o visitante vê.
+         Contém: título principal, subtítulo, botões de ação,
+         selos de confiança e imagem ilustrativa.
+         A classe "reveal" é usada pelo JS para animar os
+         elementos quando entram na área visível da tela.
     ══════════════════════════════════════════ -->
     <section class="destaque" id="home">
+    <!-- <section> agrupa conteúdo relacionado. id="home" permite navegação direta para esta seção -->
       <div class="container">
         <div class="destaque-conteudo">
+        <!-- Wrapper que organiza o texto à esquerda e a imagem à direita (layout de duas colunas) -->
 
           <div class="texto">
+          <!-- Coluna de texto: título, subtítulo, botões e selos -->
 
             <h1 class="titulo reveal" style="transition-delay:.1s">
+            <!-- h1: título principal da página (importante para SEO) -->
+            <!-- reveal: classe que o JS usa para aplicar a animação de entrada -->
+            <!-- transition-delay: atrasa a animação em 0.1s para criar efeito cascata -->
               Um espaço seguro<br>
               <strong> para cuidar da</strong><br>
+              <!-- <strong> aplica negrito e indica importância semântica ao texto -->
               <strong>sua mente.</strong>
             </h1>
 
             <div class="linha-gradiente"></div>
+            <!-- Linha decorativa com gradiente de cor, separando o título do subtítulo -->
 
             <p class="subtitulo reveal" style="transition-delay:.2s">
+            <!-- Parágrafo de subtítulo com animação atrasada em 0.2s -->
               Psicoterapia com escuta qualificada, acolhimento e acompanhamento
               personalizado para cada fase da sua vida.
             </p>
 
+            <!-- Grupo de botões de ação principal -->
             <div class="botoes reveal" style="transition-delay:.3s">
+              <!-- Botão primário: leva para a página de login/agendamento -->
               <a href="login.php" class="btn btn-primary">
+                <!-- Ícone SVG de calendário para reforçar visualmente a ação de agendar -->
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
@@ -106,8 +173,10 @@
                 </svg>
                 Agendar Sessão
               </a>
+              <!-- Botão secundário (outline): leva para a página "Sobre a Nexus" -->
               <a href="pages/sobre_nexus.html" class="btn btn-outline">
                 Saiba mais
+                <!-- Ícone SVG de seta para a direita, indicando navegação -->
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
@@ -116,9 +185,12 @@
               </a>
             </div>
 
+           <!-- Selos de confiança: pequenos ícones que reforçam credibilidade -->
            <div class="selos reveal" style="transition-delay:.4s">
+  <!-- Selo 1: Atendimento online e presencial -->
   <div class="selo">
     <div class="selo-icone">
+      <!-- Ícone SVG de telefone -->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
       </svg>
@@ -126,8 +198,10 @@
     <span class="selo-texto">Atendimento online<br>e presencial</span>
   </div>
 
+  <!-- Selo 2: Ambiente Seguro -->
   <div class="selo">
     <div class="selo-icone">
+      <!-- Ícone SVG de escudo com check, simbolizando segurança e confiança -->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
         <path d="m9 12 2 2 4-4"></path>
@@ -138,8 +212,10 @@
 </div>
           </div>
 
+          <!-- Coluna visual: imagem ilustrativa da psicóloga ou representação gráfica -->
           <div class="visual reveal" style="transition-delay:.2s">
             <img src="./assets/destaque.png" alt="" class="hero-imagem">
+            <!-- alt="" vazio pois é uma imagem decorativa; leitores de tela irão ignorá-la -->
           </div>
 
         </div>
@@ -147,25 +223,39 @@
     </section>
 
     <!-- ══════════════════════════════════════════
-         ABOUT
+         ABOUT - Seção "Sobre Mim"
+         Apresenta a psicóloga Juliana Moura com:
+         - Foto com anel decorativo e badge de disponibilidade
+         - Texto de apresentação pessoal
+         - Destaques de diferenciais (escuta ativa, abordagem personalizada)
+         - Link para a página completa "Sobre a Nexus"
     ══════════════════════════════════════════ -->
     <section class="sobre" id="about">
       <div class="container">
         <div class="conteudo-sobre">
+        <!-- Layout de duas colunas: foto à esquerda, texto à direita -->
 
+          <!-- Bloco da foto da psicóloga -->
           <div class="foto-bloco reveal">
             <img src="assets/juliana_moura.png" alt="Foto da Psicóloga Juliana">
+            <!-- Foto profissional da psicóloga -->
             <div class="foto-anel"></div>
+            <!-- Elemento decorativo: anel/borda ao redor da foto, criado puramente com CSS -->
             <div class="status-tag">
+            <!-- Badge flutuante sobre a foto indicando disponibilidade -->
               <span class="status-ponto"></span>
+              <!-- Ponto verde animado (via CSS) que indica status "online/disponível" -->
               Disponível para novos pacientes
             </div>
           </div>
 
+          <!-- Bloco de texto descritivo -->
           <div class="texto-bloco">
             <p class="section-label reveal">Sobre mim</p>
+            <!-- Rótulo de seção em letras menores, acima do título principal -->
 
             <h2 class="sobre-titulo reveal" style="transition-delay:.1s">
+            <!-- h2: título de seção (hierarquia abaixo do h1) -->
               Prazer, eu sou a<br>
               psicóloga <strong>Juliana Moura</strong>
             </h2>
@@ -176,9 +266,13 @@
               de compreender, ressignificar e transformar.
             </p>
 
+            <!-- Grade de destaques: ícone + título + descrição curta -->
             <div class="destaques reveal" style="transition-delay:.3s">
+
+              <!-- Destaque 1: Escuta ativa -->
               <div class="item">
                 <div class="item-icone">
+                  <!-- Ícone SVG de coração, representando empatia e acolhimento -->
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="#5bc0be" stroke-width="1.8"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -188,8 +282,11 @@
                 <span class="item-titulo">Escuta ativa</span>
                 <span class="item-desc">Acolhimento genuíno e sem julgamentos.</span>
               </div>
+
+              <!-- Destaque 2: Abordagem personalizada -->
               <div class="item">
                 <div class="item-icone">
+                  <!-- Ícone SVG de estrela, representando qualidade e personalização -->
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="#5bc0be" stroke-width="1.8"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -199,8 +296,11 @@
                 <span class="item-titulo">Abordagem personalizada</span>
                 <span class="item-desc">Cada processo terapêutico é único.</span>
               </div>
+
+              <!-- Destaque 3: Link "Saiba mais" para a página completa sobre a Nexus -->
               <div class="item item-link">
                 <div class="item-icone">
+                  <!-- Ícone SVG de ponto de exclamação/informação -->
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="#5bc0be" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -208,8 +308,10 @@
                     <circle cx="12" cy="18" r="0.5" fill="#5bc0be" stroke="#5bc0be"/>
                   </svg>
                 </div>
+                <!-- Link estilizado como botão de texto com seta -->
                 <a href="pages/sobre_nexus.html" class="btn-saiba-mais">
                   <span class="link-texto">Saiba mais</span>
+                  <!-- Ícone SVG de seta para a direita -->
                   <svg class="seta" width="16" height="16" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -225,24 +327,37 @@
     </section>
 
     <!-- ══════════════════════════════════════════
-         STATS
+         STATS - Seção de Estatísticas
+         Exibe números de impacto do trabalho da psicóloga:
+         - Quantidade de pessoas atendidas
+         - Índice de satisfação
+         - Modalidade de atendimento
+         O atributo data-count é usado pelo JS para animar
+         a contagem numérica quando a seção entra na tela.
     ══════════════════════════════════════════ -->
     <section class="stats" aria-label="Números">
+    <!-- aria-label fornece um rótulo acessível para a seção, lido por leitores de tela -->
   <div class="container">
     <div class="stats_inner">
+    <!-- Wrapper interno que organiza os itens de estatística em linha -->
 
+      <!-- Estatística 1: Pessoas atendidas -->
       <div class="stats_item reveal">
         <div class="stats_icon">
+          <!-- Ícone SVG de pessoa/usuário -->
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </div>
         <div class="stats_text">
           <div class="stats_value" data-count="200">+200</div>
+          <!-- data-count="200": atributo customizado usado pelo JS para animar a contagem até 200 -->
           <div class="stats_label">pessoas atendidas</div>
         </div>
       </div>
 
+      <!-- Estatística 2: Taxa de satisfação -->
       <div class="stats_item reveal" style="transition-delay:.1s">
         <div class="stats_icon">
+          <!-- Ícone SVG de rosto sorridente, representando satisfação -->
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></svg>
         </div>
         <div class="stats_text">
@@ -251,8 +366,10 @@
         </div>
       </div>
 
+      <!-- Estatística 3: Modalidade de atendimento -->
       <div class="stats_item reveal" style="transition-delay:.2s">
         <div class="stats_icon">
+          <!-- Ícone SVG de monitor/tela, representando atendimento online -->
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="12" x="3" y="4" rx="2" ry="2"/><line x1="2" x2="22" y1="20" y2="20"/><line x1="5" x2="19" y1="16" y2="16"/></svg>
         </div>
         <div class="stats_text">
@@ -266,28 +383,37 @@
 </section>
 
  <!-- ══════════════════════════════════════════
-         SPECIALIZATIONS
+         SPECIALIZATIONS - Seção de Especializações
+         Exibe os 4 serviços/áreas de atuação da psicóloga
+         em formato de cards clicáveis.
+         Cada card contém: imagem ilustrativa, nome da
+         especialização, descrição e botão de seta para
+         navegar até a página detalhada de cada área.
     ══════════════════════════════════════════ -->
 
 <section class="specializations" id="specializations">
   <div class="container">
 
+    <!-- Cabeçalho da seção: rótulo + título -->
     <div class="specializations-cabecalho">
       <p class="section-label reveal">ÁREAS DE ATUAÇÃO</p>
       <h2 class="specializations-titulo reveal" style="transition-delay:.1s">Especializações</h2>
     </div>
 
+    <!-- Wrapper e grade de cards -->
     <div class="specializations-wrapper">
       <div class="specializations-grid" id="spec-grid">
+      <!-- id="spec-grid" pode ser referenciado pelo JS para interações dinâmicas -->
         
+        <!-- Card 1: Psicologia Clínica -->
         <div class="spec-card reveal" style="transition-delay:.1s">
-          
+          <!-- Botão de seta no canto do card, levando para a página detalhada -->
           <a href="./pages/clinica.html" class="spec-card-botao" aria-label="Ver mais">
+            <!-- Ícone SVG de seta para a direita (chevron) -->
             <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M1 1L5 5L1 9" stroke="#484848" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </a>
-
           <div class="spec-card-ilustracao">
             <img src="assets/clinica.png" alt="Ilustração Clínica">
           </div>
@@ -295,14 +421,13 @@
           <p class="spec-card-descricao">Promove equilíbrio emocional e bem-estar psicológico.</p>
         </div>
 
+        <!-- Card 2: Psicologia Infantil -->
         <div class="spec-card reveal" style="transition-delay:.2s">
-          
           <a href="pages/infantil.html" class="spec-card-botao" aria-label="Ver mais">
             <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M1 1L5 5L1 9" stroke="#484848" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </a>
-
           <div class="spec-card-ilustracao">
             <img src="assets/infantil.png" alt="Ilustração Infantil">
           </div>
@@ -310,29 +435,27 @@
           <p class="spec-card-descricao">Auxilia no desenvolvimento emocional e social na infância.</p>
         </div>
 
+        <!-- Card 3: Terapia de Casal -->
         <div class="spec-card reveal" style="transition-delay:.3s">
-          
           <a href="pages/casal.html" class="spec-card-botao" aria-label="Ver mais">
             <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M1 1L5 5L1 9" stroke="#484848" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </a>
-
           <div class="spec-card-ilustracao">
             <img src="assets/casal.png" alt="Ilustração Terapia de Casal">
           </div>
           <h3 class="spec-card-nome">Terapia de Casal</h3>
-          <p class="spec-card-descricao">Fortalece a comunicação e os vínculos afetivos.</p>
+          <p class="spec-card-descricao">Fortalece vínculos e melhora a comunicação entre parceiros.</p>
         </div>
 
+        <!-- Card 4: Neuropsicologia -->
         <div class="spec-card reveal" style="transition-delay:.4s">
-          
           <a href="pages/neuropsicologia.html" class="spec-card-botao" aria-label="Ver mais">
             <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M1 1L5 5L1 9" stroke="#484848" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </a>
-
           <div class="spec-card-ilustracao">
             <img src="assets/neuro.png" alt="Ilustração Neuropsicologia">
           </div>
@@ -345,24 +468,33 @@
 </section>
 
     <!-- ══════════════════════════════════════════
-         CTA
+         CTA - Call to Action (Chamada para Ação)
+         Seção de incentivo ao agendamento de sessão.
+         Contém: título motivacional, descrição, botão
+         de agendamento e imagem decorativa.
     ══════════════════════════════════════════ -->
     <section class="cta-section" id="schedule">
   <div class="container">
     <div class="cta-box">
+    <!-- Caixa principal do CTA com layout de múltiplas colunas -->
 
+      <!-- Bloco de texto motivacional -->
       <div class="cta-text reveal">
         <h2 class="cta-title">
           Sua saúde mental<br>merece atenção.<br>
           <em>Vamos começar?</em>
+          <!-- <em> aplica itálico e indica ênfase semântica -->
         </h2>
       </div>
 
+      <!-- Bloco de ação: descrição + botão -->
       <div class="cta-action reveal" style="transition-delay:.15s">
         <p class="cta-description">
           Agende sua sessão e dê o primeiro passo para uma vida com mais leveza e propósito.
         </p>
+        <!-- Botão de agendamento que rola a página até a seção de contato no rodapé -->
         <a href="#contact" class="btn btn-primary" style="font-size:.9rem; padding:.75rem 1.75rem">
+          <!-- Ícone SVG de calendário -->
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
@@ -375,6 +507,7 @@
         </a>
       </div>
 
+    <!-- Imagem decorativa do CTA (aria-hidden oculta da leitura de acessibilidade por ser decorativa) -->
     <div class="cta-photo" aria-hidden="true">
         <img src="./assets/final_nexus.png" alt="" class="cta-img">
       </div>
@@ -385,14 +518,22 @@
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- ══════════════════════════════════════════
+     FOOTER - Rodapé da Página
+     Contém: mapa do Google Maps com localização,
+     logo, slogan, links de navegação, links de
+     artigos, informações de contato (telefone,
+     e-mail, endereço) e links de redes sociais.
+══════════════════════════════════════════ -->
 <footer class="footer">
   <div class="container">
 
+    <!-- Badge de localização acima do mapa -->
     <div class="footer__mapa-header">
       <span class="footer__mapa-badge">Localização</span>
     </div>
 
+    <!-- Container do mapa do Google Maps incorporado via iframe -->
     <div class="footer__mapa-container">
       <iframe 
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14628.536528734963!2d-46.66236520268551!3d-23.563630628280387!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c8da0aa315%3A0xd59f9431f2c9776a!2sAv.%20Paulista%20-%20S%C3%A3o%20Paulo%2C%20SP!5e0!3m2!1spt-BR!2sbr!4v1710000000000!5m2!1spt-BR!2sbr" 
@@ -401,24 +542,30 @@
         style="border:0;" 
         allowfullscreen="" 
         loading="lazy" 
+        <!-- loading="lazy": o mapa só carrega quando o usuário rolar até ele, melhorando a performance -->
         referrerpolicy="no-referrer-when-downgrade">
+        <!-- referrerpolicy: política de segurança para o iframe do Google Maps -->
       </iframe>
     </div>
 
+    <!-- Grade de colunas do rodapé -->
     <div class="footer__grade">
 
+      <!-- Coluna 1: Logo da Nexus -->
       <div class="footer__coluna footer__brand">
         <div class="footer__logo">
           <img src="./assets/logo.png" alt="Nexus Psicologia" class="footer__imagem-logo">
         </div>
       </div>
 
+      <!-- Coluna 2: Slogan -->
       <div class="footer__coluna">
         <p class="footer__slogan">
           Psicoterapia com acolhimento,<br>respeito e propósito.
         </p>
       </div>
 
+      <!-- Coluna 3: Links de navegação interna -->
       <div class="footer__coluna">
         <p class="footer__titulo-coluna">Navegação</p>
         <ul class="footer__links">
@@ -429,6 +576,7 @@
         </ul>
       </div>
 
+      <!-- Coluna 4: Links para artigos do blog -->
       <div class="footer__coluna">
         <p class="footer__titulo-coluna">Artigos</p>
         <ul class="footer__links">
@@ -439,11 +587,14 @@
         </ul>
       </div>
 
+      <!-- Coluna 5: Informações de contato (id="contact" é o destino dos links de contato da navbar) -->
       <div class="footer__coluna footer__contato-lista" id="contact">
         <p class="footer__titulo-coluna">Contato</p>
         
+        <!-- Item de contato: Telefone -->
         <div class="footer__item-contato">
           <span class="footer__icone">
+            <!-- Ícone SVG de telefone -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
             </svg>
@@ -451,8 +602,10 @@
           <span>(11) 99999-9999</span>
         </div>
 
+        <!-- Item de contato: E-mail -->
         <div class="footer__item-contato">
           <span class="footer__icone">
+            <!-- Ícone SVG de envelope/e-mail -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
               <polyline points="22,6 12,13 2,6"/>
@@ -461,8 +614,10 @@
           <span>contato@nexuspsi.com.br</span>
         </div>
 
+        <!-- Item de contato: Endereço/Localização -->
         <div class="footer__item-contato">
           <span class="footer__icone">
+            <!-- Ícone SVG de pin de localização no mapa -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
               <circle cx="12" cy="10" r="3"/>
@@ -474,17 +629,23 @@
 
     </div>
 
+    <!-- Barra inferior do rodapé: copyright e redes sociais -->
     <div class="footer__barra-inferior">
       <p class="footer__texto-direitos">© 2026 Nexus Psicologia. Todos os direitos reservados.</p>
+      <!-- Links para redes sociais -->
       <div class="footer__redes-sociais">
+        <!-- Link para Instagram -->
         <a href="#" class="footer__link-rede-social" aria-label="Instagram">
+          <!-- Ícone SVG do Instagram (quadrado arredondado com círculo e ponto) -->
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="2" width="20" height="20" rx="5"/>
             <circle cx="12" cy="12" r="4"/>
             <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
           </svg>
         </a>
+        <!-- Link para LinkedIn -->
         <a href="#" class="footer__link-rede-social" aria-label="LinkedIn">
+          <!-- Ícone SVG do LinkedIn -->
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
             <rect x="2" y="9" width="4" height="12"/>
@@ -498,6 +659,8 @@
 </footer>
   
   <!-- ── Scripts ── -->
+  <!-- O arquivo JS é carregado no final do body para garantir que todo o HTML já foi carregado
+       antes do JavaScript tentar manipulá-lo. Isso evita erros de "elemento não encontrado". -->
   <script src="js/main.js"></script>
 
 </body>

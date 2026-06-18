@@ -1,13 +1,36 @@
+<!--
+    ARQUIVO: components/navbar.html
+    DESCRIÇÃO: Componente da barra de navegação principal do site (landing page).
+
+    Este arquivo é carregado dinamicamente pelo JavaScript (main.js) e injetado
+    no elemento <div id="navbar-placeholder"> do index.html.
+
+    ESTRUTURA:
+      - Logo: link para o topo da página
+      - Links de navegação (desktop): âncoras para seções da página
+      - Botão de Login: redireciona para login.php
+      - Menu hambúrguer: botão para abrir o menu mobile
+      - Menu mobile: versão expandida dos links para telas pequenas
+
+    RESPONSIVIDADE:
+      - Desktop: .navbar-links visível, .navbar-celular oculto
+      - Mobile: .navbar-links oculto, .navbar-celular exibido ao clicar no hambúrguer
+      - O JavaScript em main.js controla a abertura/fechamento do menu mobile
+-->
+
+<!-- Elemento <nav> principal: id="navbar" usado pelo JS para detectar scroll e adicionar sombra -->
 <nav class="navbar" id="navbar">
   <div class="container">
     <div class="navbar-conteudo">
 
-      <!-- Logo -->
+      <!-- ── Logo ── -->
+      <!-- href="#" rola para o topo da página ao clicar -->
       <a href="#" class="navbar-logo">
         <img src="assets/logo.png" alt="Nexus Logo" class="logo-img" />
       </a>
 
-      <!-- Navegação -->
+      <!-- ── Links de Navegação (Desktop) ── -->
+      <!-- Âncoras (#about, #specializations, etc.) rolam suavemente para as seções do index.html -->
       <ul class="navbar-links" role="list">
         <li><a href="#about">Sobre</a></li>
         <li><a href="#specializations">Especializações</a></li>
@@ -15,9 +38,10 @@
         <li><a href="pages/artigos.html">Artigos</a></li>
       </ul>
 
-      <!-- Botão login -->
+      <!-- ── Botão de Login (Desktop) ── -->
       <div class="navbar-acao">
         <a href="login.php" class="btn btn-primary">
+          <!-- Ícone de seta de entrada (login) em SVG -->
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
             fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
@@ -29,7 +53,9 @@
         </a>
       </div>
 
-      <!-- Menu hambúrguer -->
+      <!-- ── Botão Hambúrguer (Mobile) ── -->
+      <!-- Três <span> formam as três linhas do ícone hambúrguer -->
+      <!-- aria-expanded: atualizado pelo JS para acessibilidade -->
       <button class="navbar-botao" id="hamburger" aria-label="Menu" aria-expanded="false">
         <span></span>
         <span></span>
@@ -37,11 +63,14 @@
       </button>
     </div>
 
+    <!-- ── Menu Mobile (expandido ao clicar no hambúrguer) ── -->
+    <!-- id="mobile-menu": referenciado pelo JavaScript em main.js -->
     <ul class="navbar-celular" id="mobile-menu" role="list">
       <li><a href="#about">Sobre</a></li>
       <li><a href="#specializations">Especializações</a></li>
       <li><a href="#contact">Contato</a></li>
       <li><a href="pages/artigos.html">Artigos</a></li>
+      <!-- No mobile, o botão exibe "Agendar" em vez de "Login" -->
       <li><a href="login.php" class="btn btn-primary" style="width:fit-content">Agendar</a></li>
     </ul>
   </div>

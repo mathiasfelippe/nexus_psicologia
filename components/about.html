@@ -1,33 +1,67 @@
+<!--
+    ARQUIVO: components/about.html
+    DESCRIÇÃO: Componente da seção "Sobre Mim" da landing page.
+
+    Este arquivo é carregado dinamicamente pelo JavaScript (main.js) e injetado
+    no elemento <div id="about-placeholder"> do index.html.
+
+    ESTRUTURA:
+      - Bloco de foto: imagem da psicóloga com anel decorativo e tag de disponibilidade
+      - Bloco de texto: título, descrição e três destaques (escuta ativa, abordagem, link)
+
+    ANIMAÇÕES:
+      - Classe "reveal": ativada pelo IntersectionObserver em main.js
+      - transition-delay: escalonamento das animações de entrada
+-->
+
+<!-- Seção "Sobre": id="about" é o alvo do link "Sobre" na navbar -->
 <section class="sobre" id="about">
   <div class="container">
     <div class="conteudo-sobre">
 
+      <!-- ── Bloco da Foto ── -->
+      <!-- Classe "reveal": animado ao entrar na viewport -->
       <div class="foto-bloco reveal">
+        <!-- Foto da psicóloga -->
         <img src="../assets/juliana_moura.png" alt="Foto da Psicóloga Juliana">
+        <!-- Anel decorativo ao redor da foto (elemento puramente visual via CSS) -->
         <div class="foto-anel"></div>
+        <!-- Tag de disponibilidade: exibida sobre a foto -->
         <div class="status-tag">
+          <!-- Ponto verde animado (indicador de online/disponível) -->
           <span class="status-ponto"></span>
           Disponível para novos pacientes
         </div>
       </div>
 
+      <!-- ── Bloco de Texto ── -->
       <div class="texto-bloco">
+        <!-- Rótulo da seção (texto pequeno acima do título) -->
         <p class="section-label reveal">Sobre mim</p>
 
+        <!-- Título principal da seção -->
+        <!-- transition-delay:.1s: segunda animação da sequência -->
         <h2 class="sobre-titulo reveal" style="transition-delay:.1s">
           Prazer, eu sou a<br>
           psicóloga <strong>Juliana Moura</strong>
         </h2>
 
+        <!-- Parágrafo descritivo -->
+        <!-- transition-delay:.2s: terceira animação da sequência -->
         <p class="sobre-texto reveal" style="transition-delay:.2s">
           Acredito que cada história é única e merece ser ouvida com respeito,
           empatia e sem julgamentos. Meu trabalho é caminhar ao seu lado no processo
           de compreender, ressignificar e transformar.
         </p>
 
+        <!-- ── Destaques (três itens) ── -->
+        <!-- transition-delay:.3s: quarta animação (última da sequência) -->
         <div class="destaques reveal" style="transition-delay:.3s">
+
+          <!-- Destaque 1: Escuta Ativa -->
           <div class="item">
             <div class="item-icone">
+              <!-- Ícone de coração em SVG (cor teal #5bc0be) -->
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                 stroke="#5bc0be" stroke-width="1.8"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -37,8 +71,11 @@
             <span class="item-titulo">Escuta ativa</span>
             <span class="item-desc">Acolhimento genuíno e sem julgamentos.</span>
           </div>
+
+          <!-- Destaque 2: Abordagem Personalizada -->
           <div class="item">
             <div class="item-icone">
+              <!-- Ícone de estrela em SVG -->
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                 stroke="#5bc0be" stroke-width="1.8"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -48,8 +85,12 @@
             <span class="item-titulo">Abordagem personalizada</span>
             <span class="item-desc">Cada processo terapêutico é único.</span>
           </div>
+
+          <!-- Destaque 3: Link "Saiba Mais" -->
+          <!-- item-link: classe especial para o item com link (estilo diferente dos outros dois) -->
           <div class="item item-link">
             <div class="item-icone">
+              <!-- Ícone de ponto de exclamação/informação em SVG -->
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                 stroke="#5bc0be" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -57,8 +98,10 @@
                 <circle cx="12" cy="18" r="0.5" fill="#5bc0be" stroke="#5bc0be"/>
               </svg>
             </div>
+            <!-- Link para a página completa "Sobre o Nexus" -->
             <a href="../pages/sobre_nexus.html" class="btn-saiba-mais">
               <span class="link-texto">Saiba mais</span>
+              <!-- Ícone de seta (chevron) para a direita -->
               <svg class="seta" width="16" height="16" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -66,6 +109,7 @@
               </svg>
             </a>
           </div>
+
         </div>
 
       </div>

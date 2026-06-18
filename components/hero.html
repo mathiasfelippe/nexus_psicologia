@@ -1,24 +1,55 @@
+<!--
+    ARQUIVO: components/hero.html
+    DESCRIÇÃO: Componente da seção "Hero" (destaque principal) da landing page.
+
+    Este arquivo é carregado dinamicamente pelo JavaScript (main.js) e injetado
+    no elemento <div id="hero-placeholder"> do index.html.
+
+    ESTRUTURA:
+      - Título principal com animação de revelação
+      - Linha decorativa com gradiente
+      - Subtítulo descritivo
+      - Botões de ação (Agendar Sessão e Saiba Mais)
+      - Selos de confiança (Atendimento online/presencial, Ambiente Seguro)
+      - Imagem ilustrativa
+
+    ANIMAÇÕES:
+      - Classe "reveal": ativada pelo IntersectionObserver em main.js
+      - transition-delay: escalonamento das animações de entrada
+-->
+
+<!-- Seção hero: id="home" é o alvo do link "Início" na navbar -->
 <section class="destaque" id="home">
   <div class="container">
     <div class="destaque-conteudo">
 
       <div class="texto">
 
+        <!-- ── Título Principal ── -->
+        <!-- Classe "reveal": invisível inicialmente, animado ao entrar na viewport -->
+        <!-- transition-delay:.1s: primeira animação da sequência -->
         <h1 class="titulo reveal" style="transition-delay:.1s">
           Um espaço seguro<br>
           <strong>> para cuidar da</strong><br>
           <strong>sua mente.</strong>
         </h1>
 
+        <!-- Linha decorativa com gradiente (elemento puramente visual) -->
         <div class="linha-gradiente"></div>
 
+        <!-- ── Subtítulo ── -->
+        <!-- transition-delay:.2s: segunda animação da sequência -->
         <p class="subtitulo reveal" style="transition-delay:.2s">
           Psicoterapia com escuta qualificada, acolhimento e acompanhamento
           personalizado para cada fase da sua vida.
         </p>
 
+        <!-- ── Botões de Ação ── -->
+        <!-- transition-delay:.3s: terceira animação da sequência -->
         <div class="botoes reveal" style="transition-delay:.3s">
+          <!-- Botão primário: redireciona para o login/agendamento -->
           <a href="login.php" class="btn btn-primary">
+            <!-- Ícone de calendário em SVG -->
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
@@ -27,11 +58,12 @@
               <line x1="8" y1="2" x2="8" y2="6"/>
               <line x1="3" y1="10" x2="21" y2="10"/>
             </svg>
-            
             Agendar Sessão
           </a>
+          <!-- Botão secundário (outline): redireciona para a página "Sobre o Nexus" -->
           <a href="../pages/sobre_nexus.html" class="btn btn-outline">
             Saiba mais
+            <!-- Ícone de seta para a direita (chevron) -->
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
@@ -40,27 +72,38 @@
           </a>
         </div>
 
-       <div class="selos reveal" style="transition-delay:.4s">
-  <div class="selo">
-    <div class="selo-icone">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-      </svg>
-    </div>
-    <span class="selo-texto">Atendimento online<br>e presencial</span>
-  </div>
+        <!-- ── Selos de Confiança ── -->
+        <!-- transition-delay:.4s: quarta animação (última da sequência) -->
+        <div class="selos reveal" style="transition-delay:.4s">
+          <!-- Selo 1: Atendimento online e presencial -->
+          <div class="selo">
+            <div class="selo-icone">
+              <!-- Ícone de telefone em SVG -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+            </div>
+            <span class="selo-texto">Atendimento online<br>e presencial</span>
+          </div>
 
-  <div class="selo">
-    <div class="selo-icone">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-        <path d="m9 12 2 2 4-4"></path>
-      </svg>
-    </div>
-    <span class="selo-texto">Ambiente<br>Seguro</span>
-  </div>
-</div>
+          <!-- Selo 2: Ambiente Seguro -->
+          <div class="selo">
+            <div class="selo-icone">
+              <!-- Ícone de escudo com check em SVG -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <path d="m9 12 2 2 4-4"></path>
+              </svg>
+            </div>
+            <span class="selo-texto">Ambiente<br>Seguro</span>
+          </div>
+        </div>
 
+      </div>
+
+      <!-- ── Imagem Ilustrativa ── -->
+      <!-- transition-delay:.2s: animada junto com o subtítulo -->
+      <!-- alt="" vazio: imagem decorativa, não precisa de descrição para leitores de tela -->
       <div class="visual reveal" style="transition-delay:.2s">
         <img src="../assets/destaque.png" alt="" class="hero-imagem">
       </div>

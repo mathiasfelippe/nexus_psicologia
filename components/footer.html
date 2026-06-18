@@ -1,10 +1,36 @@
+<!--
+    ARQUIVO: components/footer.html
+    DESCRIÇÃO: Componente do rodapé principal da landing page (index.html).
+
+    Este arquivo é carregado dinamicamente pelo JavaScript (main.js) e injetado
+    no elemento <div id="footer-placeholder"> do index.html.
+
+    ESTRUTURA:
+      - Mapa do Google Maps (localização da clínica)
+      - Grade de 5 colunas:
+          1. Logo da Nexus
+          2. Slogan
+          3. Links de navegação
+          4. Links de artigos
+          5. Informações de contato (id="contact": alvo do link "Contato" na navbar)
+      - Barra inferior: direitos autorais + ícones de redes sociais
+
+    NOTA: id="contact" está na coluna de contato, pois é o alvo
+    do link "Contato" na navbar e do botão "Agendar sessão" no CTA.
+-->
+
 <footer class="footer">
   <div class="container">
 
+    <!-- ── Cabeçalho do Mapa ── -->
     <div class="footer__mapa-header">
       <span class="footer__mapa-badge">Localização</span>
     </div>
 
+    <!-- ── Mapa do Google Maps ── -->
+    <!-- iframe incorporado da Avenida Paulista, São Paulo -->
+    <!-- loading="lazy": carrega o mapa apenas quando visível (otimização de performance) -->
+    <!-- referrerpolicy="no-referrer-when-downgrade": política de segurança para o iframe -->
     <div class="footer__mapa-container">
       <iframe 
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14628.536528734963!2d-46.66236520268551!3d-23.563630628280387!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c8da0aa315%3A0xd59f9431f2c9776a!2sAv.%20Paulista%20-%20S%C3%A3o%20Paulo%2C%20SP!5e0!3m2!1spt-BR!2sbr!4v1710000000000!5m2!1spt-BR!2sbr" 
@@ -17,20 +43,25 @@
       </iframe>
     </div>
 
+    <!-- ── Grade de Colunas do Rodapé ── -->
     <div class="footer__grade">
 
+      <!-- Coluna 1: Logo -->
       <div class="footer__coluna footer__brand">
         <div class="footer__logo">
           <img src="./assets/logo.png" alt="Nexus Psicologia" class="footer__imagem-logo">
         </div>
       </div>
 
+      <!-- Coluna 2: Slogan -->
       <div class="footer__coluna">
         <p class="footer__slogan">
           Psicoterapia com acolhimento,<br>respeito e propósito.
         </p>
       </div>
 
+      <!-- Coluna 3: Links de Navegação -->
+      <!-- Âncoras que rolam para as seções da página -->
       <div class="footer__coluna">
         <p class="footer__titulo-coluna">Navegação</p>
         <ul class="footer__links">
@@ -41,21 +72,27 @@
         </ul>
       </div>
 
+      <!-- Coluna 4: Links de Artigos -->
       <div class="footer__coluna">
         <p class="footer__titulo-coluna">Artigos</p>
         <ul class="footer__links">
           <li><a href="pages/artigo-ansiedade.html">Ansiedade</a></li>
           <li><a href="pages/artigo-autoconhecimento.html">Autoconhecimento</a></li>
           <li><a href="pages/artigo-relacionamentos.html">Relacionamentos</a></li>
+          <!-- Link para a página completa de artigos -->
           <li><a href="../pages/artigos.html">Mais . . .</a></li>
         </ul>
       </div>
 
+      <!-- Coluna 5: Informações de Contato -->
+      <!-- id="contact": alvo do link "Contato" na navbar e do botão no CTA -->
       <div class="footer__coluna footer__contato-lista" id="contact">
         <p class="footer__titulo-coluna">Contato</p>
-        
+
+        <!-- Item de contato: Telefone -->
         <div class="footer__item-contato">
           <span class="footer__icone">
+            <!-- Ícone de telefone em SVG -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
             </svg>
@@ -63,8 +100,10 @@
           <span>(11) 99999-9999</span>
         </div>
 
+        <!-- Item de contato: Email -->
         <div class="footer__item-contato">
           <span class="footer__icone">
+            <!-- Ícone de envelope (email) em SVG -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
               <polyline points="22,6 12,13 2,6"/>
@@ -73,8 +112,10 @@
           <span>contato@nexuspsi.com.br</span>
         </div>
 
+        <!-- Item de contato: Localização -->
         <div class="footer__item-contato">
           <span class="footer__icone">
+            <!-- Ícone de pin de localização em SVG -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
               <circle cx="12" cy="10" r="3"/>
@@ -86,17 +127,23 @@
 
     </div>
 
+    <!-- ── Barra Inferior: Direitos Autorais + Redes Sociais ── -->
     <div class="footer__barra-inferior">
       <p class="footer__texto-direitos">© 2026 Nexus Psicologia. Todos os direitos reservados.</p>
       <div class="footer__redes-sociais">
+        <!-- Link do Instagram (href="#" = placeholder, sem URL real) -->
         <a href="#" class="footer__link-rede-social" aria-label="Instagram">
+          <!-- Ícone do Instagram em SVG (câmera quadrada com círculo) -->
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="2" width="20" height="20" rx="5"/>
             <circle cx="12" cy="12" r="4"/>
+            <!-- Ponto no canto superior direito (característico do ícone do Instagram) -->
             <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
           </svg>
         </a>
+        <!-- Link do LinkedIn (href="#" = placeholder, sem URL real) -->
         <a href="#" class="footer__link-rede-social" aria-label="LinkedIn">
+          <!-- Ícone do LinkedIn em SVG -->
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
             <rect x="2" y="9" width="4" height="12"/>
@@ -108,4 +155,3 @@
 
   </div>
 </footer>
-  
